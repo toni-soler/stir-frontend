@@ -1,4 +1,4 @@
-# STIR frontend 0.1.0-SNAPSHOT
+# STIR frontend 0.2.0-SNAPSHOT
 
 Public IDAX Shell 0.3 JavaScript React extension. No separate login or tenant state. Uses Shell's React/router/i18n/fetchWithAuth and public saved-filter API. Requires the reviewed activeTenantId SDK addition in stir-main.
 

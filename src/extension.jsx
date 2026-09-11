@@ -1,4 +1,8 @@
 import { listingApi, listingPayload } from './api.js';
+import { MyProfile, PublicProfile } from './profile.jsx';
+import { ListingDetail } from './listing.jsx';
+import { NegotiationList, NegotiationDetail } from './negotiation.jsx';
+import { AgreementList, AgreementDetail } from './agreement.jsx';
 import bundles from './locales.json';
 import './style.css';
 
@@ -49,7 +53,13 @@ function Marketplace() {
   const close=async(row)=>{if(!window.confirm(t('confirmClose')))return;setBusy(true);try{await api.close(row.id,row.version);setRevision(n=>n+1);}catch(e){setError(e.message);}finally{setBusy(false);}};
   if(!api)return <section className="stir"><p role="alert">{t('realSessionRequired')}</p></section>;
   return <main className="stir"><header className="stir-heading"><div><span className="stir-brand">STIR</span><p>{t('tagline')}</p></div><button onClick={()=>navigate('/stir/new')}>+ {t('create')}</button></header>
-    <nav className="stir-tabs" aria-label="STIR"><button className={!mine&&!creating?'active':''} onClick={()=>navigate('/stir')}>{t('marketplace')}</button><button className={mine?'active':''} onClick={()=>navigate('/stir/mine')}>{t('mine')}</button></nav>
+    <nav className="stir-tabs" aria-label="STIR">
+      <button className={!mine&&!creating?'active':''} onClick={()=>navigate('/stir')}>{t('marketplace')}</button>
+      <button className={mine?'active':''} onClick={()=>navigate('/stir/mine')}>{t('mine')}</button>
+      <button onClick={()=>navigate('/stir/negotiations')}>{t('myNegotiations')}</button>
+      <button onClick={()=>navigate('/stir/agreements')}>{t('myAgreements')}</button>
+      <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
+    </nav>
     {(creating||editing) ? <ListingEditor key={editing?.id || 'new'} initial={editing} api={api} catalogs={catalogs} t={t} onCancel={()=>{setEditing(null);navigate('/stir/mine');}} onSaved={()=>{setEditing(null);setRevision(n=>n+1);navigate('/stir/mine');}}/> : <>
       <section className="stir-intro"><h2>{t(mine?'mine':'headline')}</h2><p>{t('intro')}</p></section>
       <form className="stir-filters" onSubmit={e=>e.preventDefault()}><label>{t('search')}<input value={filters.q} maxLength={160} onChange={e=>filter('q',e.target.value)}/></label>
@@ -57,11 +67,46 @@ function Marketplace() {
       </form>
       <div className="stir-saved"><input aria-label={t('filterName')} placeholder={t('filterName')} maxLength={80} value={filterName} onChange={e=>setFilterName(e.target.value)}/><button onClick={saveFilter}>{t('saveFilter')}</button>{saved.map(item=><button key={item.id} className="secondary" onClick={()=>{setFilters({...filters,...item.filters});setPage(0);}}>{item.name}</button>)}</div>
       {error && <p role="alert">{t(error.replace('stir.',''))}</p>}
-      {loading?<p role="status">{t('loading')}</p>:<section className="stir-grid">{result.content.map(row=><article className="stir-card" key={row.id}><span className={'stir-badge '+row.direction}>{t(row.direction)}</span><small>{t(row.resourceKind)} · {t(row.category)}</small><h3>{row.title}</h3><p className="stir-description">{row.description}</p>{row.location&&<p>⌖ {row.location}</p>}<footer><span>{t(row.status)}</span>{mine&&row.status==='ACTIVE'&&<div><button disabled={busy} onClick={()=>setEditing(row)}>{t('edit')}</button><button disabled={busy} className="secondary" onClick={()=>close(row)}>{t('close')}</button></div>}</footer></article>)}{!result.content.length&&<p>{t('empty')}</p>}</section>}
+      {loading?<p role="status">{t('loading')}</p>:<section className="stir-grid">{result.content.map(row=><article className="stir-card" key={row.id}><span className={'stir-badge '+row.direction}>{t(row.direction)}</span><small>{t(row.resourceKind)} · {t(row.category)}</small><h3><button type="button" className="stir-link" onClick={()=>navigate('/stir/listing/'+row.id)}>{row.title}</button></h3>{row.ownerDisplayName && <small>{t('listingBy')} {row.ownerDisplayName}</small>}<p className="stir-description">{row.description}</p>{row.location&&<p>⌖ {row.location}</p>}<footer><span>{t(row.status)}</span>{mine&&row.status==='ACTIVE'&&<div><button disabled={busy} onClick={()=>setEditing(row)}>{t('edit')}</button><button disabled={busy} className="secondary" onClick={()=>close(row)}>{t('close')}</button></div>}</footer></article>)}{!result.content.length&&<p>{t('empty')}</p>}</section>}
       <div className="stir-actions"><button disabled={page===0} onClick={()=>setPage(n=>n-1)}>{t('previous')}</button><span>{page+1} / {Math.max(1,result.totalPages)}</span><button disabled={page+1>=result.totalPages} onClick={()=>setPage(n=>n+1)}>{t('next')}</button></div>
     </>}
   </main>;
 }
+
+function sdkAndT() {
+  const sdk=window.__IDAX_MODULE_SDK__;
+  return [sdk,(key)=>sdk.i18n.t('stir.'+key,bundles.en[key] || bundles.en.error)];
+}
+function withNav(t, navigate, node) {
+  return <main className="stir">
+    <header className="stir-heading"><div><span className="stir-brand">STIR</span></div></header>
+    <nav className="stir-tabs" aria-label="STIR"><button onClick={()=>navigate('/stir')}>{t('backToMarketplace')}</button></nav>
+    {node}
+  </main>;
+}
+function ListingDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<ListingDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
+function NegotiationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NegotiationList sdk={sdk} t={t} navigate={navigate}/>); }
+function NegotiationDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<NegotiationDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
+function AgreementListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<AgreementList sdk={sdk} t={t} navigate={navigate}/>); }
+function AgreementDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<AgreementDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
+function MyProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyProfile sdk={sdk} t={t} navigate={navigate}/>); }
+function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {userId}=useParams(); return withNav(t,navigate,<PublicProfile sdk={sdk} t={t} userId={userId}/>); }
+
+function StirRoot() {
+  const [sdk,t]=sdkAndT();
+  const {Routes,Route}=sdk.router;
+  if(sdk.demo || !sdk.activeTenantId) return <section className="stir"><p role="alert">{t('realSessionRequired')}</p></section>;
+  return <Routes>
+    <Route path="/stir/listing/:id" element={<ListingDetailRoute/>}/>
+    <Route path="/stir/negotiations" element={<NegotiationListRoute/>}/>
+    <Route path="/stir/negotiations/:id" element={<NegotiationDetailRoute/>}/>
+    <Route path="/stir/agreements" element={<AgreementListRoute/>}/>
+    <Route path="/stir/agreements/:id" element={<AgreementDetailRoute/>}/>
+    <Route path="/stir/profile" element={<MyProfileRoute/>}/>
+    <Route path="/stir/participants/:userId" element={<PublicProfileRoute/>}/>
+    <Route path="/stir/*" element={<Marketplace/>}/>
+  </Routes>;
+}
 window.__IDAX_MODULE_EXTENSIONS__ ||= {};
-window.__IDAX_MODULE_EXTENSIONS__.stir={component:Marketplace};
+window.__IDAX_MODULE_EXTENSIONS__.stir={component:StirRoot};
 window.dispatchEvent(new CustomEvent('idaxModuleExtensionRegistered',{detail:{module:'stir'}}));
