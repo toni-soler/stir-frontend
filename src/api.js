@@ -3,7 +3,11 @@ function apiClient(sdk, tenantId, resource) {
   const base = `/api/stir/tenants/${encodeURIComponent(tenantId)}${resource}`;
   const request = async (suffix = '', options = {}) => {
     const response = await sdk.fetchWithAuth(base + suffix, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers } });
-    const data = await response.json().catch(() => ({}));
+    // A 200 with an empty body (e.g. TradeService.find() when no trade exists yet) is a real,
+    // meaningful `null` - not `{}`. Falling back to `{}` here would hide that distinction from
+    // every caller that checks `=== null` (TradeStatus does, to decide whether to show "activate").
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
     if (!response.ok) { const error = new Error(`stir.http${response.status}`); error.status = response.status; throw error; }
     return data;
   };
@@ -60,4 +64,27 @@ export function agreementApi(sdk, tenantId) {
 export function offerPayload(value) {
   const { message, quantity, unitLabel, proposedAmount, proposedUnitRef, terms } = value;
   return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null};
+}
+
+export function economicApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '/economic');
+  return {
+    marketplace: () => request('/marketplace'),
+    bootstrapMarketplace: (value) => request('/marketplace/bootstrap', body('POST', value)),
+    me: () => request('/me'),
+    activate: (publicKeyBase64url) => request('/activate', body('POST', { publicKeyBase64url })),
+  };
+}
+
+export function tradeApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '/agreements');
+  const base = (agreementId) => '/' + encodeURIComponent(agreementId) + '/trade';
+  return {
+    find: (agreementId) => request(base(agreementId)),
+    signingPayload: (agreementId) => request(base(agreementId) + '/signing-payload'),
+    activate: (agreementId) => request(base(agreementId) + '/activate', body('POST')),
+    authorize: (agreementId, signatureBase64url) => request(base(agreementId) + '/authorizations', body('POST', { signatureBase64url })),
+    commit: (agreementId) => request(base(agreementId) + '/commit', body('POST')),
+    sync: (agreementId) => request(base(agreementId) + '/sync', body('POST')),
+  };
 }

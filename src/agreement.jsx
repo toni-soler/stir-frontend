@@ -1,4 +1,5 @@
 import { agreementApi } from './api.js';
+import { TradeStatus } from './trade.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
@@ -37,6 +38,8 @@ export function AgreementDetail({ sdk, t, id, navigate }) {
     <span className="stir-badge">{t('economicPhase' + agreement.economicPhase)}</span>
     <p>{t('agreementCreatedAt')}: {new Date(agreement.createdAt).toLocaleString()}</p>
     <button type="button" className="stir-link" onClick={() => navigate('/stir/listing/' + agreement.listingId)}>{t('viewListing')}</button>
+    <h3>{t('economicExecution')}</h3>
+    <TradeStatus sdk={sdk} t={t} agreementId={agreement.id} economicPhase={agreement.economicPhase} navigate={navigate} />
     <h3>{t('agreementSnapshot')}</h3>
     <p>{t('snapshotDigest')}: <code>{agreement.snapshot.digestSha256}</code></p>
     <p>{t('snapshotSchemaVersion')}: {agreement.snapshot.schemaVersion}</p>
