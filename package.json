@@ -1,1 +1,1 @@
-{"name":"@stir/frontend","version":"0.3.0-SNAPSHOT","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs","test":"node --test tests/","i18n:validate":"node scripts/validate-i18n.mjs"},"dependencies":{"canonicalize":"2.1.0"},"devDependencies":{"esbuild":"0.25.12"}}
+{"name":"@stir/frontend","version":"0.4.0-SNAPSHOT","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs","test":"node --test tests/","i18n:validate":"node scripts/validate-i18n.mjs"},"dependencies":{"canonicalize":"2.1.0"},"devDependencies":{"esbuild":"0.25.12"}}

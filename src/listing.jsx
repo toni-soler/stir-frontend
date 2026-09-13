@@ -1,7 +1,17 @@
-import { listingApi, offerPayload } from './api.js';
+import { listingApi, attachmentApi, offerPayload } from './api.js';
+import { AttachmentImage } from './attachments.jsx';
+import { ReportButton } from './moderation.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
+
+function PhotoGallery({ sdk, listingId, title }) {
+  const api = useMemo(() => attachmentApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
+  const [photos, setPhotos] = useState([]);
+  useEffect(() => { api.listingPhotos(listingId).then(setPhotos).catch(() => {}); }, [listingId]);
+  if (!photos.length) return null;
+  return <div className="stir-gallery">{photos.map((p, i) => <AttachmentImage key={p.id} sdk={sdk} attachmentId={p.id} alt={`${title} - ${i + 1}/${photos.length}`} />)}</div>;
+}
 
 function OfferForm({ t, busy, error, onSubmit }) {
   const [value, setValue] = useState({ message: '', quantity: '', unitLabel: '', proposedAmount: '', proposedUnitRef: '', terms: '' });
@@ -36,7 +46,9 @@ export function ListingDetail({ sdk, t, id, navigate }) {
   const own = listing.ownerId === sdk.user?.id;
   return <section className="stir-panel">
     <span className={'stir-badge ' + listing.direction}>{t(listing.direction)}</span>
+    {listing.hidden && <p role="alert">{t('listingHiddenNotice')}</p>}
     <h2>{listing.title}</h2>
+    <PhotoGallery sdk={sdk} listingId={listing.id} title={listing.title} />
     <p>
       {t('listingBy')} <button type="button" className="stir-link" onClick={() => navigate('/stir/participants/' + listing.ownerId)}>{listing.ownerDisplayName || t('unknownParticipant')}</button>
     </p>
@@ -47,5 +59,6 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     {!own && listing.status === 'ACTIVE' && !offering && <button onClick={() => setOffering(true)}>{t('makeOffer')}</button>}
     {!own && listing.status === 'ACTIVE' && offering && <OfferForm t={t} busy={busy} error={error} onSubmit={submitOffer} />}
     {own && <p>{t('ownListingHint')}</p>}
+    {!own && <ReportButton sdk={sdk} t={t} targetType="LISTING" targetId={listing.id} />}
   </section>;
 }

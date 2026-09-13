@@ -1,3 +1,17 @@
+// TradeService.commit() (and other osTRIS-relayed failures) format their reason as "CODE: detail"
+// (see StirOstrisException) - surface that CODE as a distinct, translatable error key
+// (stir.errorCODE) instead of collapsing every failure of the same HTTP status into one generic
+// "stir.http422" message. Section 13 of the 0.4 brief: a credit-floor rejection must read as "this
+// exceeds your credit limit", never "HTTP 422".
+function httpError(status, data) {
+  const rawMessage = data && typeof data.message === 'string' ? data.message : '';
+  const match = /^([A-Z_]+): /.exec(rawMessage);
+  const error = new Error(match ? `stir.error${match[1]}` : `stir.http${status}`);
+  error.status = status;
+  error.detail = rawMessage;
+  return error;
+}
+
 function apiClient(sdk, tenantId, resource) {
   if (!tenantId || sdk.demo) throw new Error('stir.realSessionRequired');
   const base = `/api/stir/tenants/${encodeURIComponent(tenantId)}${resource}`;
@@ -8,10 +22,29 @@ function apiClient(sdk, tenantId, resource) {
     // every caller that checks `=== null` (TradeStatus does, to decide whether to show "activate").
     const text = await response.text();
     const data = text ? JSON.parse(text) : null;
-    if (!response.ok) { const error = new Error(`stir.http${response.status}`); error.status = response.status; throw error; }
+    if (!response.ok) throw httpError(response.status, data);
     return data;
   };
-  return { base, request };
+  // No Content-Type here: the browser sets multipart/form-data with the correct boundary itself
+  // only when it builds the request body, which it does not do if we set the header manually.
+  const upload = async (suffix, file) => {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await sdk.fetchWithAuth(base + suffix, { method: 'POST', body: form });
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    if (!response.ok) throw httpError(response.status, data);
+    return data;
+  };
+  // Authenticated binary GET (an <img src> cannot carry a bearer token itself): fetch the bytes and
+  // hand back a local object URL. Callers must revokeObjectURL it when done (see AttachmentImage).
+  const contentUrl = async (suffix) => {
+    const response = await sdk.fetchWithAuth(base + suffix);
+    if (!response.ok) { const error = new Error(`stir.http${response.status}`); error.status = response.status; throw error; }
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  };
+  return { base, request, upload, contentUrl };
 }
 const body = (method, value) => ({ method, body: JSON.stringify(value) });
 const query = (filters) => '?' + new URLSearchParams(Object.entries(filters).filter(([, v]) => v !== '' && v != null));
@@ -76,6 +109,56 @@ export function economicApi(sdk, tenantId) {
   };
 }
 
+export function deviceApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '/economic/devices');
+  return {
+    list: () => request(''),
+    add: (label, publicKeyBase64url) => request('', body('POST', { label, publicKeyBase64url })),
+    revoke: (credentialId) => request('/' + encodeURIComponent(credentialId) + '/revoke', body('POST')),
+  };
+}
+
+export function attachmentApi(sdk, tenantId) {
+  const { request, upload, contentUrl } = apiClient(sdk, tenantId, '');
+  return {
+    listingPhotos: (listingId) => request('/listings/' + encodeURIComponent(listingId) + '/photos'),
+    uploadListingPhoto: (listingId, file) => upload('/listings/' + encodeURIComponent(listingId) + '/photos', file),
+    uploadAvatar: (file) => upload('/participants/me/avatar', file),
+    remove: (attachmentId) => request('/attachments/' + encodeURIComponent(attachmentId), { method: 'DELETE' }),
+    contentUrl: (attachmentId) => contentUrl('/attachments/' + encodeURIComponent(attachmentId) + '/content'),
+  };
+}
+
+export function notificationApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '/notifications');
+  return {
+    list: (page = 0, size = 20) => request(query({ page, size })),
+    unreadCount: () => request('/unread-count'),
+    markRead: (id) => request('/' + encodeURIComponent(id) + '/read', body('POST')),
+  };
+}
+
+export function moderationApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '');
+  return {
+    report: (targetType, targetId, reason) => request('/reports', body('POST', { targetType, targetId, reason })),
+    canModerate: () => request('/moderation/access').then(() => true).catch(() => false),
+    openReports: (page = 0, size = 20) => request('/moderation/reports' + query({ page, size })),
+    dismiss: (reportId) => request('/moderation/reports/' + encodeURIComponent(reportId) + '/dismiss', body('POST')),
+    hide: (reportId) => request('/moderation/reports/' + encodeURIComponent(reportId) + '/hide', body('POST')),
+    restoreListing: (listingId) => request('/moderation/listings/' + encodeURIComponent(listingId) + '/restore', body('POST')),
+  };
+}
+
+/** No tenant, no auth: public instance branding, readable before login. */
+export function instanceApi(sdk) {
+  return { get: async () => {
+    const response = await sdk.fetchWithAuth('/api/stir/instance');
+    if (!response.ok) throw new Error('stir.http' + response.status);
+    return response.json();
+  } };
+}
+
 export function tradeApi(sdk, tenantId) {
   const { request } = apiClient(sdk, tenantId, '/agreements');
   const base = (agreementId) => '/' + encodeURIComponent(agreementId) + '/trade';
@@ -83,7 +166,7 @@ export function tradeApi(sdk, tenantId) {
     find: (agreementId) => request(base(agreementId)),
     signingPayload: (agreementId) => request(base(agreementId) + '/signing-payload'),
     activate: (agreementId) => request(base(agreementId) + '/activate', body('POST')),
-    authorize: (agreementId, signatureBase64url) => request(base(agreementId) + '/authorizations', body('POST', { signatureBase64url })),
+    authorize: (agreementId, credentialId, signatureBase64url) => request(base(agreementId) + '/authorizations', body('POST', { credentialId, signatureBase64url })),
     commit: (agreementId) => request(base(agreementId) + '/commit', body('POST')),
     sync: (agreementId) => request(base(agreementId) + '/sync', body('POST')),
   };

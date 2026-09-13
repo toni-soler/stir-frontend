@@ -38,7 +38,9 @@ export function TradeStatus({ sdk, t, agreementId, economicPhase, navigate }) {
     const payload = await trades.signingPayload(agreementId);
     const signer = await getSigner(sdk.activeTenantId, userId);
     const signature = await signer.sign(authorizationMessageBytes(payload.authorizationPayload));
-    return trades.authorize(agreementId, signature);
+    // credentialId identifies WHICH of this account's (possibly several) devices just signed -
+    // osTRIS, not STIR, is the one that actually verifies the signature against it.
+    return trades.authorize(agreementId, signer.credentialId, signature);
   });
   const commit = () => run(() => trades.commit(agreementId));
 

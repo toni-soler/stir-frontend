@@ -1,7 +1,28 @@
-import { participantApi } from './api.js';
+import { participantApi, attachmentApi } from './api.js';
+import { AttachmentImage } from './attachments.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState } = React;
+
+function AvatarUploader({ sdk, t, profile, onUploaded }) {
+  const api = useMemoized(() => attachmentApi(sdk, sdk.activeTenantId), sdk);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const upload = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setBusy(true); setError('');
+    try { await api.uploadAvatar(file); onUploaded(); } catch (e) { setError(e.message); } finally { setBusy(false); }
+  };
+  return <div className="stir-avatar-uploader">
+    {profile?.avatarAttachmentId
+      ? <AttachmentImage sdk={sdk} attachmentId={profile.avatarAttachmentId} alt={t('avatarOf') + ' ' + profile.displayName} className="stir-avatar" />
+      : <div className="stir-avatar stir-avatar-empty" aria-hidden="true" />}
+    <label>{t('avatarUpload')}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={upload} /></label>
+    {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
+  </div>;
+}
 
 export function useDisplayName(sdk, api, userId, cache) {
   const [name, setName] = useState(cache.current.get(userId) || '');
@@ -48,6 +69,7 @@ export function MyProfile({ sdk, t, navigate }) {
     <h2>{t('myProfile')}</h2>
     {!profile && <p>{t('profileSetupHint')}</p>}
     {saved && <p role="status">{t('profileSaved')}</p>}
+    {profile && <AvatarUploader sdk={sdk} t={t} profile={profile} onUploaded={() => api.me().then(setProfile)} />}
     <ProfileForm t={t} value={value} busy={busy} error={error} onChange={change} onSubmit={submit} />
   </section>;
 }
@@ -64,6 +86,7 @@ export function PublicProfile({ sdk, t, userId }) {
   if (loading) return <p role="status">{t('loading')}</p>;
   if (error) return <p role="alert">{t(error.replace('stir.', ''))}</p>;
   return <section className="stir-panel">
+    {profile.avatarAttachmentId && <AttachmentImage sdk={sdk} attachmentId={profile.avatarAttachmentId} alt={t('avatarOf') + ' ' + profile.displayName} className="stir-avatar" />}
     <h2>{profile.displayName}</h2>
     {profile.location && <p>⌖ {profile.location}</p>}
     {profile.bio && <p className="stir-description">{profile.bio}</p>}

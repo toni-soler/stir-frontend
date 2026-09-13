@@ -55,13 +55,17 @@ export function authorizationMessageBytes(authorizationPayloadText) {
   return message;
 }
 
-async function loadOrCreateKeyPair(storageKey) {
+async function loadOrCreateKeyRecord(storageKey) {
   const db = await openDb();
   const stored = await idbGet(db, storageKey);
   if (stored && stored.privateKey && stored.publicKey) return stored;
   const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, false, ['sign', 'verify']);
-  await idbSet(db, storageKey, keyPair);
-  return keyPair;
+  // credentialId starts unknown: this device's key exists locally, but osTRIS/STIR do not know about
+  // it yet until activation (the FIRST device on this tenant/user) or an explicit "add this device"
+  // call (any later device) registers it - see markDeviceRegistered.
+  const record = { privateKey: keyPair.privateKey, publicKey: keyPair.publicKey, credentialId: null };
+  await idbSet(db, storageKey, record);
+  return record;
 }
 
 export async function hasSigningKey(tenantId, userId) {
@@ -69,15 +73,29 @@ export async function hasSigningKey(tenantId, userId) {
   return Boolean(await idbGet(db, tenantId + ':' + userId));
 }
 
-/** { publicKeyBase64url, sign(messageBytes) -> signatureBase64url }. Creates the key on first use. */
+/** { publicKeyBase64url, credentialId, sign(messageBytes) -> signatureBase64url }. Creates the
+ * local key on first use; credentialId is null until markDeviceRegistered() is called (once this
+ * exact device's key has actually been registered with osTRIS, either by activation or by the
+ * device-management "add this device" flow). */
 export async function getSigner(tenantId, userId) {
-  const keyPair = await loadOrCreateKeyPair(tenantId + ':' + userId);
-  const rawPublicKey = await crypto.subtle.exportKey('raw', keyPair.publicKey);
+  const record = await loadOrCreateKeyRecord(tenantId + ':' + userId);
+  const rawPublicKey = await crypto.subtle.exportKey('raw', record.publicKey);
   return {
     publicKeyBase64url: base64url(rawPublicKey),
+    credentialId: record.credentialId,
     async sign(messageBytes) {
-      const signature = await crypto.subtle.sign('Ed25519', keyPair.privateKey, messageBytes);
+      const signature = await crypto.subtle.sign('Ed25519', record.privateKey, messageBytes);
       return base64url(signature);
     },
   };
+}
+
+/** Called right after this device's key is successfully registered with osTRIS (activation of the
+ * first device, or DeviceCredentialService.addDevice() for any later one). */
+export async function markDeviceRegistered(tenantId, userId, credentialId) {
+  const db = await openDb();
+  const storageKey = tenantId + ':' + userId;
+  const record = await loadOrCreateKeyRecord(storageKey);
+  record.credentialId = credentialId;
+  await idbSet(db, storageKey, record);
 }

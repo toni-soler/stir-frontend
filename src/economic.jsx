@@ -1,5 +1,6 @@
 import { economicApi } from './api.js';
-import { getSigner } from './signer.js';
+import { getSigner, markDeviceRegistered } from './signer.js';
+import { DeviceManagement } from './devices.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
@@ -37,12 +38,17 @@ export function MyEconomicProfile({ sdk, t }) {
     setBusy(true); setError('');
     try {
       const signer = await getSigner(sdk.activeTenantId, sdk.user.id);
-      setMe(await api.activate(signer.publicKeyBase64url));
+      const result = await api.activate(signer.publicKeyBase64url);
+      // credentialId is only non-null the ONE time this call actually creates a new credential
+      // (the first device to activate) - see EconomicActivationService.activate()'s docstring.
+      if (result.credentialId) await markDeviceRegistered(sdk.activeTenantId, sdk.user.id, result.credentialId);
+      setMe(result.profile);
     } catch (e) { setError(e.message); } finally { setBusy(false); }
   };
 
   if (marketplace === undefined || me === undefined) return <p role="status">{t('loading')}</p>;
-  return <section className="stir-panel">
+  return <>
+  <section className="stir-panel">
     <h2>{t('economicActivation')}</h2>
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     {marketplace === null && <>
@@ -61,5 +67,7 @@ export function MyEconomicProfile({ sdk, t }) {
       <p>{t('balance')}: <strong>{formatAmount(me.balanceProjection, marketplace.unitScale)} {marketplace.unitCode}</strong></p>
       <p>{t('creditFloor')}: {formatAmount(me.creditFloor, marketplace.unitScale)} {marketplace.unitCode}</p>
     </>}
-  </section>;
+  </section>
+  {marketplace && me && <DeviceManagement sdk={sdk} t={t} />}
+  </>;
 }

@@ -1,9 +1,13 @@
-import { listingApi, listingPayload } from './api.js';
+import { listingApi, listingPayload, instanceApi, moderationApi } from './api.js';
 import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
 import { NegotiationList, NegotiationDetail } from './negotiation.jsx';
 import { AgreementList, AgreementDetail } from './agreement.jsx';
 import { MyEconomicProfile } from './economic.jsx';
+import { PhotoUploader, ListingThumbnail } from './attachments.jsx';
+import { NotificationBell, NotificationList } from './notifications.jsx';
+import { ModerationQueue } from './moderation.jsx';
+import { Home } from './home.jsx';
 import bundles from './locales.json';
 import './style.css';
 
@@ -11,7 +15,7 @@ const React = window.__IDAX_MODULE_SDK__.React;
 const {useEffect,useState,useMemo} = React;
 Object.entries(bundles).forEach(([locale,bundle])=>window.__IDAX_MODULE_SDK__.i18n.addResourceBundle(locale,'translation',{stir:bundle}));
 
-function ListingEditor({initial, api, catalogs, t, onCancel, onSaved}) {
+function ListingEditor({initial, api, sdk, catalogs, t, onCancel, onSaved}) {
   const [value,setValue]=useState(initial || {direction:'OFFER',title:'',description:'',category:'general',resourceKind:'physical',location:''});
   const [busy,setBusy]=useState(false); const [error,setError]=useState('');
   const change=(key,next)=>setValue(current=>({...current,[key]:next}));
@@ -30,11 +34,15 @@ function ListingEditor({initial, api, catalogs, t, onCancel, onSaved}) {
     <p>{t('status')}: {t('ACTIVE')}</p>
     {error && <p role="alert">{t(error.replace('stir.',''))}</p>}
     <div className="stir-actions stir-wide"><button disabled={busy} type="submit">{t(busy?'saving':'save')}</button><button disabled={busy} type="button" className="secondary" onClick={onCancel}>{t('cancel')}</button></div>
-  </form></section>;
+  </form>
+  <PhotoUploader sdk={sdk} t={t} listingId={initial?.id}/>
+  </section>;
 }
 
 function Marketplace() {
   const sdk=window.__IDAX_MODULE_SDK__; const t=(key)=>sdk.i18n.t('stir.'+key,bundles.en[key] || bundles.en.error);
+  const siteName=useSiteName(sdk);
+  const [canModerate,setCanModerate]=useState(false);
   const {useNavigate,useLocation}=sdk.router; const navigate=useNavigate(); const path=useLocation().pathname;
   const mine=path.startsWith('/stir/mine'); const creating=path==='/stir/new';
   const api=useMemo(()=>sdk.demo || !sdk.activeTenantId ? null : listingApi(sdk,sdk.activeTenantId),[sdk.activeTenantId,sdk.demo]);
@@ -46,6 +54,7 @@ function Marketplace() {
   const preferences=`/api/shell/v1/tenants/${encodeURIComponent(sdk.activeTenantId)}/saved-filters/stir.listings`;
   useEffect(()=>{setEditing(null);setPage(0);},[path]);
   useEffect(()=>{if(!api)return;api.catalogs().then(setCatalogs).catch(e=>setError(e.message)); sdk.fetchWithAuth(preferences).then(r=>{if(!r.ok)throw new Error();return r.json();}).then(setSaved).catch(()=>{});},[api]);
+  useEffect(()=>{if(!api)return;moderationApi(sdk,sdk.activeTenantId).canModerate().then(setCanModerate);},[api]);
   useEffect(()=>{if(!api){setLoading(false);return;}const controller=new AbortController();setLoading(true);setError('');
     api.list({...filters,mine,page,size:20},controller.signal).then(setResult).catch(e=>{if(e.name!=='AbortError')setError(e.message);}).finally(()=>{if(!controller.signal.aborted)setLoading(false);});return()=>controller.abort();
   },[api,filters,mine,page,revision]);
@@ -53,23 +62,25 @@ function Marketplace() {
   const saveFilter=async()=>{if(!filterName.trim())return;const next=[...saved,{id:crypto.randomUUID(),name:filterName.trim(),filters}];try{const response=await sdk.fetchWithAuth(preferences,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(next)});if(!response.ok)throw new Error('stir.error');setSaved(next);setFilterName('');}catch(e){setError(e.message);}};
   const close=async(row)=>{if(!window.confirm(t('confirmClose')))return;setBusy(true);try{await api.close(row.id,row.version);setRevision(n=>n+1);}catch(e){setError(e.message);}finally{setBusy(false);}};
   if(!api)return <section className="stir"><p role="alert">{t('realSessionRequired')}</p></section>;
-  return <main className="stir"><header className="stir-heading"><div><span className="stir-brand">STIR</span><p>{t('tagline')}</p></div><button onClick={()=>navigate('/stir/new')}>+ {t('create')}</button></header>
+  return <main className="stir"><header className="stir-heading"><div><span className="stir-brand">{siteName}</span><p>{t('tagline')}</p></div><NotificationBell sdk={sdk} t={t} navigate={navigate}/><button onClick={()=>navigate('/stir/new')}>+ {t('create')}</button></header>
     <nav className="stir-tabs" aria-label="STIR">
+      <button onClick={()=>navigate('/stir/home')}>{t('dashboardHome')}</button>
       <button className={!mine&&!creating?'active':''} onClick={()=>navigate('/stir')}>{t('marketplace')}</button>
       <button className={mine?'active':''} onClick={()=>navigate('/stir/mine')}>{t('mine')}</button>
       <button onClick={()=>navigate('/stir/negotiations')}>{t('myNegotiations')}</button>
       <button onClick={()=>navigate('/stir/agreements')}>{t('myAgreements')}</button>
       <button onClick={()=>navigate('/stir/economic')}>{t('economicActivation')}</button>
       <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
+      {canModerate && <button onClick={()=>navigate('/stir/moderation')}>{t('moderationQueue')}</button>}
     </nav>
-    {(creating||editing) ? <ListingEditor key={editing?.id || 'new'} initial={editing} api={api} catalogs={catalogs} t={t} onCancel={()=>{setEditing(null);navigate('/stir/mine');}} onSaved={()=>{setEditing(null);setRevision(n=>n+1);navigate('/stir/mine');}}/> : <>
+    {(creating||editing) ? <ListingEditor key={editing?.id || 'new'} initial={editing} api={api} sdk={sdk} catalogs={catalogs} t={t} onCancel={()=>{setEditing(null);setRevision(n=>n+1);navigate('/stir/mine');}} onSaved={()=>{setEditing(null);setRevision(n=>n+1);navigate('/stir/mine');}}/> : <>
       <section className="stir-intro"><h2>{t(mine?'mine':'headline')}</h2><p>{t('intro')}</p></section>
       <form className="stir-filters" onSubmit={e=>e.preventDefault()}><label>{t('search')}<input value={filters.q} maxLength={160} onChange={e=>filter('q',e.target.value)}/></label>
         {[['direction',['OFFER','WANTED']],['category',catalogs.categories],['resourceKind',catalogs.resourceKinds],['status',['ACTIVE','CLOSED']]].map(([key,values])=><label key={key}>{t(key)}<select value={filters[key]} onChange={e=>filter(key,e.target.value)}>{key!=='status'&&<option value="">{t('all')}</option>}{values.map(code=><option key={code} value={code}>{t(code)}</option>)}</select></label>)}
       </form>
       <div className="stir-saved"><input aria-label={t('filterName')} placeholder={t('filterName')} maxLength={80} value={filterName} onChange={e=>setFilterName(e.target.value)}/><button onClick={saveFilter}>{t('saveFilter')}</button>{saved.map(item=><button key={item.id} className="secondary" onClick={()=>{setFilters({...filters,...item.filters});setPage(0);}}>{item.name}</button>)}</div>
       {error && <p role="alert">{t(error.replace('stir.',''))}</p>}
-      {loading?<p role="status">{t('loading')}</p>:<section className="stir-grid">{result.content.map(row=><article className="stir-card" key={row.id}><span className={'stir-badge '+row.direction}>{t(row.direction)}</span><small>{t(row.resourceKind)} · {t(row.category)}</small><h3><button type="button" className="stir-link" onClick={()=>navigate('/stir/listing/'+row.id)}>{row.title}</button></h3>{row.ownerDisplayName && <small>{t('listingBy')} {row.ownerDisplayName}</small>}<p className="stir-description">{row.description}</p>{row.location&&<p>⌖ {row.location}</p>}<footer><span>{t(row.status)}</span>{mine&&row.status==='ACTIVE'&&<div><button disabled={busy} onClick={()=>setEditing(row)}>{t('edit')}</button><button disabled={busy} className="secondary" onClick={()=>close(row)}>{t('close')}</button></div>}</footer></article>)}{!result.content.length&&<p>{t('empty')}</p>}</section>}
+      {loading?<p role="status">{t('loading')}</p>:<section className="stir-grid">{result.content.map(row=><article className="stir-card" key={row.id}><ListingThumbnail sdk={sdk} attachmentId={row.mainPhotoId} alt={row.title}/><span className={'stir-badge '+row.direction}>{t(row.direction)}</span>{row.hidden&&<span className="stir-badge">{t('listingHiddenNotice')}</span>}<small>{t(row.resourceKind)} · {t(row.category)}</small><h3><button type="button" className="stir-link" onClick={()=>navigate('/stir/listing/'+row.id)}>{row.title}</button></h3>{row.ownerDisplayName && <small>{t('listingBy')} {row.ownerDisplayName}</small>}<p className="stir-description">{row.description}</p>{row.location&&<p>⌖ {row.location}</p>}<footer><span>{t(row.status)}</span>{mine&&row.status==='ACTIVE'&&<div><button disabled={busy} onClick={()=>setEditing(row)}>{t('edit')}</button><button disabled={busy} className="secondary" onClick={()=>close(row)}>{t('close')}</button></div>}</footer></article>)}{!result.content.length&&<p>{t('empty')}</p>}</section>}
       <div className="stir-actions"><button disabled={page===0} onClick={()=>setPage(n=>n-1)}>{t('previous')}</button><span>{page+1} / {Math.max(1,result.totalPages)}</span><button disabled={page+1>=result.totalPages} onClick={()=>setPage(n=>n+1)}>{t('next')}</button></div>
     </>}
   </main>;
@@ -79,21 +90,36 @@ function sdkAndT() {
   const sdk=window.__IDAX_MODULE_SDK__;
   return [sdk,(key)=>sdk.i18n.t('stir.'+key,bundles.en[key] || bundles.en.error)];
 }
-function withNav(t, navigate, node) {
+// Instance branding (section 18 of the 0.4 brief) never changes at runtime, so one fetch per page
+// load is cached module-wide rather than re-requested by every header that renders.
+let instanceCache=null;
+function useSiteName(sdk) {
+  const [siteName,setSiteName]=useState('STIR');
+  useEffect(()=>{ (instanceCache ||= instanceApi(sdk).get().catch(()=>({siteName:'STIR'}))).then(i=>setSiteName(i.siteName||'STIR')); },[]);
+  return siteName;
+}
+function withNav(t, navigate, node, sdk) {
+  const siteName=useSiteName(sdk);
   return <main className="stir">
-    <header className="stir-heading"><div><span className="stir-brand">STIR</span></div></header>
-    <nav className="stir-tabs" aria-label="STIR"><button onClick={()=>navigate('/stir')}>{t('backToMarketplace')}</button></nav>
+    <header className="stir-heading"><div><span className="stir-brand">{siteName}</span></div></header>
+    <nav className="stir-tabs" aria-label="STIR">
+      <button onClick={()=>navigate('/stir/home')}>{t('dashboardHome')}</button>
+      <button onClick={()=>navigate('/stir')}>{t('backToMarketplace')}</button>
+    </nav>
     {node}
   </main>;
 }
-function ListingDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<ListingDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
-function NegotiationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NegotiationList sdk={sdk} t={t} navigate={navigate}/>); }
-function NegotiationDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<NegotiationDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
-function AgreementListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<AgreementList sdk={sdk} t={t} navigate={navigate}/>); }
-function AgreementDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<AgreementDetail sdk={sdk} t={t} id={id} navigate={navigate}/>); }
-function MyProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyProfile sdk={sdk} t={t} navigate={navigate}/>); }
-function MyEconomicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyEconomicProfile sdk={sdk} t={t} navigate={navigate}/>); }
-function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {userId}=useParams(); return withNav(t,navigate,<PublicProfile sdk={sdk} t={t} userId={userId}/>); }
+function ListingDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<ListingDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
+function NegotiationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NegotiationList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function NegotiationDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<NegotiationDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
+function AgreementListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<AgreementList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function AgreementDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<AgreementDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
+function MyProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyProfile sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function MyEconomicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyEconomicProfile sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {userId}=useParams(); return withNav(t,navigate,<PublicProfile sdk={sdk} t={t} userId={userId}/>,sdk); }
+function HomeRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<Home sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function NotificationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NotificationList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function ModerationQueueRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<ModerationQueue sdk={sdk} t={t}/>,sdk); }
 
 function StirRoot() {
   const [sdk,t]=sdkAndT();
@@ -108,6 +134,9 @@ function StirRoot() {
     <Route path="/stir/profile" element={<MyProfileRoute/>}/>
     <Route path="/stir/economic" element={<MyEconomicProfileRoute/>}/>
     <Route path="/stir/participants/:userId" element={<PublicProfileRoute/>}/>
+    <Route path="/stir/home" element={<HomeRoute/>}/>
+    <Route path="/stir/notifications" element={<NotificationListRoute/>}/>
+    <Route path="/stir/moderation" element={<ModerationQueueRoute/>}/>
     <Route path="/stir/*" element={<Marketplace/>}/>
   </Routes>;
 }
