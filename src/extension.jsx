@@ -7,6 +7,7 @@ import { MyEconomicProfile } from './economic.jsx';
 import { PhotoUploader, ListingThumbnail } from './attachments.jsx';
 import { NotificationBell, NotificationList } from './notifications.jsx';
 import { ModerationQueue } from './moderation.jsx';
+import { LegalPage } from './legal.jsx';
 import { Home } from './home.jsx';
 import bundles from './locales.json';
 import './style.css';
@@ -120,6 +121,8 @@ function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,usePa
 function HomeRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<Home sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function NotificationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NotificationList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function ModerationQueueRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<ModerationQueue sdk={sdk} t={t}/>,sdk); }
+function PrivacyRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="privacy"/>,sdk); }
+function TermsRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="terms"/>,sdk); }
 
 function StirRoot() {
   const [sdk,t]=sdkAndT();
@@ -137,6 +140,8 @@ function StirRoot() {
     <Route path="/stir/home" element={<HomeRoute/>}/>
     <Route path="/stir/notifications" element={<NotificationListRoute/>}/>
     <Route path="/stir/moderation" element={<ModerationQueueRoute/>}/>
+    <Route path="/stir/privacy" element={<PrivacyRoute/>}/>
+    <Route path="/stir/terms" element={<TermsRoute/>}/>
     <Route path="/stir/*" element={<Marketplace/>}/>
   </Routes>;
 }
