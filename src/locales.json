@@ -196,7 +196,10 @@
     "errorRATE_LIMITED": "Too many attempts. Please wait a moment and try again.",
     "unnamedDevice": "Device",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Set up your marketplace profile before activating exchanges.",
-    "avatarOf": "Avatar of"
+    "avatarOf": "Avatar of",
+    "retry": "Retry",
+    "economicReadForbidden": "Your role doesn't include access to economic activation.",
+    "economicLoadError": "Could not load the economic activation status. Please try again."
   },
   "es": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -395,7 +398,10 @@
     "errorRATE_LIMITED": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
     "unnamedDevice": "Dispositivo",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configura tu perfil de mercado antes de activar los intercambios.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Reintentar",
+    "economicReadForbidden": "Tu rol no incluye acceso a la activación económica.",
+    "economicLoadError": "No se pudo cargar el estado de la activación económica. Inténtalo de nuevo."
   },
   "ca": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -594,7 +600,10 @@
     "errorRATE_LIMITED": "Massa intents. Espera un moment i torna-ho a provar.",
     "unnamedDevice": "Dispositiu",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configura el teu perfil de mercat abans d’activar els intercanvis.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Torna-ho a provar",
+    "economicReadForbidden": "El teu rol no inclou accés a l'activació econòmica.",
+    "economicLoadError": "No s'ha pogut carregar l'estat de l'activació econòmica. Torna-ho a provar."
   },
   "de": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -793,7 +802,10 @@
     "errorRATE_LIMITED": "Zu viele Versuche. Bitte warte einen Moment und versuche es erneut.",
     "unnamedDevice": "Gerät",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Richte dein Marktprofil ein, bevor du den Austausch aktivierst.",
-    "avatarOf": "Avatar von"
+    "avatarOf": "Avatar von",
+    "retry": "Erneut versuchen",
+    "economicReadForbidden": "Deine Rolle umfasst keinen Zugriff auf die wirtschaftliche Aktivierung.",
+    "economicLoadError": "Der Status der wirtschaftlichen Aktivierung konnte nicht geladen werden. Bitte versuche es erneut."
   },
   "fr": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -992,7 +1004,10 @@
     "errorRATE_LIMITED": "Trop de tentatives. Merci de patienter un instant avant de réessayer.",
     "unnamedDevice": "Appareil",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configurez votre profil de marché avant d’activer les échanges.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Réessayer",
+    "economicReadForbidden": "Votre rôle n'inclut pas l'accès à l'activation économique.",
+    "economicLoadError": "Impossible de charger l'état de l'activation économique. Veuillez réessayer."
   },
   "it": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1191,7 +1206,10 @@
     "errorRATE_LIMITED": "Troppi tentativi. Attendi un momento e riprova.",
     "unnamedDevice": "Dispositivo",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configura il tuo profilo di mercato prima di attivare gli scambi.",
-    "avatarOf": "Avatar di"
+    "avatarOf": "Avatar di",
+    "retry": "Riprova",
+    "economicReadForbidden": "Il tuo ruolo non include l'accesso all'attivazione economica.",
+    "economicLoadError": "Impossibile caricare lo stato dell'attivazione economica. Riprova."
   },
   "pt": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1390,7 +1408,10 @@
     "errorRATE_LIMITED": "Demasiadas tentativas. Espera um momento e tenta novamente.",
     "unnamedDevice": "Dispositivo",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configura o teu perfil de mercado antes de ativares as trocas.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Tentar novamente",
+    "economicReadForbidden": "O teu perfil não inclui acesso à ativação económica.",
+    "economicLoadError": "Não foi possível carregar o estado da ativação económica. Tenta novamente."
   },
   "jp": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1589,7 +1610,10 @@
     "errorRATE_LIMITED": "試行回数が多すぎます。しばらく待ってから再度お試しください。",
     "unnamedDevice": "デバイス",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "交換を有効にする前にマーケットプロフィールを設定してください。",
-    "avatarOf": "のアバター"
+    "avatarOf": "のアバター",
+    "retry": "再試行",
+    "economicReadForbidden": "あなたのロールには経済活性化へのアクセス権が含まれていません。",
+    "economicLoadError": "経済活性化の状態を読み込めませんでした。もう一度お試しください。"
   },
   "eu": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1788,7 +1812,10 @@
     "errorRATE_LIMITED": "Saiakera gehiegi. Itxaron pixka bat eta saiatu berriro.",
     "unnamedDevice": "Gailua",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Konfiguratu zure merkatuko profila truke-elkarrekintzak aktibatu aurretik.",
-    "avatarOf": "Honen abatarra:"
+    "avatarOf": "Honen abatarra:",
+    "retry": "Saiatu berriro",
+    "economicReadForbidden": "Zure rolak ez du aktibazio ekonomikorako sarbiderik.",
+    "economicLoadError": "Ezin izan da aktibazio ekonomikoaren egoera kargatu. Saiatu berriro."
   },
   "gl": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1987,7 +2014,10 @@
     "errorRATE_LIMITED": "Demasiados intentos. Agarda un momento e téntao de novo.",
     "unnamedDevice": "Dispositivo",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configura o teu perfil de mercado antes de activar os intercambios.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Téntao de novo",
+    "economicReadForbidden": "O teu rol non inclúe acceso á activación económica.",
+    "economicLoadError": "Non se puido cargar o estado da activación económica. Téntao de novo."
   },
   "pt-BR": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2186,7 +2216,10 @@
     "errorRATE_LIMITED": "Muitas tentativas. Aguarde um momento e tente novamente.",
     "unnamedDevice": "Dispositivo",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "Configure o seu perfil de mercado antes de ativar as trocas.",
-    "avatarOf": "Avatar de"
+    "avatarOf": "Avatar de",
+    "retry": "Tentar novamente",
+    "economicReadForbidden": "Seu perfil não inclui acesso à ativação econômica.",
+    "economicLoadError": "Não foi possível carregar o status da ativação econômica. Tente novamente."
   },
   "zh": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2385,6 +2418,9 @@
     "errorRATE_LIMITED": "尝试次数过多，请稍后再试。",
     "unnamedDevice": "设备",
     "errorPROFILE_REQUIRED_BEFORE_ACTIVATION": "在激活交易之前，请先设置你的市场资料。",
-    "avatarOf": "的头像"
+    "avatarOf": "的头像",
+    "retry": "重试",
+    "economicReadForbidden": "您的角色没有经济激活的访问权限。",
+    "economicLoadError": "无法加载经济激活状态。请重试。"
   }
 }
