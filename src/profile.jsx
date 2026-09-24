@@ -37,7 +37,7 @@ export function useDisplayName(sdk, api, userId, cache) {
 
 export function ProfileForm({ t, value, busy, error, onChange, onSubmit }) {
   return <form className="stir-form" onSubmit={onSubmit}>
-    <label>{t('profileDisplayName')}<input required maxLength={80} value={value.displayName} onChange={e => onChange('displayName', e.target.value)} /></label>
+    <label>{t('profileDisplayName')}<input required maxLength={80} value={value.displayName} onChange={e => onChange('displayName', e.target.value)} /><small>{t('profileDisplayNameHint')}</small></label>
     <label className="stir-wide">{t('profileBio')}<textarea maxLength={500} rows={4} value={value.bio || ''} onChange={e => onChange('bio', e.target.value)} /></label>
     <label>{t('profileLocation')}<input maxLength={160} value={value.location || ''} onChange={e => onChange('location', e.target.value)} /></label>
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}

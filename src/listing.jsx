@@ -41,6 +41,16 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     try { const negotiation = await api.offer(id, payload); navigate('/stir/negotiations/' + negotiation.id); }
     catch (e) { setError(e.message); } finally { setBusy(false); }
   };
+  // Editing/closing your own listing used to only be reachable from "Mine" - viewing your own
+  // listing's own detail page had no way to act on it at all, forcing a detour back to the
+  // marketplace list to find the same card again. "Mine" still owns the actual edit form, so
+  // this hands off to it with the listing id it should open, rather than duplicating the form.
+  const closeListing = async () => {
+    if (!window.confirm(t('confirmClose'))) return;
+    setBusy(true); setError('');
+    try { await api.close(listing.id, listing.version); setListing(await api.read(id)); }
+    catch (e) { setError(e.message); } finally { setBusy(false); }
+  };
   if (loading) return <p role="status">{t('loading')}</p>;
   if (error && !listing) return <p role="alert">{t(error.replace('stir.', ''))}</p>;
   const own = listing.ownerId === sdk.user?.id;
@@ -59,6 +69,10 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     {!own && listing.status === 'ACTIVE' && !offering && <button onClick={() => setOffering(true)}>{t('makeOffer')}</button>}
     {!own && listing.status === 'ACTIVE' && offering && <OfferForm t={t} busy={busy} error={error} onSubmit={submitOffer} />}
     {own && <p>{t('ownListingHint')}</p>}
+    {own && listing.status === 'ACTIVE' && <div className="stir-actions">
+      <button disabled={busy} onClick={() => navigate('/stir/mine?edit=' + listing.id)}>{t('edit')}</button>
+      <button disabled={busy} className="secondary" onClick={closeListing}>{t('close')}</button>
+    </div>}
     {!own && <ReportButton sdk={sdk} t={t} targetType="LISTING" targetId={listing.id} />}
   </section>;
 }

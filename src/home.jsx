@@ -1,4 +1,4 @@
-import { listingApi, negotiationApi, agreementApi, economicApi, notificationApi } from './api.js';
+import { listingApi, negotiationApi, agreementApi, economicApi, notificationApi, participantApi } from './api.js';
 import { ListingThumbnail } from './attachments.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
@@ -12,6 +12,7 @@ export function Home({ sdk, t, navigate }) {
   const agreements = useMemo(() => agreementApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const economic = useMemo(() => economicApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const notifications = useMemo(() => notificationApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
+  const participants = useMemo(() => participantApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
 
@@ -24,8 +25,12 @@ export function Home({ sdk, t, navigate }) {
       economic.marketplace().then((m) => economic.me().then((me) => ({ marketplace: m, me })).catch(() => ({ marketplace: m, me: null }))).catch(() => null),
       notifications.list(0, 5),
       notifications.unreadCount(),
-    ]).then(([mine, recent, openNegotiations, myAgreements, economicState, recentNotifications, unread]) => {
-      setData({ mine, recent, openNegotiations, myAgreements, economicState, recentNotifications, unread: unread.count });
+      // 404 (no profile saved yet) is expected and not an error - see MyProfile's own handling.
+      // A missing/blank displayName is exactly what makes this person show as "Participante" to
+      // everyone else once they publish or negotiate (listing.jsx, negotiation.jsx by name).
+      participants.me().catch((e) => (e.status === 404 ? null : Promise.reject(e))),
+    ]).then(([mine, recent, openNegotiations, myAgreements, economicState, recentNotifications, unread, profile]) => {
+      setData({ mine, recent, openNegotiations, myAgreements, economicState, recentNotifications, unread: unread.count, profile });
     }).catch((e) => setError(e.message));
   }, [sdk.activeTenantId]);
 
@@ -41,6 +46,11 @@ export function Home({ sdk, t, navigate }) {
       <h2>{t(attentionCount > 0 ? 'homeAttentionNeeded' : 'homeAllCaughtUp')}</h2>
       {attentionCount === 0 && <p>{t('homeAllCaughtUpDetail')}</p>}
     </section>
+
+    {!data.profile?.displayName && <section className="stir-panel stir-callout">
+      <p>{t('homeCompleteProfilePrompt')}</p>
+      <button onClick={() => navigate('/stir/profile')}>{t('myProfile')}</button>
+    </section>}
 
     {!data.economicState?.me && <section className="stir-panel stir-callout">
       <p>{t('homeActivateEconomicPrompt')}</p>

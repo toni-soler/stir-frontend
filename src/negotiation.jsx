@@ -44,6 +44,7 @@ export function NegotiationList({ sdk, t, navigate }) {
       <label>{t('status')}<select value={status} onChange={e => setStatus(e.target.value)}>
         <option value="">{t('all')}</option><option value="OPEN">{t('OPEN')}</option><option value="ACCEPTED">{t('ACCEPTED')}</option><option value="DECLINED">{t('DECLINED')}</option>
       </select></label>
+      {status && <button type="button" className="secondary" onClick={() => setStatus('')}>{t('clearFilters')}</button>}
     </form>
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     {loading ? <p role="status">{t('loading')}</p> : <section className="stir-grid">
@@ -52,7 +53,7 @@ export function NegotiationList({ sdk, t, navigate }) {
         <small>{new Date(row.updatedAt).toLocaleString()}</small>
         <footer><button onClick={() => navigate('/stir/negotiations/' + row.id)}>{t('view')}</button></footer>
       </article>)}
-      {!result.content.length && <p>{t('emptyNegotiations')}</p>}
+      {!result.content.length && <div className="stir-empty-state"><p>{t(status ? 'emptyNegotiationsNoMatch' : 'emptyNegotiations')}</p>{status && <button type="button" className="secondary" onClick={() => setStatus('')}>{t('clearFilters')}</button>}</div>}
     </section>}
   </section>;
 }
