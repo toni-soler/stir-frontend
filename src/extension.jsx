@@ -131,7 +131,7 @@ function MyEconomicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=
 function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {userId}=useParams(); return withNav(t,navigate,<PublicProfile sdk={sdk} t={t} userId={userId}/>,sdk); }
 function HomeRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<Home sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function NotificationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<NotificationList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
-function ModerationQueueRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<ModerationQueue sdk={sdk} t={t}/>,sdk); }
+function ModerationQueueRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<ModerationQueue sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function PrivacyRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="privacy"/>,sdk); }
 function TermsRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="terms"/>,sdk); }
 
