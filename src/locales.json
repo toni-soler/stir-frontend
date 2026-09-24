@@ -199,7 +199,8 @@
     "avatarOf": "Avatar of",
     "retry": "Retry",
     "economicReadForbidden": "Your role doesn't include access to economic activation.",
-    "economicLoadError": "Could not load the economic activation status. Please try again."
+    "economicLoadError": "Could not load the economic activation status. Please try again.",
+    "moderationTargetUnavailable": "Content no longer available"
   },
   "es": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -401,7 +402,8 @@
     "avatarOf": "Avatar de",
     "retry": "Reintentar",
     "economicReadForbidden": "Tu rol no incluye acceso a la activación económica.",
-    "economicLoadError": "No se pudo cargar el estado de la activación económica. Inténtalo de nuevo."
+    "economicLoadError": "No se pudo cargar el estado de la activación económica. Inténtalo de nuevo.",
+    "moderationTargetUnavailable": "Contenido ya no disponible"
   },
   "ca": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -603,7 +605,8 @@
     "avatarOf": "Avatar de",
     "retry": "Torna-ho a provar",
     "economicReadForbidden": "El teu rol no inclou accés a l'activació econòmica.",
-    "economicLoadError": "No s'ha pogut carregar l'estat de l'activació econòmica. Torna-ho a provar."
+    "economicLoadError": "No s'ha pogut carregar l'estat de l'activació econòmica. Torna-ho a provar.",
+    "moderationTargetUnavailable": "Contingut ja no disponible"
   },
   "de": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -805,7 +808,8 @@
     "avatarOf": "Avatar von",
     "retry": "Erneut versuchen",
     "economicReadForbidden": "Deine Rolle umfasst keinen Zugriff auf die wirtschaftliche Aktivierung.",
-    "economicLoadError": "Der Status der wirtschaftlichen Aktivierung konnte nicht geladen werden. Bitte versuche es erneut."
+    "economicLoadError": "Der Status der wirtschaftlichen Aktivierung konnte nicht geladen werden. Bitte versuche es erneut.",
+    "moderationTargetUnavailable": "Inhalt nicht mehr verfügbar"
   },
   "fr": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1007,7 +1011,8 @@
     "avatarOf": "Avatar de",
     "retry": "Réessayer",
     "economicReadForbidden": "Votre rôle n'inclut pas l'accès à l'activation économique.",
-    "economicLoadError": "Impossible de charger l'état de l'activation économique. Veuillez réessayer."
+    "economicLoadError": "Impossible de charger l'état de l'activation économique. Veuillez réessayer.",
+    "moderationTargetUnavailable": "Contenu non disponible"
   },
   "it": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1209,7 +1214,8 @@
     "avatarOf": "Avatar di",
     "retry": "Riprova",
     "economicReadForbidden": "Il tuo ruolo non include l'accesso all'attivazione economica.",
-    "economicLoadError": "Impossibile caricare lo stato dell'attivazione economica. Riprova."
+    "economicLoadError": "Impossibile caricare lo stato dell'attivazione economica. Riprova.",
+    "moderationTargetUnavailable": "Contenuto non più disponibile"
   },
   "pt": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1411,7 +1417,8 @@
     "avatarOf": "Avatar de",
     "retry": "Tentar novamente",
     "economicReadForbidden": "O teu perfil não inclui acesso à ativação económica.",
-    "economicLoadError": "Não foi possível carregar o estado da ativação económica. Tenta novamente."
+    "economicLoadError": "Não foi possível carregar o estado da ativação económica. Tenta novamente.",
+    "moderationTargetUnavailable": "Conteúdo já não disponível"
   },
   "jp": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1613,7 +1620,8 @@
     "avatarOf": "のアバター",
     "retry": "再試行",
     "economicReadForbidden": "あなたのロールには経済活性化へのアクセス権が含まれていません。",
-    "economicLoadError": "経済活性化の状態を読み込めませんでした。もう一度お試しください。"
+    "economicLoadError": "経済活性化の状態を読み込めませんでした。もう一度お試しください。",
+    "moderationTargetUnavailable": "コンテンツは利用できません"
   },
   "eu": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1815,7 +1823,8 @@
     "avatarOf": "Honen abatarra:",
     "retry": "Saiatu berriro",
     "economicReadForbidden": "Zure rolak ez du aktibazio ekonomikorako sarbiderik.",
-    "economicLoadError": "Ezin izan da aktibazio ekonomikoaren egoera kargatu. Saiatu berriro."
+    "economicLoadError": "Ezin izan da aktibazio ekonomikoaren egoera kargatu. Saiatu berriro.",
+    "moderationTargetUnavailable": "Edukia jada ez dago eskuragarri"
   },
   "gl": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2017,7 +2026,8 @@
     "avatarOf": "Avatar de",
     "retry": "Téntao de novo",
     "economicReadForbidden": "O teu rol non inclúe acceso á activación económica.",
-    "economicLoadError": "Non se puido cargar o estado da activación económica. Téntao de novo."
+    "economicLoadError": "Non se puido cargar o estado da activación económica. Téntao de novo.",
+    "moderationTargetUnavailable": "Contido xa non dispoñible"
   },
   "pt-BR": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2219,7 +2229,8 @@
     "avatarOf": "Avatar de",
     "retry": "Tentar novamente",
     "economicReadForbidden": "Seu perfil não inclui acesso à ativação econômica.",
-    "economicLoadError": "Não foi possível carregar o status da ativação econômica. Tente novamente."
+    "economicLoadError": "Não foi possível carregar o status da ativação econômica. Tente novamente.",
+    "moderationTargetUnavailable": "Conteúdo não está mais disponível"
   },
   "zh": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2421,6 +2432,7 @@
     "avatarOf": "的头像",
     "retry": "重试",
     "economicReadForbidden": "您的角色没有经济激活的访问权限。",
-    "economicLoadError": "无法加载经济激活状态。请重试。"
+    "economicLoadError": "无法加载经济激活状态。请重试。",
+    "moderationTargetUnavailable": "内容已不可用"
   }
 }

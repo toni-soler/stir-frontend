@@ -37,9 +37,14 @@ export function ReportButton({ sdk, t, targetType, targetId }) {
   </form>;
 }
 
+// LISTING/PROFILE are the only report target types the backend accepts (ModerationService.report);
+// keep this in sync with it if a third type is ever added.
+const targetPath = (r) => r.targetType === 'LISTING' ? '/stir/listing/' + r.targetId
+  : r.targetType === 'PROFILE' ? '/stir/participants/' + r.targetId : null;
+
 /** Minimal moderation queue (section 17 of the 0.4 brief) - review open reports, hide the
  * reported Listing (never touching its Agreement/Trade/journal history) or dismiss. */
-export function ModerationQueue({ sdk, t }) {
+export function ModerationQueue({ sdk, t, navigate }) {
   const api = useMemo(() => moderationApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [result, setResult] = useState({ content: [], totalPages: 0 });
   const [loading, setLoading] = useState(true);
@@ -57,7 +62,14 @@ export function ModerationQueue({ sdk, t }) {
     {!result.content.length && <p>{t('moderationQueueEmpty')}</p>}
     <ul className="stir-list">
       {result.content.map((r) => <li key={r.id} className="stir-panel">
-        <p><strong>{t(r.targetType)}</strong> - {r.reason}</p>
+        <p><strong>{t(r.targetType)}</strong>
+          {/* targetPreview is null when the target was deleted after the report was filed - a
+              moderator still needs to decide (dismiss), just without a live link to open. */}
+          {r.targetPreview
+            ? <> - <button type="button" className="stir-link" onClick={() => navigate(targetPath(r))}>{r.targetPreview}</button></>
+            : <> - {t('moderationTargetUnavailable')}</>}
+        </p>
+        <p>{r.reason}</p>
         <small>{new Date(r.createdAt).toLocaleString()}</small>
         <div className="stir-actions">
           <button disabled={busy} onClick={() => act(() => api.hide(r.id))}>{t('moderationHide')}</button>
