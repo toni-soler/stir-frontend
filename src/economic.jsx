@@ -17,15 +17,33 @@ export function formatAmount(minorUnitsString, scale) {
 
 export function MyEconomicProfile({ sdk, t }) {
   const api = useMemo(() => economicApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
+  // marketplace/me: undefined while unresolved (either still in flight, or a load failure that
+  // wasn't the recognized "not bound"/"not activated" case), null = confirmed not bound/not
+  // activated, object = loaded data. marketplaceSettled/meSettled is what actually distinguishes
+  // "still loading" from "loaded but undefined because it failed" - without it, any 403/5xx/network
+  // failure left the screen on "Cargando..." forever, indistinguishable from a real in-flight
+  // request. Reproduced in production (24/09/2026): PRUEBA Manual STIR's role hit this before the
+  // marketplace was even bound. See AJUSTES_PARA_CLAUDE_CODE.md's P1 "Activación económica...".
   const [marketplace, setMarketplace] = useState(undefined);
   const [me, setMe] = useState(undefined);
+  const [marketplaceSettled, setMarketplaceSettled] = useState(false);
+  const [meSettled, setMeSettled] = useState(false);
+  const [forbidden, setForbidden] = useState(false);
+  const [loadError, setLoadError] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [bootstrapForm, setBootstrapForm] = useState({ communityName: '', unitCode: '', unitScale: 2 });
 
   const load = () => {
-    api.marketplace().then(setMarketplace).catch((e) => setMarketplace(e.status === 409 ? null : undefined));
-    api.me().then(setMe).catch((e) => setMe(e.status === 404 ? null : undefined));
+    setMarketplaceSettled(false); setMeSettled(false); setForbidden(false); setLoadError('');
+    api.marketplace().then(setMarketplace).catch((e) => {
+      if (e.status === 409) setMarketplace(null);
+      else { setMarketplace(undefined); if (e.status === 403) setForbidden(true); else setLoadError(e.message); }
+    }).finally(() => setMarketplaceSettled(true));
+    api.me().then(setMe).catch((e) => {
+      if (e.status === 404) setMe(null);
+      else { setMe(undefined); if (e.status === 403) setForbidden(true); else setLoadError(e.message); }
+    }).finally(() => setMeSettled(true));
   };
   useEffect(load, [api]);
 
@@ -46,7 +64,12 @@ export function MyEconomicProfile({ sdk, t }) {
     } catch (e) { setError(e.message); } finally { setBusy(false); }
   };
 
-  if (marketplace === undefined || me === undefined) return <p role="status">{t('loading')}</p>;
+  if (!marketplaceSettled || !meSettled) return <p role="status">{t('loading')}</p>;
+  if (forbidden) return <p>{t('economicReadForbidden')}</p>;
+  if (marketplace === undefined || me === undefined) return <div className="stir-panel">
+    <p role="alert">{t(loadError ? loadError.replace('stir.', '') : 'economicLoadError')}</p>
+    <button type="button" className="secondary" onClick={load}>{t('retry')}</button>
+  </div>;
   return <>
   <section className="stir-panel">
     <h2>{t('economicActivation')}</h2>

@@ -19,6 +19,12 @@ export function ReportButton({ sdk, t, targetType, targetId }) {
     catch (e) { setError(e.message); } finally { setBusy(false); }
   };
 
+  // The backend already enforces stir.content.report via @PreAuthorize - this only stops the
+  // button from being offered to someone who will just get "no tienes permiso" after filling in
+  // a reason. Reproduced in production (24/09/2026): PRUEBA Manual STIR's role lacked the
+  // permission but still saw and could open the form. See AJUSTES_PARA_CLAUDE_CODE.md's P1
+  // "Reportar aparece sin permiso".
+  if (!sdk.useAuth().hasPermission('stir.content.report')) return null;
   if (done) return <p role="status">{t('reportSubmitted')}</p>;
   if (!open) return <button type="button" className="secondary" onClick={() => setOpen(true)}>{t('reportContent')}</button>;
   return <form className="stir-form" onSubmit={submit}>
