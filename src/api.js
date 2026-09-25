@@ -175,6 +175,7 @@ export function tradeApi(sdk, tenantId) {
 export function referenceApi(sdk,tenantId) {
   const {request}=apiClient(sdk,tenantId,'/references');
   return {list:()=>request(),create:r=>request('',body('POST',r)),view:id=>request('/'+encodeURIComponent(id)),
+    community:()=>request('/community'),
     history:id=>request('/'+encodeURIComponent(id)+'/history'),proposals:id=>request('/'+encodeURIComponent(id)+'/proposals'),
     propose:(id,r)=>request('/'+encodeURIComponent(id)+'/proposals',body('POST',r)),
     publish:(id,decision)=>request('/proposals/'+encodeURIComponent(id)+'/publish',body('POST',{decision})),
@@ -188,5 +189,13 @@ export function marketGovernanceApi(sdk,tenantId) {
     events:id=>request('/'+encodeURIComponent(id)+'/events'),
     audit:id=>request('/'+encodeURIComponent(id)+'/audit'),
     proposals:id=>request('/'+encodeURIComponent(id)+'/proposals'),
+    credentials:id=>request('/'+encodeURIComponent(id)+'/credentials'),
+    bootstrap:r=>request('/bootstrap',body('POST',r)),
+    propose:(community,r)=>request('/'+encodeURIComponent(community)+'/proposals',body('POST',r)),
+    proposal:id=>request('/proposals/'+encodeURIComponent(id)),
+    signingPayload:id=>request('/proposals/'+encodeURIComponent(id)+'/signing-payload'),
+    sign:(id,r)=>request('/proposals/'+encodeURIComponent(id)+'/signatures',body('POST',r)),
+    activate:(id,r)=>request('/proposals/'+encodeURIComponent(id)+'/activate',body('POST',r||{})),
+    suspend:(community,r)=>request('/'+encodeURIComponent(community)+'/emergency-suspensions',body('POST',r)),
   };
 }
