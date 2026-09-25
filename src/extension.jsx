@@ -1,4 +1,5 @@
 import { References, ReferenceSelector } from './references.jsx';
+import { Governance, GovernanceSignTool } from './governance.jsx';
 import { listingApi, listingPayload, instanceApi, moderationApi } from './api.js';
 import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
@@ -82,6 +83,7 @@ function Marketplace() {
       <button className={mine?'active':''} onClick={()=>navigate('/stir/mine')}>{t('mine')}</button>
       <button onClick={()=>navigate('/stir/negotiations')}>{t('myNegotiations')}</button>
       <button onClick={()=>navigate('/stir/references')}>{t('refCommunity')}</button>
+      <button onClick={()=>navigate('/stir/governance')}>{t('govTab')}</button>
       <button onClick={()=>navigate('/stir/agreements')}>{t('myAgreements')}</button>
       <button onClick={()=>navigate('/stir/economic')}>{t('economicActivation')}</button>
       <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
@@ -139,12 +141,16 @@ function PrivacyRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router
 function TermsRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="terms"/>,sdk); }
 
 function ReferencesRoute(){const [sdk,t]=sdkAndT();const navigate=sdk.router.useNavigate();return withNav(t,navigate,<References sdk={sdk} t={t}/>,sdk);}
+function GovernanceRoute(){const [sdk,t]=sdkAndT();const navigate=sdk.router.useNavigate();return withNav(t,navigate,<Governance sdk={sdk} t={t}/>,sdk);}
+function GovernanceSignRoute(){const [sdk,t]=sdkAndT();const navigate=sdk.router.useNavigate();return withNav(t,navigate,<GovernanceSignTool t={t}/>,sdk);}
 function StirRoot() {
   const [sdk,t]=sdkAndT();
   const {Routes,Route}=sdk.router;
   if(sdk.demo || !sdk.activeTenantId) return <section className="stir"><p role="alert">{t('realSessionRequired')}</p></section>;
   return <Routes>
     <Route path="/stir/references" element={<ReferencesRoute/>}/>
+    <Route path="/stir/governance" element={<GovernanceRoute/>}/>
+    <Route path="/stir/governance/sign" element={<GovernanceSignRoute/>}/>
     <Route path="/stir/listing/:id" element={<ListingDetailRoute/>}/>
     <Route path="/stir/negotiations" element={<NegotiationListRoute/>}/>
     <Route path="/stir/negotiations/:id" element={<NegotiationDetailRoute/>}/>
