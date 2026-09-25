@@ -183,7 +183,9 @@ export function referenceApi(sdk,tenantId) {
     context:id=>request('/agreements/'+encodeURIComponent(id)+'/context'),
     observations:id=>request('/'+encodeURIComponent(id)+'/observations'),
     evidenceManifest:id=>request('/'+encodeURIComponent(id)+'/evidence-manifest'),
-    policy:(id,r)=>request('/'+encodeURIComponent(id)+'/policies',body('POST',r))};
+    policy:(id,r)=>request('/'+encodeURIComponent(id)+'/policies',body('POST',r)),
+    independence:userId=>request('/participants/'+encodeURIComponent(userId)+'/independence'),
+    refreshIndependence:userId=>request('/participants/'+encodeURIComponent(userId)+'/independence-refresh',body('POST',{}))};
 }
 export function integrityApi(sdk,tenantId) {
   const {request}=apiClient(sdk,tenantId,'/references/integrity');

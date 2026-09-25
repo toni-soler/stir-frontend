@@ -29,6 +29,13 @@ export function ReferencePanel({sdk,t,definitionId,offer,context,onDefinition}) 
       <p>{t('refThresholds')}: {e.minimumObservations} / {e.minimumParticipants} / {e.maximumAllowedParticipantShare}</p>
       {e.observationCount!=null&&<p>{t('refPairShare')}: {e.maximumPairShare} · {t('refDaysObserved')}: {e.distinctUtcDays} · {t('refSensitivity')}: {e.maximumSingleObservationMedianShift}</p>}
       <p>{t('refConstitutionVersion')}: {e.constitutionVersion} · {t('refIndependenceCheck')}: {String(e.independenceChecksRequired)} · {t('refConcentrationCheck')}: {String(e.concentrationChecksRequired)}</p>
+      <p>{t('refIdentityAssuranceLabel')}: {t('ref'+e.identityAssurance)}
+        {e.independenceAssuranceCoveragePercent!=null&&<> · {t('refIndependenceCoverage')}: {e.independenceAssuranceCoveragePercent}%</>}
+        {e.adjustedIndependentParticipantCount!=null&&<> · {t('refAdjustedParticipants')}: {e.adjustedIndependentParticipantCount} ({t('refRawParticipants')}: {e.participantCount})</>}
+        {e.relatedAccountClusters!=null&&e.relatedAccountClusters>0&&<> · {t('refRelatedClusters')}: {e.relatedAccountClusters}</>}
+        {e.unknownIndependenceAccountCount!=null&&e.unknownIndependenceAccountCount>0&&<> · {t('refUnknownIndependence')}: {e.unknownIndependenceAccountCount}</>}
+      </p>
+      <p className="stir-hint">{t('refIndependenceExplainer')}</p>
       {r&&<><p>{t('refDecision')}: {r.decision}</p><p>{t('refOrigin')}: {r.origin}</p><p>{t('refValidity')}: {r.valid_from} – {r.valid_until}</p></>}
       {data.publicationEvidence&&<p>{t('refPublicationEvidence')}: {t('ref'+data.publicationEvidence.status)} · {data.publicationEvidence.windowEnd} · {data.publicationEvidence.observationCount??'—'}</p>}
       <p>{t('refMethod')}: {e.method} · {t('refPolicy')} v{e.policyVersion}</p>
@@ -75,6 +82,19 @@ function reasonLabel(t,reason) {
   return t('ref'+reason);
 }
 
+/** Triggers osTRIS's own private continuity decision for one account. The publisher only asks
+ * "again" here - STIR never authors or alters what osTRIS answers, only persists it. A stale/
+ * NOT_ASSESSED badge is expected and normal; refreshing costs nothing and never blocks anything. */
+function IndependenceBadge({sdk,t,userId}) {
+  const api=useMemo(()=>referenceApi(sdk,sdk.activeTenantId),[sdk.activeTenantId]);
+  const [status,setStatus]=useState(null),[busy,setBusy]=useState(false);
+  useEffect(()=>{let live=true;api.independence(userId).then(r=>{if(live)setStatus(r.status);}).catch(()=>{if(live)setStatus('NOT_ASSESSED');});return ()=>{live=false;};},[api,userId]);
+  const refresh=async(ev)=>{ev.stopPropagation();setBusy(true);try{const r=await api.refreshIndependence(userId);setStatus(r.status);}finally{setBusy(false);}};
+  return <button type="button" className="stir-inline-action" disabled={busy} onClick={refresh} title={t('refIndependenceRefreshHint')}>
+    <code>{String(userId).slice(0,8)}</code> {t('ref'+(status||'NOT_ASSESSED'))} ({t('refRefresh')})
+  </button>;
+}
+
 /** Publisher-only: every raw observation this definition has, cross-referenced against the
  * private evidence manifest so RAW / REFERENCE-ELIGIBLE / EXCLUDED+reason are never conflated -
  * an excluded observation is shown here exactly as it stayed in the raw list, never removed. */
@@ -99,7 +119,7 @@ export function EvidenceBreakdown({sdk,t,definitionId}) {
       const reason=manifest.exclusions[o.id];
       return <p key={o.id}>
         <code>{o.id.slice(0,8)}</code> · {o.source} · {o.amount??'—'}/{o.quantity} {o.quantity_unit} ·
-        <code>{String(o.participant_a).slice(0,8)}</code>↔<code>{String(o.participant_b).slice(0,8)}</code> ·
+        <IndependenceBadge sdk={sdk} t={t} userId={o.participant_a}/>↔<IndependenceBadge sdk={sdk} t={t} userId={o.participant_b}/> ·
         {o.observed_at} · <strong>{reason?reasonLabel(t,reason):t('refEligibleTag')}</strong>
         {o.case_status&&<> · {t('refCaseStatus'+o.case_status)}</>}
       </p>;
