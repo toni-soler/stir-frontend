@@ -365,7 +365,8 @@
     "govAuditValid": "Chain verified",
     "govSuspendSeat": "Emergency-suspend a seat",
     "govSuspendReasonCode": "Reason code",
-    "govSuspendSubmit": "Suspend"
+    "govSuspendSubmit": "Suspend",
+    "govSameDeviceWarning": "TEST / SAME-DEVICE CEREMONY: generating or signing with more than one seat's key in this same browser is for development, automated testing, demos and the stir-pruebas tenant only. It does not create seven independent custodians - it is one device holding several credentials. For a real community's constitutional authority, each seat and the Guardian must generate and hold their key on their own separate device, using the paste-a-task / paste-a-signature relay below."
   },
   "es": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -733,7 +734,8 @@
     "govAuditValid": "Cadena verificada",
     "govSuspendSeat": "Suspender un asiento de emergencia",
     "govSuspendReasonCode": "Codigo de motivo",
-    "govSuspendSubmit": "Suspender"
+    "govSuspendSubmit": "Suspender",
+    "govSameDeviceWarning": "CEREMONIA DE PRUEBA / MISMO DISPOSITIVO: generar o firmar con la clave de mas de un asiento en este mismo navegador es solo para desarrollo, pruebas automatizadas, demostraciones y el tenant stir-pruebas. No crea siete custodios independientes: es un unico dispositivo que retiene varias credenciales. Para la autoridad constitucional de una comunidad real, cada asiento y el Guardian deben generar y conservar su clave en su propio dispositivo separado, usando el relevo de pegar-tarea / pegar-firma de mas abajo."
   },
   "ca": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1101,7 +1103,8 @@
     "govAuditValid": "Cadena verificada",
     "govSuspendSeat": "Suspendre un seient d'emergencia",
     "govSuspendReasonCode": "Codi de motiu",
-    "govSuspendSubmit": "Suspendre"
+    "govSuspendSubmit": "Suspendre",
+    "govSameDeviceWarning": "CERIMONIA DE PROVA / MATEIX DISPOSITIU: generar o signar amb la clau de mes d'un seient en aquest mateix navegador nomes es per a desenvolupament, proves automatitzades, demostracions i el tenant stir-pruebas. No crea set custodis independents: es un unic dispositiu que rete diverses credencials. Per a l'autoritat constitucional d'una comunitat real, cada seient i el Guardia han de generar i conservar la seva clau en el seu propi dispositiu separat, usant el relleu d'enganxar-tasca / enganxar-signatura de mes avall."
   },
   "de": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1469,7 +1472,8 @@
     "govAuditValid": "Kette verifiziert",
     "govSuspendSeat": "Sitz notfallmaessig suspendieren",
     "govSuspendReasonCode": "Grundcode",
-    "govSuspendSubmit": "Suspendieren"
+    "govSuspendSubmit": "Suspendieren",
+    "govSameDeviceWarning": "TEST-/GERAET-ZEREMONIE: das Erzeugen oder Signieren mit dem Schluessel mehr als eines Sitzes in demselben Browser ist nur fuer Entwicklung, automatisierte Tests, Demos und den Mandanten stir-pruebas gedacht. Es schafft keine sieben unabhaengigen Verwahrer - es ist ein einziges Geraet, das mehrere Berechtigungen haelt. Fuer die Verfassungsautoritaet einer echten Gemeinschaft muss jeder Sitz und der Waechter seinen Schluessel auf seinem eigenen, separaten Geraet erzeugen und halten, ueber die Aufgabe-einfuegen/Unterschrift-einfuegen-Relais unten."
   },
   "fr": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1837,7 +1841,8 @@
     "govAuditValid": "Chaine verifiee",
     "govSuspendSeat": "Suspendre un siege d'urgence",
     "govSuspendReasonCode": "Code de motif",
-    "govSuspendSubmit": "Suspendre"
+    "govSuspendSubmit": "Suspendre",
+    "govSameDeviceWarning": "CEREMONIE DE TEST / MEME APPAREIL : generer ou signer avec la cle de plus d'un siege sur ce meme navigateur ne sert qu'au developpement, aux tests automatises, aux demonstrations et au tenant stir-pruebas. Cela ne cree pas sept depositaires independants : c'est un seul appareil detenant plusieurs identifiants. Pour l'autorite constitutionnelle d'une communaute reelle, chaque siege et le gardien doivent generer et conserver leur cle sur leur propre appareil separe, via le relais coller-une-tache / coller-une-signature ci-dessous."
   },
   "it": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2205,7 +2210,8 @@
     "govAuditValid": "Catena verificata",
     "govSuspendSeat": "Sospendi un seggio d'emergenza",
     "govSuspendReasonCode": "Codice motivo",
-    "govSuspendSubmit": "Sospendi"
+    "govSuspendSubmit": "Sospendi",
+    "govSameDeviceWarning": "CERIMONIA DI TEST / STESSO DISPOSITIVO: generare o firmare con la chiave di piu di un seggio in questo stesso browser serve solo per sviluppo, test automatizzati, demo e il tenant stir-pruebas. Non crea sette custodi indipendenti: e un unico dispositivo che detiene piu credenziali. Per l'autorita costituzionale di una comunita reale, ogni seggio e il custode devono generare e conservare la propria chiave sul proprio dispositivo separato, usando il relay incolla-attivita / incolla-firma qui sotto."
   },
   "pt": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2573,7 +2579,8 @@
     "govAuditValid": "Cadeia verificada",
     "govSuspendSeat": "Suspender um lugar de emergencia",
     "govSuspendReasonCode": "Codigo de motivo",
-    "govSuspendSubmit": "Suspender"
+    "govSuspendSubmit": "Suspender",
+    "govSameDeviceWarning": "CERIMONIA DE TESTE / MESMO DISPOSITIVO: gerar ou assinar com a chave de mais de um lugar neste mesmo navegador serve apenas para desenvolvimento, testes automatizados, demonstracoes e o tenant stir-pruebas. Nao cria sete custodiantes independentes: e um unico dispositivo a deter varias credenciais. Para a autoridade constitucional de uma comunidade real, cada lugar e o Guardiao devem gerar e conservar a sua chave no seu proprio dispositivo separado, usando o relay de colar-tarefa / colar-assinatura abaixo."
   },
   "jp": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2941,7 +2948,8 @@
     "govAuditValid": "チェーン検証済み",
     "govSuspendSeat": "席を緊急停止",
     "govSuspendReasonCode": "理由コード",
-    "govSuspendSubmit": "停止"
+    "govSuspendSubmit": "停止",
+    "govSameDeviceWarning": "テスト/同一デバイスでの儀式: 同じブラウザで複数の議席の鍵を生成・署名する操作は、開発・自動テスト・デモ・stir-pruebasテナント専用です。これは7人の独立した管理者を作るものではなく、1台のデバイスが複数の資格情報を保持しているだけです。実際のコミュニティの憲法上の権限には、各議席とガーディアンがそれぞれ別のデバイスで自分の鍵を生成・保持し、以下のタスク貼り付け/署名貼り付けの中継を使う必要があります。"
   },
   "eu": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -3309,7 +3317,8 @@
     "govAuditValid": "Katea egiaztatuta",
     "govSuspendSeat": "Larrialdiz eseki eserleku bat",
     "govSuspendReasonCode": "Arrazoi-kodea",
-    "govSuspendSubmit": "Eseki"
+    "govSuspendSubmit": "Eseki",
+    "govSameDeviceWarning": "PROBA / GAILU-BEREKO ZEREMONIA: leku bat baino gehiagoren gakoa nabigatzaile berean sortu edo sinatzea garapenerako, proba automatizatuetarako, erakustaldietarako eta stir-pruebas tenanterako soilik da. Ez du zazpi zaindari independente sortzen: gailu bakar batek hainbat kredentzial dituela da. Benetako komunitate baten agintaritza konstituzionalerako, eserleku bakoitzak eta Guardianak beren gakoa beren gailu bereizian sortu eta eduki behar dute, azpiko zeregina-itsatsi / sinadura-itsatsi txandaka erabiliz."
   },
   "gl": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -3677,7 +3686,8 @@
     "govAuditValid": "Cadena verificada",
     "govSuspendSeat": "Suspendre un seient d'emergencia",
     "govSuspendReasonCode": "Codi de motiu",
-    "govSuspendSubmit": "Suspendre"
+    "govSuspendSubmit": "Suspendre",
+    "govSameDeviceWarning": "CERIMONIA DE PROBA / MESMO DISPOSITIVO: xerar ou asinar coa clave de mais dun asento neste mesmo navegador e so para desenvolvemento, probas automatizadas, demostracions e o tenant stir-pruebas. Non crea sete custodios independentes: e un unico dispositivo que garda varias credenciais. Para a autoridade constitucional dunha comunidade real, cada asento e o Garda deben xerar e conservar a sua clave no seu propio dispositivo separado, usando o relevo de pegar-tarefa / pegar-sinatura de mais abaixo."
   },
   "pt-BR": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -4045,7 +4055,8 @@
     "govAuditValid": "Cadeia verificada",
     "govSuspendSeat": "Suspender um lugar de emergencia",
     "govSuspendReasonCode": "Codigo de motivo",
-    "govSuspendSubmit": "Suspender"
+    "govSuspendSubmit": "Suspender",
+    "govSameDeviceWarning": "CERIMONIA DE TESTE / MESMO DISPOSITIVO: gerar ou assinar com a chave de mais de um assento neste mesmo navegador serve apenas para desenvolvimento, testes automatizados, demonstracoes e o tenant stir-pruebas. Nao cria sete custodiantes independentes: e um unico dispositivo retendo varias credenciais. Para a autoridade constitucional de uma comunidade real, cada assento e o Guardiao devem gerar e manter sua chave em seu proprio dispositivo separado, usando o revezamento de colar-tarefa / colar-assinatura abaixo."
   },
   "zh": {
     "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -4413,6 +4424,7 @@
     "govAuditValid": "链已验证",
     "govSuspendSeat": "紧急暂停席位",
     "govSuspendReasonCode": "原因代码",
-    "govSuspendSubmit": "暂停"
+    "govSuspendSubmit": "暂停",
+    "govSameDeviceWarning": "测试/同设备仪式：在同一浏览器中生成或使用多个席位的密钥仅用于开发、自动化测试、演示和 stir-pruebas 租户。这并不能创建七个独立的保管人——而只是一台设备持有多个凭证。对于真实社区的宪法权力机构，每个席位和监护人都必须在各自独立的设备上生成并持有自己的密钥，使用下方的粘贴任务/粘贴签名中继方式。"
   }
 }

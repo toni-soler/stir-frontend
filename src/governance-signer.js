@@ -5,6 +5,24 @@
 // STIR's backend never sees, generates or stores a Seven Keys private key (PRIVACY_MODEL /
 // SEVEN_KEYS_GOVERNANCE.md section 39 of the market-integrity handoff: no server-side custody).
 //
+// What "non-extractable" does and does not guarantee (GOVERNANCE_CAPTURE_THREAT_MODEL.md): the
+// raw key bytes cannot be exported/read out of the CryptoKey handle by this or any other page -
+// that part is real. It does NOT mean the key is unusable by a compromised client: any code
+// running with access to this origin's IndexedDB and the WebCrypto API (a malicious browser
+// extension, a supply-chain-compromised dependency, a compromised OS) can still ask the CryptoKey
+// to produce a signature over an attacker-chosen message, exactly as this module does. The
+// guarantee is "cannot be exfiltrated as bytes," not "cannot be misused in place." Treat this
+// module's custody as protecting against network/server-side exposure, not against a fully
+// compromised endpoint - a hardware-backed credential (WebAuthn or similar) would be needed for
+// that, which this module does not implement.
+//
+// This module also does not by itself make eight independent custodians real. Running the
+// bootstrap wizard's "generate/sign here" shortcuts for more than one seat in the same browser
+// (as the local dev/E2E/demo/stir-pruebas flow does) produces one device holding several
+// credentials, not seven independent ones - see the same-device-ceremony warning surfaced in the
+// bootstrap UI. For an actual community, each seat and the Guardian must run this module on their
+// own separate device via the paste-a-task/paste-a-signature relay.
+//
 // Two payload sources exist, and this module never blurs them:
 //  - PROPOSAL signing (ordinary amendments, guardian appointment/removal, recovery): the backend
 //    already computed and stored the exact canonical payload text (`payloadJson`); this module

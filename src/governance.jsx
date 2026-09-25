@@ -93,6 +93,7 @@ export function BootstrapWizard({sdk,t,communityId,onDone}) {
     }catch(e){setError(e.message);}finally{setBusy(false);}
   };
   return <section className="stir-panel"><h2>{t('govBootstrapStart')}</h2><p>{t('govNoAuthorityHint')}</p>
+    <p role="alert">{t('govSameDeviceWarning')}</p>
     <p><small>{t('govAuthorityId')}: <code>{authorityId}</code> · {t('govCommunityId')}: <code>{communityId}</code></small></p>
     {error&&<p role="alert">{t(error.replace('stir.',''))}</p>}
     {!payload&&<><h3>{t('govBootstrapStep1')}</h3>
