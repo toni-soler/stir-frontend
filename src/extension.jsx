@@ -1,3 +1,4 @@
+import { References, ReferenceSelector } from './references.jsx';
 import { listingApi, listingPayload, instanceApi, moderationApi } from './api.js';
 import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
@@ -33,6 +34,7 @@ function ListingEditor({initial, api, sdk, catalogs, t, onCancel, onSaved, justC
     <label className="stir-wide">{t('description')} *<textarea maxLength={8000} required rows={6} placeholder={t('descriptionPlaceholder')} value={value.description} onChange={e=>change('description',e.target.value)}/></label>
     <label>{t('category')}<select value={value.category} onChange={e=>change('category',e.target.value)}>{catalogs.categories.map(code=><option key={code} value={code}>{t(code)}</option>)}</select></label>
     <label>{t('resourceKind')}<select value={value.resourceKind} onChange={e=>change('resourceKind',e.target.value)}>{catalogs.resourceKinds.map(code=><option key={code} value={code}>{t(code)}</option>)}</select></label>
+    <ReferenceSelector sdk={sdk} t={t} value={value.referenceDefinitionId} onChange={v=>change('referenceDefinitionId',v)}/>
     <label className="stir-wide">{t('location')}<input maxLength={160} value={value.location||''} onChange={e=>change('location',e.target.value)}/><small>{t('locationHint')}</small></label>
     <p className="stir-wide"><small>{t('requiredFieldsHint')}</small></p>
     <p>{t('status')}: {t('ACTIVE')}</p>
@@ -79,6 +81,7 @@ function Marketplace() {
       <button className={!mine&&!creating?'active':''} onClick={()=>navigate('/stir')}>{t('marketplace')}</button>
       <button className={mine?'active':''} onClick={()=>navigate('/stir/mine')}>{t('mine')}</button>
       <button onClick={()=>navigate('/stir/negotiations')}>{t('myNegotiations')}</button>
+      <button onClick={()=>navigate('/stir/references')}>{t('refCommunity')}</button>
       <button onClick={()=>navigate('/stir/agreements')}>{t('myAgreements')}</button>
       <button onClick={()=>navigate('/stir/economic')}>{t('economicActivation')}</button>
       <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
@@ -135,11 +138,13 @@ function ModerationQueueRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sd
 function PrivacyRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="privacy"/>,sdk); }
 function TermsRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<LegalPage sdk={sdk} kind="terms"/>,sdk); }
 
+function ReferencesRoute(){const [sdk,t]=sdkAndT();const navigate=sdk.router.useNavigate();return withNav(t,navigate,<References sdk={sdk} t={t}/>,sdk);}
 function StirRoot() {
   const [sdk,t]=sdkAndT();
   const {Routes,Route}=sdk.router;
   if(sdk.demo || !sdk.activeTenantId) return <section className="stir"><p role="alert">{t('realSessionRequired')}</p></section>;
   return <Routes>
+    <Route path="/stir/references" element={<ReferencesRoute/>}/>
     <Route path="/stir/listing/:id" element={<ListingDetailRoute/>}/>
     <Route path="/stir/negotiations" element={<NegotiationListRoute/>}/>
     <Route path="/stir/negotiations/:id" element={<NegotiationDetailRoute/>}/>

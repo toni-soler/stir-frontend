@@ -1,3 +1,4 @@
+import { AgreementReference } from './references.jsx';
 import { agreementApi } from './api.js';
 import { TradeStatus } from './trade.jsx';
 
@@ -33,13 +34,18 @@ export function AgreementDetail({ sdk, t, id, navigate }) {
   useEffect(() => { setLoading(true); setError(''); api.read(id).then(setAgreement).catch(e => setError(e.message)).finally(() => setLoading(false)); }, [id]);
   if (loading) return <p role="status">{t('loading')}</p>;
   if (error) return <p role="alert">{t(error.replace('stir.', ''))}</p>;
+  const accepted = JSON.parse(agreement.snapshot.canonicalJson);
   return <section className="stir-panel">
     <h2>{t('agreement')}</h2>
     <span className="stir-badge">{t('economicPhase' + agreement.economicPhase)}</span>
     <p>{t('agreementCreatedAt')}: {new Date(agreement.createdAt).toLocaleString()}</p>
     <button type="button" className="stir-link" onClick={() => navigate('/stir/listing/' + agreement.listingId)}>{t('viewListing')}</button>
+    <h3>{t('refAgreed')}</h3>
+    <p>{accepted.proposedAmount ?? t('refNoAmount')} {/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(accepted.proposedUnitRef||'')?t('refCommunityUnit'):(accepted.proposedUnitRef||'')}</p>
+    {(accepted.quantity || accepted.unitLabel) && <p>{t('refAgreedQuantity')}: {accepted.quantity ?? ''} {accepted.unitLabel || ''}</p>}
     <h3>{t('economicExecution')}</h3>
     <TradeStatus sdk={sdk} t={t} agreementId={agreement.id} economicPhase={agreement.economicPhase} navigate={navigate} />
+    <AgreementReference sdk={sdk} t={t} id={agreement.id}/>
     <h3>{t('agreementSnapshot')}</h3>
     <p>{t('snapshotDigest')}: <code>{agreement.snapshot.digestSha256}</code></p>
     <p>{t('snapshotSchemaVersion')}: {agreement.snapshot.schemaVersion}</p>

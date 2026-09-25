@@ -63,7 +63,7 @@ export function listingApi(sdk, tenantId) {
 }
 export function listingPayload(value, editing) {
   const { direction, title, description, category, resourceKind, location, version } = value;
-  return {direction,title,description,category,resourceKind,location:location || null,...(editing?{version}:{})};
+  return {direction,title,description,category,resourceKind,location:location || null,...(value.referenceDefinitionId?{referenceDefinitionId:value.referenceDefinitionId}:{}),...(editing?{version}:{})};
 }
 
 export function participantApi(sdk, tenantId) {
@@ -81,7 +81,7 @@ export function negotiationApi(sdk, tenantId) {
     list: (filters, signal) => request(query(filters), { signal }),
     read: (id) => request('/' + encodeURIComponent(id)),
     counter: (id, value) => request('/' + encodeURIComponent(id) + '/offers', body('POST', value)),
-    accept: (id, offerId, expectedVersion) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion })),
+    accept: (id, offerId, expectedVersion, shareReferenceObservation=false) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion, ...(shareReferenceObservation?{shareReferenceObservation:true}:{}) })),
     decline: (id, expectedVersion) => request('/' + encodeURIComponent(id) + '/decline', body('POST', { expectedVersion })),
   };
 }
@@ -96,7 +96,7 @@ export function agreementApi(sdk, tenantId) {
 
 export function offerPayload(value) {
   const { message, quantity, unitLabel, proposedAmount, proposedUnitRef, terms } = value;
-  return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null};
+  return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null,...(value.shareReferenceObservation?{shareReferenceObservation:true}:{})};
 }
 
 export function economicApi(sdk, tenantId) {
@@ -170,4 +170,14 @@ export function tradeApi(sdk, tenantId) {
     commit: (agreementId) => request(base(agreementId) + '/commit', body('POST')),
     sync: (agreementId) => request(base(agreementId) + '/sync', body('POST')),
   };
+}
+
+export function referenceApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references');
+  return {list:()=>request(),create:r=>request('',body('POST',r)),view:id=>request('/'+encodeURIComponent(id)),
+    history:id=>request('/'+encodeURIComponent(id)+'/history'),proposals:id=>request('/'+encodeURIComponent(id)+'/proposals'),
+    propose:(id,r)=>request('/'+encodeURIComponent(id)+'/proposals',body('POST',r)),
+    publish:(id,decision)=>request('/proposals/'+encodeURIComponent(id)+'/publish',body('POST',{decision})),
+    canPublish:()=>request('/publish-access').then(()=>true).catch(()=>false),
+    context:id=>request('/agreements/'+encodeURIComponent(id)+'/context')};
 }

@@ -1,3 +1,4 @@
+import { ReferencePanel, ReferenceConsent } from './references.jsx';
 import { listingApi, attachmentApi, offerPayload } from './api.js';
 import { AttachmentImage } from './attachments.jsx';
 import { ReportButton } from './moderation.jsx';
@@ -13,7 +14,7 @@ function PhotoGallery({ sdk, listingId, title }) {
   return <div className="stir-gallery">{photos.map((p, i) => <AttachmentImage key={p.id} sdk={sdk} attachmentId={p.id} alt={`${title} - ${i + 1}/${photos.length}`} />)}</div>;
 }
 
-function OfferForm({ t, busy, error, onSubmit }) {
+function OfferForm({ sdk, definitionId, t, busy, error, onSubmit }) {
   const [value, setValue] = useState({ message: '', quantity: '', unitLabel: '', proposedAmount: '', proposedUnitRef: '', terms: '' });
   const change = (key, next) => setValue(current => ({ ...current, [key]: next }));
   return <form className="stir-form" onSubmit={e => { e.preventDefault(); onSubmit(offerPayload(value)); }}>
@@ -23,6 +24,7 @@ function OfferForm({ t, busy, error, onSubmit }) {
     <label>{t('offerProposedAmount')}<input type="number" min="0" step="any" value={value.proposedAmount} onChange={e => change('proposedAmount', e.target.value)} /></label>
     <label>{t('offerProposedUnitRef')}<input maxLength={60} value={value.proposedUnitRef} onChange={e => change('proposedUnitRef', e.target.value)} /></label>
     <label className="stir-wide">{t('offerTerms')}<textarea maxLength={2000} rows={2} value={value.terms} onChange={e => change('terms', e.target.value)} /></label>
+    {definitionId&&<><ReferencePanel sdk={sdk} t={t} definitionId={definitionId} offer={value} onDefinition={d=>setValue(current=>({...current,quantity:current.quantity||String(d.quantity_basis),unitLabel:current.unitLabel||d.quantity_unit,proposedUnitRef:current.proposedUnitRef||d.unit_ref}))}/><ReferenceConsent t={t} value={value.shareReferenceObservation} onChange={v=>change('shareReferenceObservation',v)}/></>}
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     <div className="stir-actions stir-wide"><button disabled={busy} type="submit">{t(busy ? 'sending' : 'sendOffer')}</button></div>
   </form>;
@@ -58,6 +60,7 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     <span className={'stir-badge ' + listing.direction}>{t(listing.direction)}</span>
     {listing.hidden && <p role="alert">{t('listingHiddenNotice')}</p>}
     <h2>{listing.title}</h2>
+    <ReferencePanel sdk={sdk} t={t} definitionId={listing.referenceDefinitionId}/>
     <PhotoGallery sdk={sdk} listingId={listing.id} title={listing.title} />
     <p>
       {t('listingBy')} <button type="button" className="stir-link" onClick={() => navigate('/stir/participants/' + listing.ownerId)}>{listing.ownerDisplayName || t('unknownParticipant')}</button>
@@ -67,7 +70,7 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     {listing.location && <p>⌖ {listing.location}</p>}
     <p>{t('status')}: {t(listing.status)}</p>
     {!own && listing.status === 'ACTIVE' && !offering && <button onClick={() => setOffering(true)}>{t('makeOffer')}</button>}
-    {!own && listing.status === 'ACTIVE' && offering && <OfferForm t={t} busy={busy} error={error} onSubmit={submitOffer} />}
+    {!own && listing.status === 'ACTIVE' && offering && <OfferForm sdk={sdk} definitionId={listing.referenceDefinitionId} t={t} busy={busy} error={error} onSubmit={submitOffer} />}
     {own && <p>{t('ownListingHint')}</p>}
     {own && listing.status === 'ACTIVE' && <div className="stir-actions">
       <button disabled={busy} onClick={() => navigate('/stir/mine?edit=' + listing.id)}>{t('edit')}</button>
