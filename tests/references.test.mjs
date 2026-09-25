@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {comparison} from '../src/reference-comparison.js';
+import {comparison,proposalDeviation} from '../src/reference-comparison.js';
 import {offerPayload,listingPayload,negotiationApi} from '../src/api.js';
 import fs from 'node:fs';
 const d={unit_ref:'unit',quantity_unit:'hour',quantity_basis:'1'},r={lower_value:'10',upper_value:'20'};
@@ -28,7 +28,19 @@ test('listing association never forwards forged reference amounts or identity',(
 test('all reference messages and dynamic evidence states exist in every locale',()=>{
   const bundles=JSON.parse(fs.readFileSync(new URL('../src/locales.json',import.meta.url),'utf8'));
   const source=fs.readFileSync(new URL('../src/references.jsx',import.meta.url),'utf8');
-  const keys=new Set([...source.matchAll(/t\('(ref[A-Za-z]+)'\)/g)].map(m=>m[1]));
-  for(const suffix of ['VALUE','BAND','CONVENTION','QUALITATIVE','SUFFICIENT_DATA','INSUFFICIENT_DATA','SMALL_SAMPLE','LOW_DIVERSITY','CONCENTRATED','STALE','NOT_COMPARABLE','BELOW','ABOVE','WITHIN'])keys.add('ref'+suffix);
+  const keys=new Set([...source.matchAll(/t\('(ref[A-Za-z_]+)'\)/g)].map(m=>m[1]));
+  for(const suffix of ['VALUE','BAND','CONVENTION','QUALITATIVE','SUFFICIENT_DATA','INSUFFICIENT_DATA','SMALL_SAMPLE','LOW_DIVERSITY','CONCENTRATED','STALE','NOT_COMPARABLE','BELOW','ABOVE','WITHIN',
+    'SOURCE_NOT_AGREEMENT','NO_BILATERAL_CONSENT','OUTSIDE_WINDOW','MISSING_COUNTERPARTY'])keys.add('ref'+suffix);
+  for(const status of ['SIGNAL','UNDER_REVIEW','FINAL','DISMISSED'])keys.add('refCaseStatus'+status);
+  for(const code of ['REPEATED_RELATIONSHIP','HIGH_COUNTERPARTY_CONCENTRATION','RELATED_PARTICIPANT_CLUSTER','CIRCULAR_ACTIVITY','OUTLIER_PENDING_REVIEW','OTHER_EXPLAINED_SIGNAL'])keys.add('refSignal'+code);
+  for(const deviation of ['MATCHES_OBSERVED_RANGE','DEVIATES_FROM_OBSERVED'])keys.add('refDeviation_'+deviation);
   for(const [locale,bundle] of Object.entries(bundles))for(const key of keys)assert.ok(bundle[key]?.trim(),locale+': '+key);
+});
+test('proposal deviation is descriptive only and never blocks a departure from observed evidence',()=>{
+  const sufficient={status:'SUFFICIENT_DATA',lowerQuartile:'10.00',upperQuartile:'20.00'};
+  assert.equal(proposalDeviation('12','15',sufficient),'MATCHES_OBSERVED_RANGE');
+  assert.equal(proposalDeviation('100','100',sufficient),'DEVIATES_FROM_OBSERVED');
+  assert.equal(proposalDeviation('1','1',sufficient),'DEVIATES_FROM_OBSERVED');
+  assert.equal(proposalDeviation('100','100',{status:'INSUFFICIENT_DATA'}),null);
+  assert.equal(proposalDeviation('','',sufficient),null);
 });

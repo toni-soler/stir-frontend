@@ -180,7 +180,18 @@ export function referenceApi(sdk,tenantId) {
     propose:(id,r)=>request('/'+encodeURIComponent(id)+'/proposals',body('POST',r)),
     publish:(id,decision)=>request('/proposals/'+encodeURIComponent(id)+'/publish',body('POST',{decision})),
     canPublish:()=>request('/publish-access').then(()=>true).catch(()=>false),
-    context:id=>request('/agreements/'+encodeURIComponent(id)+'/context')};
+    context:id=>request('/agreements/'+encodeURIComponent(id)+'/context'),
+    observations:id=>request('/'+encodeURIComponent(id)+'/observations'),
+    evidenceManifest:id=>request('/'+encodeURIComponent(id)+'/evidence-manifest'),
+    policy:(id,r)=>request('/'+encodeURIComponent(id)+'/policies',body('POST',r))};
+}
+export function integrityApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references/integrity');
+  return {
+    signal:r=>request('/signals',body('POST',r)),
+    decide:(caseId,r)=>request('/cases/'+encodeURIComponent(caseId)+'/decisions',body('POST',r)),
+    cases:definitionId=>request('/definitions/'+encodeURIComponent(definitionId)+'/cases'),
+    history:caseId=>request('/cases/'+encodeURIComponent(caseId)+'/history')};
 }
 export function marketGovernanceApi(sdk,tenantId) {
   const {request}=apiClient(sdk,tenantId,'/references/governance');
