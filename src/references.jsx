@@ -1,4 +1,4 @@
-import { referenceApi } from './api.js';
+import { referenceApi, marketGovernanceApi } from './api.js';
 import { comparison } from './reference-comparison.js';
 const React=window.__IDAX_MODULE_SDK__.React;
 const {useState,useEffect,useMemo}=React;
@@ -20,18 +20,51 @@ export function ReferencePanel({sdk,t,definitionId,offer,context,onDefinition}) 
     <p>{t('refFree')}</p>
     <h4>{t('refObserved')}</h4>
     <p>{t('ref'+e.status)}</p>
-    {e.observationCount!=null&&<p>{t('refAgreements')}: {e.observationCount} · {t('refParticipants')}: {e.participantCount} · {t('refMedian')}: {e.median} · {t('refIqr')}: {e.lowerQuartile} – {e.upperQuartile}</p>}
+    {e.observationCount!=null&&<p>{t('refAgreements')}: {e.observationCount} · {t('refParticipants')}: {e.participantCount} · {t('refRelationships')}: {e.relationshipCount} · {t('refMedian')}: {e.median} · {t('refIqr')}: {e.lowerQuartile} – {e.upperQuartile}</p>}
     {offer&&<p>{t('refProposal')}: {t('ref'+comparison(offer,d,r))}</p>}
     <details><summary>{t('refWhy')}</summary>
       <p>{t('refWhyText')}</p><p>{t('refDaily')}</p><p>{t('refIdentity')}</p>
       <p>{t('refWindow')}: {e.windowStart} – {e.windowEnd}</p>
       {e.reasons.map(reason=><p key={reason}>{t('ref'+reason)}</p>)}
       <p>{t('refThresholds')}: {e.minimumObservations} / {e.minimumParticipants} / {e.maximumAllowedParticipantShare}</p>
+      {e.observationCount!=null&&<p>{t('refPairShare')}: {e.maximumPairShare} · {t('refDaysObserved')}: {e.distinctUtcDays} · {t('refSensitivity')}: {e.maximumSingleObservationMedianShift}</p>}
+      <p>{t('refConstitutionVersion')}: {e.constitutionVersion} · {t('refIndependenceCheck')}: {String(e.independenceChecksRequired)} · {t('refConcentrationCheck')}: {String(e.concentrationChecksRequired)}</p>
       {r&&<><p>{t('refDecision')}: {r.decision}</p><p>{t('refOrigin')}: {r.origin}</p><p>{t('refValidity')}: {r.valid_from} – {r.valid_until}</p></>}
       {data.publicationEvidence&&<p>{t('refPublicationEvidence')}: {t('ref'+data.publicationEvidence.status)} · {data.publicationEvidence.windowEnd} · {data.publicationEvidence.observationCount??'—'}</p>}
       <p>{t('refMethod')}: {e.method} · {t('refPolicy')} v{e.policyVersion}</p>
     </details>
   </aside>;
+}
+
+export function GovernanceSummary({sdk,t,definitionId}) {
+  const [state,setState]=useState(null);
+  useEffect(()=>{
+    let live=true;setState(null);
+    referenceApi(sdk,sdk.activeTenantId).view(definitionId).then(ref=>{
+      const api=marketGovernanceApi(sdk,sdk.activeTenantId);
+      return Promise.all([api.view(ref.definition.community_id),api.events(ref.definition.community_id),api.proposals(ref.definition.community_id),api.audit(ref.definition.community_id)]);
+    }).then(([authority,events,proposals,audit])=>{if(live)setState({authority,events,proposals,audit});})
+      .catch(()=>{if(live)setState({unavailable:true});});
+    return ()=>{live=false;};
+  },[sdk.activeTenantId,definitionId]);
+  if(!state)return null;
+  if(state.unavailable)return <p>{t('refAuthorityNotActive')}</p>;
+  const {authority:a,events,proposals,audit}=state;
+  return <details><summary>{t('refWhatProtects')}</summary>
+    <p>{t('refSevenKeysRule')}</p>
+    <p>{t('refConstitutionVersion')}: {a.constitutionVersion} · SHA-256: <code>{a.constitutionDigest}</code></p>
+    <p>{t('refGuardianStatus')}: {a.guardianStatus} · {t('refGuardianLimited')}</p>
+    <ul>{Object.entries(a.constitution).filter(([k])=>k!=='schema').map(([k,v])=><li key={k}>{k}: {String(v)}</li>)}</ul>
+    <p>{t('refSeats')}: {a.seats.map(s=>`${s.ordinal} ${s.status}`).join(' · ')}</p>
+    <h4>{t('refGovernanceProposals')}</h4>
+    {proposals.length===0?<p>{t('refNoGovernanceProposals')}</p>:proposals.map(p=><article key={p.id}>
+      <p>{p.actionType} · {p.state} · {p.signatureCount}/{p.required} · {t('refSignedSeats')}: {p.signatures.map(s=>s.seat_ordinal).join(', ')||'—'}</p>
+      {p.reason&&<p>{p.reason}</p>}{p.affectedFields&&<p>{p.affectedFields.map(k=>`${k}: ${String(p.after[k])}`).join(' · ')}</p>}
+      <details><summary>{t('refGovernanceDigests')}</summary><code>{p.beforeDigest} → {p.afterDigest}</code></details>
+    </article>)}
+    <p>{t('refAuditEvents')}: {events.map(e=>`#${e.sequence} ${e.event_type}`).join(' · ')}</p>
+    <p>{t('refAuditVerified')}: {String(audit.valid)} · {audit.eventCount} · SHA-256: <code>{audit.latestDigest}</code></p>
+  </details>;
 }
 
 export function ReferenceSelector({sdk,t,value,onChange}) {
@@ -68,6 +101,7 @@ export function References({sdk,t}) {
       <label>{t('refAttributes')}<textarea placeholder='{"weight":"500 g"}' onChange={e=>{try{setD({...d,attributes:JSON.parse(e.target.value||'{}')});e.target.setCustomValidity('');}catch{e.target.setCustomValidity(t('refInvalidJson'));}}}/></label>
       <button disabled={busy}>{t('refCreateDefinition')}</button></form></details>
     {selected&&<><ReferencePanel key={selected+revision} sdk={sdk} t={t} definitionId={selected}/>
+      <GovernanceSummary key={'governance-'+selected+revision} sdk={sdk} t={t} definitionId={selected}/>
       <details><summary>{t('refPropose')}</summary><form className="stir-form" onSubmit={e=>{e.preventDefault();run(()=>api.propose(selected,{...p,lowerValue:p.kind==='QUALITATIVE'?null:p.lowerValue,upperValue:p.kind==='QUALITATIVE'?null:p.upperValue}));}}>
         <label>{t('refKind')}<select value={p.kind} onChange={e=>setP({...p,kind:e.target.value})}>{['CONVENTION','QUALITATIVE','VALUE','BAND'].map(k=><option key={k} value={k}>{t('ref'+k)}</option>)}</select></label>
         {p.kind!=='QUALITATIVE'&&['lowerValue','upperValue'].map(k=><label key={k}>{t('refField'+k)}<input type="number" min="0" step="0.01" required value={p[k]} onChange={e=>setP({...p,[k]:e.target.value})}/></label>)}

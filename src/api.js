@@ -181,3 +181,12 @@ export function referenceApi(sdk,tenantId) {
     canPublish:()=>request('/publish-access').then(()=>true).catch(()=>false),
     context:id=>request('/agreements/'+encodeURIComponent(id)+'/context')};
 }
+export function marketGovernanceApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references/governance');
+  return {
+    view:id=>request('/'+encodeURIComponent(id)),
+    events:id=>request('/'+encodeURIComponent(id)+'/events'),
+    audit:id=>request('/'+encodeURIComponent(id)+'/audit'),
+    proposals:id=>request('/'+encodeURIComponent(id)+'/proposals'),
+  };
+}
