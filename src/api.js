@@ -195,6 +195,30 @@ export function integrityApi(sdk,tenantId) {
     cases:definitionId=>request('/definitions/'+encodeURIComponent(definitionId)+'/cases'),
     history:caseId=>request('/cases/'+encodeURIComponent(caseId)+'/history')};
 }
+/** Ordinary community governance (ORDINARY_GOVERNANCE.md) - quorum-based, explicitly separate
+ * from Seven Keys (marketGovernanceApi below). Pure data layer: no screen/route/branding
+ * assumptions belong here, only the HTTP contract, so any future presentation can reuse it. */
+export function ordinaryGovernanceApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references/governance/ordinary');
+  return {
+    settings:communityId=>request('/settings/'+encodeURIComponent(communityId)),
+    setEnabled:(communityId,enabled)=>request('/settings/'+encodeURIComponent(communityId),body('PUT',{enabled})),
+    members:communityId=>request('/members/'+encodeURIComponent(communityId)),
+    addMember:(communityId,userId)=>request('/members/'+encodeURIComponent(communityId)+'/'+encodeURIComponent(userId),{method:'POST'}),
+    removeMember:(communityId,userId)=>request('/members/'+encodeURIComponent(communityId)+'/'+encodeURIComponent(userId),{method:'DELETE'}),
+    currentPolicy:communityId=>request('/policy/'+encodeURIComponent(communityId)),
+    setPolicy:(communityId,r)=>request('/policy/'+encodeURIComponent(communityId),body('POST',r)),
+    proposePublishReference:(definitionId,referenceProposalId)=>request('/proposals/'+encodeURIComponent(definitionId)+'/reference/'+encodeURIComponent(referenceProposalId),{method:'POST'}),
+    proposePolicyChange:(definitionId,r)=>request('/proposals/'+encodeURIComponent(definitionId)+'/policy',body('POST',r)),
+    proposals:communityId=>request('/proposals/community/'+encodeURIComponent(communityId)),
+    proposal:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)),
+    votes:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/votes'),
+    electorate:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/electorate'),
+    vote:(proposalId,choice)=>request('/proposal/'+encodeURIComponent(proposalId)+'/vote',body('POST',{choice})),
+    close:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/close',{method:'POST'}),
+    execute:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/execute',{method:'POST'}),
+  };
+}
 export function marketGovernanceApi(sdk,tenantId) {
   const {request}=apiClient(sdk,tenantId,'/references/governance');
   return {

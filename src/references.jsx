@@ -1,5 +1,6 @@
 import { referenceApi, marketGovernanceApi, integrityApi } from './api.js';
 import { comparison, proposalDeviation } from './reference-comparison.js';
+import { OrdinaryGovernancePanel } from './ordinary-governance.jsx';
 const React=window.__IDAX_MODULE_SDK__.React;
 const {useState,useEffect,useMemo}=React;
 
@@ -267,6 +268,10 @@ export function References({sdk,t}) {
         <EvidenceBreakdown key={'evidence-'+selected+revision} sdk={sdk} t={t} definitionId={selected}/>
         <IntegrityPanel key={'integrity-'+selected+revision} sdk={sdk} t={t} definitionId={selected}/>
       </>}
+      {/* Not publisher-gated: any ordinary-governance elector needs to see and use this panel to
+          vote, even without stir.references.publish - only its own management sections (settings/
+          electorate/policy) are further gated on canManage. */}
+      <OrdinaryGovernancePanel key={'gov-ordinary-'+selected+revision} sdk={sdk} t={t} definitionId={selected} communityId={view?.definition?.community_id} canManage={publisher}/>
     </>}
   </section>;
 }
