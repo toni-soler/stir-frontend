@@ -41,6 +41,14 @@ test('catalog contract refuses demo and missing tenant, and excludes forged owne
     { direction: 'WANTED', title: 'Chair', description: 'Wood', category: 'home', resourceKind: 'physical', location: null });
 });
 
+test('offerPayload only forwards an external contract commitment when a distribution supplies one', () => {
+  assert.deepEqual(offerPayload({ message: 'Interested' }),
+    { message: 'Interested', quantity: null, unitLabel: null, proposedAmount: null, proposedUnitRef: null, terms: null });
+  assert.deepEqual(offerPayload({ message: 'Interested', externalContractNamespace: 'example.market', externalContractDigest: 'a'.repeat(64) }),
+    { message: 'Interested', quantity: null, unitLabel: null, proposedAmount: null, proposedUnitRef: null, terms: null,
+      externalContractNamespace: 'example.market', externalContractDigest: 'a'.repeat(64) });
+});
+
 test('catalog contract preserves backend conflict status and translated error code', async () => {
   const backend = sdk([{ status: 409, body: { message: 'VERSION_CONFLICT: changed elsewhere' } }]);
   await assert.rejects(createCatalogClient(backend, 'tenant').close('listing', 2), (error) => {

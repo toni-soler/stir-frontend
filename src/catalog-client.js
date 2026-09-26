@@ -58,5 +58,8 @@ export function listingPayload(value, editing) {
 
 export function offerPayload(value) {
   const { message, quantity, unitLabel, proposedAmount, proposedUnitRef, terms } = value;
-  return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null,...(value.shareReferenceObservation?{shareReferenceObservation:true}:{})};
+  return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null,...(value.shareReferenceObservation?{shareReferenceObservation:true}:{}),
+    // Opaque passthrough only: a distribution that reuses STIR's own offer/counter form still
+    // attaches its own frozen external contract commitment without STIR interpreting it.
+    ...(value.externalContractNamespace?{externalContractNamespace:value.externalContractNamespace,externalContractDigest:value.externalContractDigest}:{})};
 }
