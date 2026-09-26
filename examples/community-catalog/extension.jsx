@@ -8,6 +8,23 @@ const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useMemo, useState } = React;
 Object.entries(bundles).forEach(([locale, bundle]) => window.__IDAX_MODULE_SDK__.i18n.addResourceBundle(locale, 'translation', { stir: bundle }));
 
+function CommunityImage({ client, attachmentId, alt }) {
+  const [url, setUrl] = useState(null);
+  useEffect(() => {
+    if (!attachmentId) { setUrl(null); return; }
+    setUrl(null);
+    const controller = new AbortController();
+    let objectUrl = null;
+    client.contentUrl(attachmentId, controller.signal).then(value => {
+      objectUrl = value;
+      if (controller.signal.aborted) URL.revokeObjectURL(value);
+      else setUrl(value);
+    }).catch(() => {});
+    return () => { controller.abort(); if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [client, attachmentId]);
+  return url ? <img className="community-image" src={url} alt={alt} /> : null;
+}
+
 function CommunityCatalog() {
   const sdk = window.__IDAX_MODULE_SDK__;
   const { useLocation, useNavigate } = sdk.router;
@@ -54,6 +71,7 @@ function CommunityCatalog() {
     {detailId ? <>
       {loading && <p role="status">{t('loading')}</p>}
       {listing && <article className="community-detail">
+        {listing.mainPhotoId && <CommunityImage client={client} attachmentId={listing.mainPhotoId} alt={listing.title} />}
         <small>{t(listing.direction)} · {t(listing.resourceKind)}</small>
         <h1>{listing.title}</h1>
         <p>{listing.description}</p>
@@ -69,6 +87,7 @@ function CommunityCatalog() {
       <h1>{t('headline')}</h1>
       <label>{t('search')}<input value={query} maxLength={160} onChange={e => setQuery(e.target.value)} /></label>
       {loading ? <p role="status">{t('loading')}</p> : <div className="community-grid">{rows.map(row => <article key={row.id}>
+        {row.mainPhotoId && <CommunityImage client={client} attachmentId={row.mainPhotoId} alt={row.title} />}
         <small>{t(row.direction)} · {t(row.category)}</small>
         <h2><button onClick={() => navigate('/community-catalog/listing/' + encodeURIComponent(row.id))}>{row.title}</button></h2>
         <p>{row.description}</p>

@@ -1,5 +1,4 @@
 import { ReferencePanel, ReferenceConsent } from './references.jsx';
-import { attachmentApi } from './api.js';
 import { createCatalogClient, offerPayload } from './catalog-client.js';
 import { AttachmentImage } from './attachments.jsx';
 import { ReportButton } from './moderation.jsx';
@@ -8,9 +7,14 @@ const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
 
 function PhotoGallery({ sdk, listingId, title }) {
-  const api = useMemo(() => attachmentApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
+  const api = useMemo(() => createCatalogClient(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [photos, setPhotos] = useState([]);
-  useEffect(() => { api.listingPhotos(listingId).then(setPhotos).catch(() => {}); }, [listingId]);
+  useEffect(() => {
+    const controller = new AbortController();
+    setPhotos([]);
+    api.photos(listingId, controller.signal).then(setPhotos).catch(() => {});
+    return () => controller.abort();
+  }, [listingId, api]);
   if (!photos.length) return null;
   return <div className="stir-gallery">{photos.map((p, i) => <AttachmentImage key={p.id} sdk={sdk} attachmentId={p.id} alt={`${title} - ${i + 1}/${photos.length}`} />)}</div>;
 }

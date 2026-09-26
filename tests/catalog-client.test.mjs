@@ -50,3 +50,24 @@ test('catalog contract preserves backend conflict status and translated error co
     return true;
   });
 });
+
+test('photo metadata and authenticated binary content stay inside the tenant boundary', async () => {
+  const paths = [];
+  const client = createCatalogClient({ fetchWithAuth: async (path, options) => {
+    paths.push({ path, options });
+    if (path.endsWith('/photos')) return { ok: true, status: 200, text: async () => '[{"id":"photo/1"}]' };
+    return { ok: true, status: 200, blob: async () => new Blob(['image bytes'], { type: 'image/png' }) };
+  } }, 'tenant a');
+  const controller = new AbortController();
+  assert.deepEqual(await client.photos('listing/1', controller.signal), [{ id: 'photo/1' }]);
+  const objectUrl = await client.contentUrl('photo/1', controller.signal);
+  try {
+    assert.match(objectUrl, /^blob:/);
+    assert.equal(paths[0].path, '/api/stir/tenants/tenant%20a/listings/listing%2F1/photos');
+    assert.equal(paths[1].path, '/api/stir/tenants/tenant%20a/attachments/photo%2F1/content');
+    assert.equal(paths[0].options.signal, controller.signal);
+    assert.equal(paths[1].options.signal, controller.signal);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+});

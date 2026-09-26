@@ -32,6 +32,18 @@ export function createCatalogClient(sdk, tenantId) {
     list: (filters = {}, signal) => request('?' + new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== '' && value != null)), { signal }),
     catalogs: () => request('/catalogs'),
     read: (id, signal) => request(idPath(id), { signal }),
+    photos: (id, signal) => request(idPath(id) + '/photos', { signal }),
+    // Binary assets require the authenticated SDK. The consumer revokes this
+    // object URL when the image is replaced or unmounted.
+    contentUrl: async (attachmentId, signal) => {
+      const response = await sdk.fetchWithAuth(`/api/stir/tenants/${encodeURIComponent(tenantId)}/attachments/${encodeURIComponent(attachmentId)}/content`, { signal });
+      if (!response.ok) {
+        const error = new Error(`stir.http${response.status}`);
+        error.status = response.status;
+        throw error;
+      }
+      return URL.createObjectURL(await response.blob());
+    },
     create: (value) => request('', body('POST', value)),
     update: (id, value) => request(idPath(id), body('PUT', value)),
     close: (id, version) => request(idPath(id) + '/close', body('POST', { version })),
