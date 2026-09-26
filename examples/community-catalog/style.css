@@ -1,0 +1,9 @@
+.community-catalog { max-width: 1120px; margin: 0 auto; padding: 2rem; color: #182c29; font-family: system-ui, sans-serif; }
+.community-catalog header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #244d43; padding-bottom: 1rem; }
+.community-catalog nav { display: flex; gap: .75rem; }
+.community-catalog button { background: #244d43; color: white; border: 0; border-radius: .4rem; padding: .55rem .85rem; cursor: pointer; }
+.community-catalog input, .community-catalog textarea { display: block; width: 100%; margin: .4rem 0 1rem; padding: .65rem; box-sizing: border-box; }
+.community-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+.community-grid article, .community-detail { padding: 1.5rem; background: #f2f7f2; border: 1px solid #cadbd0; border-radius: .75rem; }
+.community-grid h2 button { background: none; color: #174a3c; text-align: left; padding: 0; font: inherit; text-decoration: underline; }
+.community-detail { max-width: 720px; margin-top: 1.5rem; }

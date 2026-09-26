@@ -1,3 +1,6 @@
+import { createCatalogClient } from './catalog-client.js';
+export { listingPayload, offerPayload } from './catalog-client.js';
+
 // TradeService.commit() (and other osTRIS-relayed failures) format their reason as "CODE: detail"
 // (see StirOstrisException) - surface that CODE as a distinct, translatable error key
 // (stir.errorCODE) instead of collapsing every failure of the same HTTP status into one generic
@@ -49,22 +52,7 @@ function apiClient(sdk, tenantId, resource) {
 const body = (method, value) => ({ method, body: JSON.stringify(value) });
 const query = (filters) => '?' + new URLSearchParams(Object.entries(filters).filter(([, v]) => v !== '' && v != null));
 
-export function listingApi(sdk, tenantId) {
-  const { request } = apiClient(sdk, tenantId, '/listings');
-  return {
-    list: (filters, signal) => request(query(filters), { signal }),
-    catalogs: () => request('/catalogs'),
-    read: (id) => request('/' + encodeURIComponent(id)),
-    create: (value) => request('', body('POST', value)),
-    update: (id, value) => request('/' + encodeURIComponent(id), body('PUT', value)),
-    close: (id, version) => request('/' + encodeURIComponent(id) + '/close', body('POST', { version })),
-    offer: (listingId, value) => request('/' + encodeURIComponent(listingId) + '/offers', body('POST', value)),
-  };
-}
-export function listingPayload(value, editing) {
-  const { direction, title, description, category, resourceKind, location, version } = value;
-  return {direction,title,description,category,resourceKind,location:location || null,...(value.referenceDefinitionId?{referenceDefinitionId:value.referenceDefinitionId}:{}),...(editing?{version}:{})};
-}
+export const listingApi = createCatalogClient;
 
 export function participantApi(sdk, tenantId) {
   const { request } = apiClient(sdk, tenantId, '/participants');
@@ -92,11 +80,6 @@ export function agreementApi(sdk, tenantId) {
     list: (filters, signal) => request(query(filters), { signal }),
     read: (id) => request('/' + encodeURIComponent(id)),
   };
-}
-
-export function offerPayload(value) {
-  const { message, quantity, unitLabel, proposedAmount, proposedUnitRef, terms } = value;
-  return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null,...(value.shareReferenceObservation?{shareReferenceObservation:true}:{})};
 }
 
 export function economicApi(sdk, tenantId) {

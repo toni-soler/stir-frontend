@@ -1,5 +1,6 @@
 import { ReferencePanel, ReferenceConsent } from './references.jsx';
-import { listingApi, attachmentApi, offerPayload } from './api.js';
+import { attachmentApi } from './api.js';
+import { createCatalogClient, offerPayload } from './catalog-client.js';
 import { AttachmentImage } from './attachments.jsx';
 import { ReportButton } from './moderation.jsx';
 
@@ -31,7 +32,7 @@ function OfferForm({ sdk, definitionId, t, busy, error, onSubmit }) {
 }
 
 export function ListingDetail({ sdk, t, id, navigate }) {
-  const api = useMemo(() => listingApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
+  const api = useMemo(() => createCatalogClient(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

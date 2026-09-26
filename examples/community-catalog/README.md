@@ -1,0 +1,9 @@
+# Second catalog presentation
+
+This is a buildable Shell extension showing that a distribution can render STIR's catalog and listing detail with its own layout, then hand a submitted offer to STIR's negotiation route. It is an example consumer, not the FreeFolk product or a production theme. It imports the generated `dist/community/stir-catalog.mjs` artifact built from the same `src/catalog-client.js` STIR uses; it does not copy REST paths, payload normalization or session handling.
+
+`npm run build` creates `dist/examples/extensions/community-catalog/index.js` and `index.css`. To mount it in a test composition, add a manifest extension with `id: "community-catalog"` and `route: "/community-catalog"`, serve those two assets at `/extensions/community-catalog/`, and keep STIR mounted for `/stir/negotiations/:id`. The example is deliberately not added to STIR's default composition.
+
+The frontend entry at `dist/community/stir-catalog.mjs` is a browser ESM consumer artifact with `CATALOG_CONTRACT_VERSION = 1`. Pin the STIR frontend source revision, build it with `npm ci && npm run build`, and bundle this generated artifact into the distribution. `createCatalogClient(sdk, tenantId)` needs Shell's `fetchWithAuth`, the active tenant, and a real session. Re-create it when the active tenant changes. It exposes `list(filters, signal)`, `catalogs()`, `read(id, signal)`, `create(value)`, `update(id, value)`, `close(id, version)` and `offer(id, value)`. `listingPayload` and `offerPayload` normalize writes. All responses are backend responses; authorization remains on the server. Errors carry `message` translation key, `status` and `detail`.
+
+This first contract is the catalog client only. Other STIR UI flows are still internal. A fully independent frontend must integrate their public contracts as those are extracted; loading this example does not imply support for them.

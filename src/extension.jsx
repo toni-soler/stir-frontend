@@ -1,6 +1,7 @@
 import { References, ReferenceSelector } from './references.jsx';
 import { Governance, GovernanceSignTool } from './governance.jsx';
-import { listingApi, listingPayload, instanceApi, moderationApi } from './api.js';
+import { instanceApi, moderationApi } from './api.js';
+import { createCatalogClient, listingPayload } from './catalog-client.js';
 import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
 import { NegotiationList, NegotiationDetail } from './negotiation.jsx';
@@ -53,7 +54,7 @@ function Marketplace() {
   const {useNavigate,useLocation}=sdk.router; const navigate=useNavigate(); const location=useLocation(); const path=location.pathname;
   const mine=path.startsWith('/stir/mine'); const creating=path==='/stir/new';
   const editRequestId=mine?new URLSearchParams(location.search).get('edit'):null;
-  const api=useMemo(()=>sdk.demo || !sdk.activeTenantId ? null : listingApi(sdk,sdk.activeTenantId),[sdk.activeTenantId,sdk.demo]);
+  const api=useMemo(()=>sdk.demo || !sdk.activeTenantId ? null : createCatalogClient(sdk,sdk.activeTenantId),[sdk.activeTenantId,sdk.demo]);
   const [catalogs,setCatalogs]=useState({categories:[],resourceKinds:[]});
   const [filters,setFilters]=useState({q:'',direction:'',category:'',resourceKind:'',status:'ACTIVE'});
   const [page,setPage]=useState(0); const [result,setResult]=useState({content:[],totalPages:0});
