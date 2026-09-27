@@ -193,6 +193,7 @@ export function ordinaryGovernanceApi(sdk,tenantId) {
     setPolicy:(communityId,r)=>request('/policy/'+encodeURIComponent(communityId),body('POST',r)),
     proposePublishReference:(definitionId,referenceProposalId)=>request('/proposals/'+encodeURIComponent(definitionId)+'/reference/'+encodeURIComponent(referenceProposalId),{method:'POST'}),
     proposePolicyChange:(definitionId,r)=>request('/proposals/'+encodeURIComponent(definitionId)+'/policy',body('POST',r)),
+    proposeRetentionPolicyChange:(communityId,r)=>request('/proposals/community/'+encodeURIComponent(communityId)+'/retention-policy',body('POST',r)),
     proposals:communityId=>request('/proposals/community/'+encodeURIComponent(communityId)),
     proposal:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)),
     votes:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/votes'),
@@ -200,6 +201,28 @@ export function ordinaryGovernanceApi(sdk,tenantId) {
     vote:(proposalId,choice)=>request('/proposal/'+encodeURIComponent(proposalId)+'/vote',body('POST',{choice})),
     close:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/close',{method:'POST'}),
     execute:proposalId=>request('/proposal/'+encodeURIComponent(proposalId)+'/execute',{method:'POST'}),
+  };
+}
+/** Purpose-specific consent lifecycle (CONSENT_RETENTION.md): view/withdraw only - grant/decline
+ * is captured automatically at Agreement acceptance, never through this API. */
+export function consentApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references/consent');
+  return {
+    mine:()=>request('/mine'),
+    view:consentId=>request('/'+encodeURIComponent(consentId)),
+    withdraw:(consentId,reason)=>request('/'+encodeURIComponent(consentId)+'/withdraw',body('POST',{reason})),
+  };
+}
+/** Retention policy and the one real deletion-lifecycle action, anonymization
+ * (CONSENT_RETENTION.md). Publisher/community-authority gated, like reference policy. */
+export function retentionApi(sdk,tenantId) {
+  const {request}=apiClient(sdk,tenantId,'/references/retention');
+  return {
+    currentPolicy:communityId=>request('/policy/'+encodeURIComponent(communityId)),
+    setPolicy:(communityId,r)=>request('/policy/'+encodeURIComponent(communityId),body('POST',r)),
+    status:observationId=>request('/observation/'+encodeURIComponent(observationId)+'/status'),
+    due:definitionId=>request('/definition/'+encodeURIComponent(definitionId)+'/due'),
+    anonymize:(observationId,reason)=>request('/observation/'+encodeURIComponent(observationId)+'/anonymize',body('POST',{reason})),
   };
 }
 export function marketGovernanceApi(sdk,tenantId) {

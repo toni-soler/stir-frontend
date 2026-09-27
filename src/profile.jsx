@@ -1,5 +1,6 @@
 import { participantApi, attachmentApi } from './api.js';
 import { AttachmentImage } from './attachments.jsx';
+import { MyConsentPanel } from './consent-retention.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState } = React;
@@ -71,6 +72,7 @@ export function MyProfile({ sdk, t, navigate }) {
     {saved && <p role="status">{t('profileSaved')}</p>}
     {profile && <AvatarUploader sdk={sdk} t={t} profile={profile} onUploaded={() => api.me().then(setProfile)} />}
     <ProfileForm t={t} value={value} busy={busy} error={error} onChange={change} onSubmit={submit} />
+    <MyConsentPanel sdk={sdk} t={t} />
   </section>;
 }
 

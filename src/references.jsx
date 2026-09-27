@@ -1,6 +1,7 @@
 import { referenceApi, marketGovernanceApi, integrityApi } from './api.js';
 import { comparison, proposalDeviation } from './reference-comparison.js';
 import { OrdinaryGovernancePanel } from './ordinary-governance.jsx';
+import { RetentionPanel } from './consent-retention.jsx';
 const React=window.__IDAX_MODULE_SDK__.React;
 const {useState,useEffect,useMemo}=React;
 
@@ -267,6 +268,7 @@ export function References({sdk,t}) {
         {view?.policy&&<PolicyForm sdk={sdk} t={t} definitionId={selected} policy={view.policy} onChanged={()=>setRevision(n=>n+1)}/>}
         <EvidenceBreakdown key={'evidence-'+selected+revision} sdk={sdk} t={t} definitionId={selected}/>
         <IntegrityPanel key={'integrity-'+selected+revision} sdk={sdk} t={t} definitionId={selected}/>
+        <RetentionPanel key={'retention-'+selected+revision} sdk={sdk} t={t} definitionId={selected} communityId={view?.definition?.community_id} canManage={publisher}/>
       </>}
       {/* Not publisher-gated: any ordinary-governance elector needs to see and use this panel to
           vote, even without stir.references.publish - only its own management sections (settings/
