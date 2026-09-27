@@ -37,6 +37,14 @@ function ListingEditor({initial, api, sdk, catalogs, t, onCancel, onSaved, justC
     <label>{t('category')}<select value={value.category} onChange={e=>change('category',e.target.value)}>{catalogs.categories.map(code=><option key={code} value={code}>{t(code)}</option>)}</select></label>
     <label>{t('resourceKind')}<select value={value.resourceKind} onChange={e=>change('resourceKind',e.target.value)}>{catalogs.resourceKinds.map(code=><option key={code} value={code}>{t(code)}</option>)}</select></label>
     <ReferenceSelector sdk={sdk} t={t} value={value.referenceDefinitionId} onChange={v=>change('referenceDefinitionId',v)}/>
+    {value.referenceDefinitionId && <>
+      <p className="stir-wide"><small>{t('listingIndicativeHint')}</small></p>
+      <label>{t('listingIndicativeAmount')}<input type="number" min="0" step="any" value={value.indicativeAmount||''} onChange={e=>change('indicativeAmount',e.target.value)}/></label>
+      <label>{t('listingIndicativeQuantity')}<input type="number" min="0" step="any" value={value.indicativeQuantity||''} onChange={e=>change('indicativeQuantity',e.target.value)}/></label>
+      <label>{t('listingIndicativeUnitLabel')}<input maxLength={40} value={value.indicativeUnitLabel||''} onChange={e=>change('indicativeUnitLabel',e.target.value)}/></label>
+      <label>{t('listingIndicativeUnitRef')}<input maxLength={60} value={value.indicativeUnitRef||''} onChange={e=>change('indicativeUnitRef',e.target.value)}/></label>
+      <label className="stir-wide"><input type="checkbox" checked={Boolean(value.shareReferenceObservation)} onChange={e=>change('shareReferenceObservation',e.target.checked)}/>{t('listingShareConsent')}</label>
+    </>}
     <label className="stir-wide">{t('location')}<input maxLength={160} value={value.location||''} onChange={e=>change('location',e.target.value)}/><small>{t('locationHint')}</small></label>
     <p className="stir-wide"><small>{t('requiredFieldsHint')}</small></p>
     <p>{t('status')}: {t('ACTIVE')}</p>

@@ -30,9 +30,14 @@ test('all reference messages and dynamic evidence states exist in every locale',
   const source=fs.readFileSync(new URL('../src/references.jsx',import.meta.url),'utf8');
   const keys=new Set([...source.matchAll(/t\('(ref[A-Za-z_]+)'\)/g)].map(m=>m[1]));
   for(const suffix of ['VALUE','BAND','CONVENTION','QUALITATIVE','SUFFICIENT_DATA','INSUFFICIENT_DATA','SMALL_SAMPLE','LOW_DIVERSITY','CONCENTRATED','STALE','NOT_COMPARABLE','BELOW','ABOVE','WITHIN',
-    'SOURCE_NOT_AGREEMENT','NO_BILATERAL_CONSENT','OUTSIDE_WINDOW','MISSING_COUNTERPARTY'])keys.add('ref'+suffix);
+    'SOURCE_NOT_AGREEMENT','NO_BILATERAL_CONSENT','OUTSIDE_WINDOW','MISSING_COUNTERPARTY',
+    // MULTI_SOURCE_VALUE_EVIDENCE.md: new dynamic exclusion reasons and source labels, computed via
+    // t('ref'+x) string concatenation so the regex above cannot see them - listed explicitly like
+    // every other dynamic suffix in this test.
+    'SOURCE_NOT_ELIGIBLE','NO_CONSENT','LINEAGE_CONCENTRATED','LISTING','WANTED','COMMUNITY_SEED','AGREEMENT','PROPOSAL'])keys.add('ref'+suffix);
   for(const status of ['SIGNAL','UNDER_REVIEW','FINAL','DISMISSED'])keys.add('refCaseStatus'+status);
-  for(const code of ['REPEATED_RELATIONSHIP','HIGH_COUNTERPARTY_CONCENTRATION','RELATED_PARTICIPANT_CLUSTER','CIRCULAR_ACTIVITY','OUTLIER_PENDING_REVIEW','OTHER_EXPLAINED_SIGNAL'])keys.add('refSignal'+code);
+  for(const code of ['REPEATED_RELATIONSHIP','HIGH_COUNTERPARTY_CONCENTRATION','RELATED_PARTICIPANT_CLUSTER','CIRCULAR_ACTIVITY','OUTLIER_PENDING_REVIEW','OTHER_EXPLAINED_SIGNAL',
+    'LISTING_SPAM','REPEATED_RELISTING','COORDINATED_LISTING_OR_WANTED','TEMPORAL_BURST','LINEAGE_MANIPULATION','SELECTIVE_CONSENT_PATTERN','SEED_ARTIFICIAL_ORIENTATION'])keys.add('refSignal'+code);
   for(const deviation of ['MATCHES_OBSERVED_RANGE','DEVIATES_FROM_OBSERVED'])keys.add('refDeviation_'+deviation);
   for(const [locale,bundle] of Object.entries(bundles))for(const key of keys)assert.ok(bundle[key]?.trim(),locale+': '+key);
 });

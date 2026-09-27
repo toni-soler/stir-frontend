@@ -5,6 +5,18 @@ import { RetentionPanel } from './consent-retention.jsx';
 const React=window.__IDAX_MODULE_SDK__.React;
 const {useState,useEffect,useMemo}=React;
 
+/** LISTING/WANTED's own separate descriptive bucket - never blended into the AGREEMENT median
+ * above it (MULTI_SOURCE_VALUE_EVIDENCE.md). Shows the same "why" shape at a glance: status,
+ * count, independent participants/lineages, without repeating the full detail already explained
+ * for the AGREEMENT bucket. */
+function SourceEvidenceSummary({t,label,evidence:se}) {
+  return <p>{t(label)}: {t('ref'+se.status)}
+    {se.observationCount!=null&&<> · {se.observationCount} · {t('refParticipants')}: {se.participantCount}
+      {se.adjustedIndependentParticipantCount!=null&&<> ({t('refAdjustedParticipants')}: {se.adjustedIndependentParticipantCount})</>}
+      {se.economicLineageCount!=null&&<> · {t('refEconomicLineages')}: {se.economicLineageCount}</>}
+      {se.median!=null&&<> · {t('refMedian')}: {se.median}</>}</>}
+  </p>;
+}
 export function ReferencePanel({sdk,t,definitionId,offer,context,onDefinition}) {
   const api=useMemo(()=>referenceApi(sdk,sdk.activeTenantId),[sdk.activeTenantId]);
   const [data,setData]=useState(context||null),[error,setError]=useState('');
@@ -23,6 +35,15 @@ export function ReferencePanel({sdk,t,definitionId,offer,context,onDefinition}) 
     <h4>{t('refObserved')}</h4>
     <p>{t('ref'+e.status)}</p>
     {e.observationCount!=null&&<p>{t('refAgreements')}: {e.observationCount} · {t('refParticipants')}: {e.participantCount} · {t('refRelationships')}: {e.relationshipCount} · {t('refMedian')}: {e.median} · {t('refIqr')}: {e.lowerQuartile} – {e.upperQuartile}</p>}
+    {/* Raw counts by source, never insinuating that N observations are N equally-weighted voices
+        (MULTI_SOURCE_VALUE_EVIDENCE.md) - AGREEMENT keeps its own median above; LISTING/WANTED are
+        their own separate, explicitly-labeled buckets below when a policy has opted them in. */}
+    {e.sourceBreakdown&&<p>{t('refSourceBreakdown')}: {Object.entries(e.sourceBreakdown).map(([source,count])=>`${t('ref'+source)}: ${count}`).join(' · ')}</p>}
+    {e.listingEvidence&&<SourceEvidenceSummary t={t} label="refListingEvidence" evidence={e.listingEvidence}/>}
+    {e.wantedEvidence&&<SourceEvidenceSummary t={t} label="refWantedEvidence" evidence={e.wantedEvidence}/>}
+    {e.communitySeed&&<p>{t('refCommunitySeed')}: {t('ref'+e.communitySeed.kind)} {e.communitySeed.lower_value??''}{e.communitySeed.upper_value!==e.communitySeed.lower_value?' – '+(e.communitySeed.upper_value??''):''}
+      · v{e.communitySeed.version} · {t('refValidity')}: {e.communitySeed.valid_from} – {e.communitySeed.valid_until}
+      {e.communitySeed.supersededByRealEvidence&&<> · <strong>{t('refSeedSuperseded')}</strong></>}</p>}
     {offer&&<p>{t('refProposal')}: {t('ref'+comparison(offer,d,r))}</p>}
     <details><summary>{t('refWhy')}</summary>
       <p>{t('refWhyText')}</p><p>{t('refDaily')}</p><p>{t('refIdentity')}</p>
@@ -30,6 +51,7 @@ export function ReferencePanel({sdk,t,definitionId,offer,context,onDefinition}) 
       {e.reasons.map(reason=><p key={reason}>{t('ref'+reason)}</p>)}
       <p>{t('refThresholds')}: {e.minimumObservations} / {e.minimumParticipants} / {e.maximumAllowedParticipantShare}</p>
       {e.observationCount!=null&&<p>{t('refPairShare')}: {e.maximumPairShare} · {t('refDaysObserved')}: {e.distinctUtcDays} · {t('refSensitivity')}: {e.maximumSingleObservationMedianShift}</p>}
+      {e.economicLineageCount!=null&&<p>{t('refEconomicLineages')}: {e.economicLineageCount} <span className="stir-hint">({t('refLineageExplainer')})</span></p>}
       <p>{t('refConstitutionVersion')}: {e.constitutionVersion} · {t('refIndependenceCheck')}: {String(e.independenceChecksRequired)} · {t('refConcentrationCheck')}: {String(e.concentrationChecksRequired)}</p>
       <p>{t('refIdentityAssuranceLabel')}: {t('ref'+e.identityAssurance)}
         {e.independenceAssuranceCoveragePercent!=null&&<> · {t('refIndependenceCoverage')}: {e.independenceAssuranceCoveragePercent}%</>}
@@ -160,7 +182,10 @@ export function PolicyForm({sdk,t,definitionId,policy,onChanged}) {
   </details>;
 }
 
-const SIGNAL_CODES=['REPEATED_RELATIONSHIP','HIGH_COUNTERPARTY_CONCENTRATION','RELATED_PARTICIPANT_CLUSTER','CIRCULAR_ACTIVITY','OUTLIER_PENDING_REVIEW','OTHER_EXPLAINED_SIGNAL'];
+// LISTING/WANTED are cheaper to fabricate than AGREEMENT, so they get their own explicit signal
+// vocabulary (MULTI_SOURCE_VALUE_EVIDENCE.md) - still human-raised, never an automated fraud score.
+const SIGNAL_CODES=['REPEATED_RELATIONSHIP','HIGH_COUNTERPARTY_CONCENTRATION','RELATED_PARTICIPANT_CLUSTER','CIRCULAR_ACTIVITY','OUTLIER_PENDING_REVIEW','OTHER_EXPLAINED_SIGNAL',
+  'LISTING_SPAM','REPEATED_RELISTING','COORDINATED_LISTING_OR_WANTED','TEMPORAL_BURST','LINEAGE_MANIPULATION','SELECTIVE_CONSENT_PATTERN','SEED_ARTIFICIAL_ORIENTATION'];
 
 /** Publisher-only market integrity review: SIGNAL -> UNDER_REVIEW -> FINAL|DISMISSED. The case
  * originator cannot decide their own case (backend-enforced; a 409 here means exactly that).

@@ -53,7 +53,13 @@ export function createCatalogClient(sdk, tenantId) {
 
 export function listingPayload(value, editing) {
   const { direction, title, description, category, resourceKind, location, version } = value;
-  return {direction,title,description,category,resourceKind,location:location || null,...(value.referenceDefinitionId?{referenceDefinitionId:value.referenceDefinitionId}:{}),...(editing?{version}:{})};
+  return {direction,title,description,category,resourceKind,location:location || null,
+    ...(value.referenceDefinitionId?{referenceDefinitionId:value.referenceDefinitionId}:{}),...(editing?{version}:{}),
+    // The owner's own ask/want, never "what the market accepts" - opt-in, only meaningful once a
+    // reference definition is picked (MULTI_SOURCE_VALUE_EVIDENCE.md).
+    ...(value.referenceDefinitionId?{indicativeAmount:value.indicativeAmount||null,indicativeQuantity:value.indicativeQuantity||null,
+      indicativeUnitLabel:value.indicativeUnitLabel||null,indicativeUnitRef:value.indicativeUnitRef||null,
+      shareReferenceObservation:Boolean(value.shareReferenceObservation)}:{})};
 }
 
 export function offerPayload(value) {

@@ -52,6 +52,7 @@ export function OrdinaryGovernancePanel({ sdk, t, definitionId, communityId, can
   const [newMember, setNewMember] = useState('');
   const [policyForm, setPolicyForm] = useState({ quorumNumerator: 1, quorumDenominator: 2, approvalNumerator: 2, approvalDenominator: 3, votingWindowHours: 168, abstentionRule: 'COUNTS_TOWARD_QUORUM_NOT_APPROVAL', explanation: '' });
   const [policyChangeForm, setPolicyChangeForm] = useState(null);
+  const [seedForm, setSeedForm] = useState(null);
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [revision, setRevision] = useState(0);
   useEffect(() => {
     if (!communityId) return;
@@ -102,14 +103,31 @@ export function OrdinaryGovernancePanel({ sdk, t, definitionId, communityId, can
         {votableReferenceProposals.length === 0 ? <p>{t('govNoVotableProposals')}</p> : votableReferenceProposals.map(rp =>
           <p key={rp.id}><code>{String(rp.id).slice(0, 8)}</code> · {t('ref' + rp.kind)}: {rp.lower_value} – {rp.upper_value}
             <button type="button" disabled={busy} onClick={() => run(() => api.proposePublishReference(definitionId, rp.id))}>{t('govStartVoteAction')}</button></p>)}
-        <button type="button" disabled={busy} onClick={() => setPolicyChangeForm(policyChangeForm ? null : { windowDays: 90, minimumObservations: 5, minimumParticipants: 6, maximumParticipantShare: '0.40', freshnessDays: 30, explanation: '' })}>{t('govProposePolicyChange')}</button>
+        <button type="button" disabled={busy} onClick={() => setPolicyChangeForm(policyChangeForm ? null : { windowDays: 90, minimumObservations: 5, minimumParticipants: 6, maximumParticipantShare: '0.40', freshnessDays: 30, explanation: '', listingSourceEnabled: false, wantedSourceEnabled: false })}>{t('govProposePolicyChange')}</button>
         {policyChangeForm && <form className="stir-form" onSubmit={e => { e.preventDefault(); run(() => api.proposePolicyChange(definitionId, policyChangeForm)).then(() => setPolicyChangeForm(null)); }}>
           <label>{t('refWindowDays')}<input type="number" min={7} max={365} required value={policyChangeForm.windowDays} onChange={e => setPolicyChangeForm({ ...policyChangeForm, windowDays: Number(e.target.value) })}/></label>
           <label>{t('refMinObservations')}<input type="number" min={5} required value={policyChangeForm.minimumObservations} onChange={e => setPolicyChangeForm({ ...policyChangeForm, minimumObservations: Number(e.target.value) })}/></label>
           <label>{t('refMinParticipants')}<input type="number" min={6} required value={policyChangeForm.minimumParticipants} onChange={e => setPolicyChangeForm({ ...policyChangeForm, minimumParticipants: Number(e.target.value) })}/></label>
           <label>{t('refMaxParticipantShare')}<input type="number" min="0.1" max="0.5" step="0.01" required value={policyChangeForm.maximumParticipantShare} onChange={e => setPolicyChangeForm({ ...policyChangeForm, maximumParticipantShare: e.target.value })}/></label>
           <label>{t('refFreshnessDays')}<input type="number" min={1} required value={policyChangeForm.freshnessDays} onChange={e => setPolicyChangeForm({ ...policyChangeForm, freshnessDays: Number(e.target.value) })}/></label>
+          <label><input type="checkbox" checked={policyChangeForm.listingSourceEnabled} onChange={e => setPolicyChangeForm({ ...policyChangeForm, listingSourceEnabled: e.target.checked })}/>{t('refListingSourceEnabled')}</label>
+          <label><input type="checkbox" checked={policyChangeForm.wantedSourceEnabled} onChange={e => setPolicyChangeForm({ ...policyChangeForm, wantedSourceEnabled: e.target.checked })}/>{t('refWantedSourceEnabled')}</label>
           <label className="stir-wide">{t('refPolicyExplanation')}<textarea required maxLength={2000} value={policyChangeForm.explanation} onChange={e => setPolicyChangeForm({ ...policyChangeForm, explanation: e.target.value })}/></label>
+          <button disabled={busy}>{t('govOrdinarySubmitProposal')}</button>
+        </form>}
+        <button type="button" disabled={busy} onClick={() => setSeedForm(seedForm ? null : { kind: 'VALUE', lowerValue: '', upperValue: '', rationale: '', basis: '', validDays: 90 })}>{t('govProposeSeed')}</button>
+        {seedForm && <form className="stir-form" onSubmit={e => { e.preventDefault(); run(() => api.proposeCommunitySeed(definitionId, seedForm)).then(() => setSeedForm(null)); }}>
+          <p className="stir-hint">{t('govProposeSeedHint')}</p>
+          <label>{t('govSeedKind')}<select value={seedForm.kind} onChange={e => setSeedForm({ ...seedForm, kind: e.target.value, lowerValue: '', upperValue: '' })}>
+            <option value="VALUE">{t('refVALUE')}</option><option value="BAND">{t('refBAND')}</option><option value="QUALITATIVE">{t('refQUALITATIVE')}</option>
+          </select></label>
+          {seedForm.kind !== 'QUALITATIVE' && <>
+            <label>{t('refFieldlowerValue')}<input type="number" min="0" step="any" required value={seedForm.lowerValue} onChange={e => setSeedForm({ ...seedForm, lowerValue: e.target.value })}/></label>
+            <label>{t('refFieldupperValue')}<input type="number" min="0" step="any" required value={seedForm.upperValue} onChange={e => setSeedForm({ ...seedForm, upperValue: e.target.value })}/></label>
+          </>}
+          <label className="stir-wide">{t('govSeedRationale')}<textarea required maxLength={2000} value={seedForm.rationale} onChange={e => setSeedForm({ ...seedForm, rationale: e.target.value })}/></label>
+          <label className="stir-wide">{t('govSeedBasis')}<input required maxLength={100} value={seedForm.basis} onChange={e => setSeedForm({ ...seedForm, basis: e.target.value })}/></label>
+          <label>{t('govSeedValidDays')}<input type="number" min={1} max={365} required value={seedForm.validDays} onChange={e => setSeedForm({ ...seedForm, validDays: Number(e.target.value) })}/></label>
           <button disabled={busy}>{t('govOrdinarySubmitProposal')}</button>
         </form>}
       </details>
