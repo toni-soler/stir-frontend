@@ -158,7 +158,10 @@ export function PolicyForm({sdk,t,definitionId,policy,onChanged}) {
   const api=useMemo(()=>referenceApi(sdk,sdk.activeTenantId),[sdk.activeTenantId]);
   const initial=()=>({windowDays:policy.window_days,minimumObservations:policy.minimum_observations,
     minimumParticipants:policy.minimum_participants,maximumParticipantShare:policy.maximum_participant_share,
-    freshnessDays:policy.freshness_days,explanation:''});
+    freshnessDays:policy.freshness_days,explanation:'',
+    // Carried forward explicitly - an unrelated field edit through this direct path must never
+    // silently reset these back to disabled (MULTI_SOURCE_VALUE_EVIDENCE.md).
+    listingSourceEnabled:Boolean(policy.listing_source_enabled),wantedSourceEnabled:Boolean(policy.wanted_source_enabled)});
   const [form,setForm]=useState(initial);
   useEffect(()=>{setForm(initial());},[policy.id]);
   const [busy,setBusy]=useState(false),[error,setError]=useState('');
@@ -176,6 +179,8 @@ export function PolicyForm({sdk,t,definitionId,policy,onChanged}) {
       <label>{t('refMaxParticipantShare')}<input type="number" min="0.1" max="0.5" step="0.01" required value={form.maximumParticipantShare} onChange={e=>setForm({...form,maximumParticipantShare:e.target.value})}/></label>
       <label>{t('refFreshnessDays')}<input type="number" min={1} required value={form.freshnessDays} onChange={e=>setForm({...form,freshnessDays:Number(e.target.value)})}/></label>
       <label className="stir-wide">{t('refPolicyExplanation')}<textarea required maxLength={2000} value={form.explanation} onChange={e=>setForm({...form,explanation:e.target.value})}/></label>
+      <label><input type="checkbox" checked={form.listingSourceEnabled} onChange={e=>setForm({...form,listingSourceEnabled:e.target.checked})}/>{t('refListingSourceEnabled')}</label>
+      <label><input type="checkbox" checked={form.wantedSourceEnabled} onChange={e=>setForm({...form,wantedSourceEnabled:e.target.checked})}/>{t('refWantedSourceEnabled')}</label>
       {error&&<p role="alert">{error}</p>}
       <button disabled={busy}>{t('refPolicySave')}</button>
     </form>
