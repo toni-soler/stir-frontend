@@ -236,6 +236,8 @@ export function marketGovernanceApi(sdk,tenantId) {
     proposals:id=>request('/'+encodeURIComponent(id)+'/proposals'),
     credentials:id=>request('/'+encodeURIComponent(id)+'/credentials'),
     bootstrap:r=>request('/bootstrap',body('POST',r)),
+    beginWebauthnRegistration:r=>request('/webauthn/register/begin',body('POST',r)),
+    finishWebauthnRegistration:r=>request('/webauthn/register/finish',body('POST',r)),
     propose:(community,r)=>request('/'+encodeURIComponent(community)+'/proposals',body('POST',r)),
     proposal:id=>request('/proposals/'+encodeURIComponent(id)),
     signingPayload:id=>request('/proposals/'+encodeURIComponent(id)+'/signing-payload'),
