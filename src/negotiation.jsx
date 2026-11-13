@@ -90,11 +90,13 @@ export function NegotiationDetail({ sdk, t, id, navigate }) {
 
   const head = negotiation.offers[negotiation.offers.length - 1];
   const myTurn = negotiation.status === 'OPEN' && head.authorId !== userId;
+  // Who pays whom is part of what is accepted: show it, and bind the acceptance to exactly it.
+  const economicParties = head.proposedAmount != null && negotiation.payerUserId ? { payerUserId: negotiation.payerUserId, payeeUserId: negotiation.payeeUserId } : null;
 
   const act = async (action) => {
     setBusy(true); setError('');
     try {
-      if (action.type === 'accept') { const agreement = await negotiations.accept(id, head.id, negotiation.version, consent); navigate('/stir/agreements/' + agreement.id); return; }
+      if (action.type === 'accept') { const agreement = await negotiations.accept(id, head.id, negotiation.version, consent, economicParties); navigate('/stir/agreements/' + agreement.id); return; }
       if (action.type === 'decline') { await negotiations.decline(id, negotiation.version); setRevision(n => n + 1); return; }
       if (action.type === 'counter') { await negotiations.counter(id, { ...action.payload, expectedVersion: negotiation.version }); setRevision(n => n + 1); return; }
     } catch (e) { setError(e.message); } finally { setBusy(false); }
@@ -110,6 +112,7 @@ export function NegotiationDetail({ sdk, t, id, navigate }) {
     </div>
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     {negotiation.status === 'OPEN' && !myTurn && <p>{t('waitingForOtherParty')}</p>}
+    {myTurn && economicParties && <p className="stir-economic-role" data-testid="economic-role">{t(economicParties.payerUserId === userId ? 'acceptYouPay' : 'acceptYouReceive')}</p>}
     {negotiation.status === 'OPEN' && myTurn && !countering && <div className="stir-actions">
       <button disabled={busy} onClick={() => act({ type: 'accept' })}>{t('accept')}</button>
       <button disabled={busy} className="secondary" onClick={() => setCountering(true)}>{t('counter')}</button>
