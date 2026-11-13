@@ -69,7 +69,9 @@ export function negotiationApi(sdk, tenantId) {
     list: (filters, signal) => request(query(filters), { signal }),
     read: (id) => request('/' + encodeURIComponent(id)),
     counter: (id, value) => request('/' + encodeURIComponent(id) + '/offers', body('POST', value)),
-    accept: (id, offerId, expectedVersion, shareReferenceObservation=false) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion, ...(shareReferenceObservation?{shareReferenceObservation:true}:{}) })),
+    // expectedParties: { payerUserId, payeeUserId } as shown to the user; the server refuses any other.
+    accept: (id, offerId, expectedVersion, shareReferenceObservation=false, expectedParties=null) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion, ...(shareReferenceObservation?{shareReferenceObservation:true}:{}),
+      ...(expectedParties?{expectedPayerUserId:expectedParties.payerUserId,expectedPayeeUserId:expectedParties.payeeUserId}:{}) })),
     decline: (id, expectedVersion) => request('/' + encodeURIComponent(id) + '/decline', body('POST', { expectedVersion })),
   };
 }
