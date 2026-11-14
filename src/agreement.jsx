@@ -1,6 +1,7 @@
 import { AgreementReference } from './references.jsx';
 import { agreementApi } from './api.js';
 import { TradeStatus } from './trade.jsx';
+import { StructuredTermsView } from './terms.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
@@ -43,6 +44,7 @@ export function AgreementDetail({ sdk, t, id, navigate }) {
     <h3>{t('refAgreed')}</h3>
     <p>{accepted.proposedAmount ?? t('refNoAmount')} {/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(accepted.proposedUnitRef||'')?t('refCommunityUnit'):(accepted.proposedUnitRef||'')}</p>
     {(accepted.quantity || accepted.unitLabel) && <p>{t('refAgreedQuantity')}: {accepted.quantity ?? ''} {accepted.unitLabel || ''}</p>}
+    <StructuredTermsView t={t} terms={accepted} viewerIsOwner={agreement.ownerId === sdk.user?.id} acknowledged={accepted.openQuestionsAcknowledged} />
     <h3>{t('economicExecution')}</h3>
     <TradeStatus sdk={sdk} t={t} agreementId={agreement.id} economicPhase={agreement.economicPhase} navigate={navigate} />
     <AgreementReference sdk={sdk} t={t} id={agreement.id}/>

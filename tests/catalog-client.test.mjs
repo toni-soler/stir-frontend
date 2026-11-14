@@ -79,3 +79,31 @@ test('photo metadata and authenticated binary content stay inside the tenant bou
     URL.revokeObjectURL(objectUrl);
   }
 });
+
+// STRUCTURED_TERMS_AND_NEEDS.md
+test('listingPayload sends details only when set or when editing, and drops need-only fields from offers', async () => {
+  const { listingDetails } = await import('../src/catalog-client.js');
+  const base = { direction: 'OFFER', title: 'Bike', description: 'Red', category: 'general', resourceKind: 'physical' };
+  assert.equal('details' in listingPayload(base, false), false);
+  assert.deepEqual(listingPayload({ ...base, version: 3 }, true).details, listingDetails(base));
+  const withDetails = listingPayload({ ...base, itemCondition: 'GOOD', neededBy: '2026-12-01', flexibleOn: ['TIMING'], counterpartNote: '  Ring twice  ' }, false);
+  assert.deepEqual(withDetails.details, { itemCondition: 'GOOD', fulfilmentMode: null, includedItems: null, availableUntil: null, availability: 'AVAILABLE',
+    neededBy: null, flexibleOn: [], firmOn: [], counterpartNote: 'Ring twice' });
+  assert.equal(listingPayload({ ...base, direction: 'WANTED', neededBy: '2026-12-01', firmOn: ['PLACE'] }, false).details.neededBy, '2026-12-01');
+});
+
+test('offerPayload adds structured terms only when one is given, and validity is sent as an instant', async () => {
+  assert.equal('structuredTerms' in offerPayload({ message: 'Hi' }), false);
+  const payload = offerPayload({ message: 'Hi', scope: ' Diagnosis only ', openQuestions: 'Which part', validUntil: '2030-01-02T10:00' });
+  assert.equal(payload.structuredTerms.scope, 'Diagnosis only');
+  assert.equal(payload.structuredTerms.openQuestions, 'Which part');
+  assert.equal(payload.structuredTerms.validUntil, new Date('2030-01-02T10:00').toISOString());
+  assert.equal(payload.structuredTerms.ownerTasks, null);
+});
+
+test('offerExpired is false without validity and true once it has passed', async () => {
+  const { offerExpired } = await import('../src/catalog-client.js');
+  assert.equal(offerExpired({}), false);
+  assert.equal(offerExpired({ validUntil: '2030-01-01T00:00:00Z' }, Date.parse('2029-12-31T00:00:00Z')), false);
+  assert.equal(offerExpired({ validUntil: '2030-01-01T00:00:00Z' }, Date.parse('2030-01-02T00:00:00Z')), true);
+});

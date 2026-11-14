@@ -70,8 +70,10 @@ export function negotiationApi(sdk, tenantId) {
     read: (id) => request('/' + encodeURIComponent(id)),
     counter: (id, value) => request('/' + encodeURIComponent(id) + '/offers', body('POST', value)),
     // expectedParties: { payerUserId, payeeUserId } as shown to the user; the server refuses any other.
-    accept: (id, offerId, expectedVersion, shareReferenceObservation=false, expectedParties=null) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion, ...(shareReferenceObservation?{shareReferenceObservation:true}:{}),
-      ...(expectedParties?{expectedPayerUserId:expectedParties.payerUserId,expectedPayeeUserId:expectedParties.payeeUserId}:{}) })),
+    // acknowledgeOpenQuestions: required when the offer leaves questions open (STRUCTURED_TERMS_AND_NEEDS.md).
+    accept: (id, offerId, expectedVersion, shareReferenceObservation=false, expectedParties=null, acknowledgeOpenQuestions=false) => request('/' + encodeURIComponent(id) + '/accept', body('POST', { offerId, expectedVersion, ...(shareReferenceObservation?{shareReferenceObservation:true}:{}),
+      ...(expectedParties?{expectedPayerUserId:expectedParties.payerUserId,expectedPayeeUserId:expectedParties.payeeUserId}:{}),
+      ...(acknowledgeOpenQuestions?{acknowledgeOpenQuestions:true}:{}) })),
     decline: (id, expectedVersion) => request('/' + encodeURIComponent(id) + '/decline', body('POST', { expectedVersion })),
   };
 }
