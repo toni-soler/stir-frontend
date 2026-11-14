@@ -5,6 +5,20 @@
  */
 export const CATALOG_CONTRACT_VERSION = 1;
 
+// Additive, version unchanged (STRUCTURED_TERMS_AND_NEEDS.md): listing details, a counterpart-only note, structured offer terms.
+export const CONDITIONS = ['NEW', 'LIKE_NEW', 'GOOD', 'FAIR', 'FOR_PARTS'];
+export const FULFILMENT_MODES = ['PICKUP', 'DELIVERY', 'PICKUP_OR_DELIVERY', 'ON_SITE', 'REMOTE'];
+export const AVAILABILITY = ['AVAILABLE', 'IN_CONVERSATION', 'COMMITTED'];
+export const DIMENSIONS = ['TIMING', 'PLACE', 'QUANTITY', 'CONDITION', 'AMOUNT'];
+const DETAIL_KEYS = ['itemCondition', 'fulfilmentMode', 'includedItems', 'availableUntil', 'availability', 'neededBy', 'flexibleOn', 'firmOn', 'counterpartNote'];
+const TERM_KEYS = ['scope', 'ownerTasks', 'initiatorTasks', 'fulfilmentMode', 'fulfilBy', 'openQuestions', 'validUntil'];
+const present = (v) => Array.isArray(v) ? v.length > 0 : v != null && String(v).trim() !== '';
+
+/** An offer whose validity has passed can no longer be accepted (the server refuses it too). */
+export function offerExpired(offer, now = Date.now()) {
+  return Boolean(offer?.validUntil) && new Date(offer.validUntil).getTime() < now;
+}
+
 export function createCatalogClient(sdk, tenantId) {
   if (!tenantId || sdk?.demo || typeof sdk?.fetchWithAuth !== 'function') {
     throw new Error('stir.realSessionRequired');
@@ -59,7 +73,22 @@ export function listingPayload(value, editing) {
     // reference definition is picked (MULTI_SOURCE_VALUE_EVIDENCE.md).
     ...(value.referenceDefinitionId?{indicativeAmount:value.indicativeAmount||null,indicativeQuantity:value.indicativeQuantity||null,
       indicativeUnitLabel:value.indicativeUnitLabel||null,indicativeUnitRef:value.indicativeUnitRef||null,
-      shareReferenceObservation:Boolean(value.shareReferenceObservation)}:{})};
+      shareReferenceObservation:Boolean(value.shareReferenceObservation)}:{}),
+    // Sent when any detail is set, and always when editing so that clearing one is possible. Omitted,
+    // the server keeps an existing listing's details.
+    ...(editing || DETAIL_KEYS.some(key => present(value[key])) ? { details: listingDetails(value) } : {})};
+}
+
+export function listingDetails(value) {
+  const text = (v) => present(v) ? String(v).trim() : null;
+  const isNeed = value.direction === 'WANTED';
+  return {
+    itemCondition: value.itemCondition || null, fulfilmentMode: value.fulfilmentMode || null,
+    includedItems: text(value.includedItems), availableUntil: value.availableUntil || null,
+    availability: value.availability || 'AVAILABLE', neededBy: isNeed ? (value.neededBy || null) : null,
+    flexibleOn: isNeed ? (value.flexibleOn || []) : [], firmOn: isNeed ? (value.firmOn || []) : [],
+    counterpartNote: text(value.counterpartNote),
+  };
 }
 
 export function offerPayload(value) {
@@ -67,5 +96,16 @@ export function offerPayload(value) {
   return {message,quantity:quantity||null,unitLabel:unitLabel||null,proposedAmount:proposedAmount||null,proposedUnitRef:proposedUnitRef||null,terms:terms||null,...(value.shareReferenceObservation?{shareReferenceObservation:true}:{}),
     // Opaque passthrough only: a distribution that reuses STIR's own offer/counter form still
     // attaches its own frozen external contract commitment without STIR interpreting it.
-    ...(value.externalContractNamespace?{externalContractNamespace:value.externalContractNamespace,externalContractDigest:value.externalContractDigest}:{})};
+    ...(value.externalContractNamespace?{externalContractNamespace:value.externalContractNamespace,externalContractDigest:value.externalContractDigest}:{}),
+    ...(TERM_KEYS.some(key => present(value[key])) ? { structuredTerms: offerTerms(value) } : {})};
+}
+
+export function offerTerms(value) {
+  const text = (v) => present(v) ? String(v).trim() : null;
+  return {
+    scope: text(value.scope), ownerTasks: text(value.ownerTasks), initiatorTasks: text(value.initiatorTasks),
+    fulfilmentMode: value.fulfilmentMode || null, fulfilBy: value.fulfilBy || null, openQuestions: text(value.openQuestions),
+    // datetime-local has no zone: it is the user's local time.
+    validUntil: value.validUntil ? new Date(value.validUntil).toISOString() : null,
+  };
 }

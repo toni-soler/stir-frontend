@@ -2,6 +2,7 @@ import { References, ReferenceSelector } from './references.jsx';
 import { Governance, GovernanceSignTool } from './governance.jsx';
 import { instanceApi, moderationApi } from './api.js';
 import { createCatalogClient, listingPayload } from './catalog-client.js';
+import { ListingDetailsFields } from './terms.jsx';
 import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
 import { NegotiationList, NegotiationDetail } from './negotiation.jsx';
@@ -46,6 +47,7 @@ function ListingEditor({initial, api, sdk, catalogs, t, onCancel, onSaved, justC
       <label className="stir-wide"><input type="checkbox" checked={Boolean(value.shareReferenceObservation)} onChange={e=>change('shareReferenceObservation',e.target.checked)}/>{t('listingShareConsent')}</label>
     </>}
     <label className="stir-wide">{t('location')}<input maxLength={160} value={value.location||''} onChange={e=>change('location',e.target.value)}/><small>{t('locationHint')}</small></label>
+    <ListingDetailsFields t={t} value={value} change={change}/>
     <p className="stir-wide"><small>{t('requiredFieldsHint')}</small></p>
     <p>{t('status')}: {t('ACTIVE')}</p>
     {error && <p role="alert">{t(error.replace('stir.',''))}</p>}

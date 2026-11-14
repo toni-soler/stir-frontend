@@ -1,20 +1,23 @@
 import { ReferencePanel, ReferenceConsent } from './references.jsx';
 import { negotiationApi, participantApi, listingApi, offerPayload } from './api.js';
+import { StructuredTermsFields, StructuredTermsView, ListingDetailsView } from './terms.jsx';
+import { offerExpired } from './catalog-client.js';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
 
-function OfferThreadItem({ t, offer, isMine, otherPartyName }) {
+function OfferThreadItem({ t, offer, isMine, otherPartyName, viewerIsOwner }) {
   return <article className={'stir-offer ' + offer.status}>
     <header><strong>{isMine ? t('you') : otherPartyName}</strong><span className={'stir-badge ' + offer.status}>{t('offerStatus' + offer.status)}</span></header>
     <p>{offer.message}</p>
     {(offer.quantity || offer.unitLabel) && <p>{t('offerQuantity')}: {offer.quantity ?? ''} {offer.unitLabel || ''}</p>}
     {(offer.proposedAmount || offer.proposedUnitRef) && <p>{t('offerProposedAmount')}: {offer.proposedAmount ?? ''} {offer.proposedUnitRef || ''}</p>}
     {offer.terms && <p><em>{offer.terms}</em></p>}
+    <StructuredTermsView t={t} terms={offer} viewerIsOwner={viewerIsOwner} />
   </article>;
 }
 
-function CounterForm({ sdk, definitionId, t, busy, error, onSubmit }) {
+function CounterForm({ sdk, definitionId, t, busy, error, onSubmit, viewerIsOwner }) {
   const [value, setValue] = useState({ message: '', quantity: '', unitLabel: '', proposedAmount: '', proposedUnitRef: '', terms: '' });
   const change = (key, next) => setValue(current => ({ ...current, [key]: next }));
   return <form className="stir-form" onSubmit={e => { e.preventDefault(); onSubmit(offerPayload(value)); }}>
@@ -24,6 +27,7 @@ function CounterForm({ sdk, definitionId, t, busy, error, onSubmit }) {
     <label>{t('offerProposedAmount')}<input type="number" min="0" step="any" value={value.proposedAmount} onChange={e => change('proposedAmount', e.target.value)} /></label>
     <label>{t('offerProposedUnitRef')}<input maxLength={60} value={value.proposedUnitRef} onChange={e => change('proposedUnitRef', e.target.value)} /></label>
     <label className="stir-wide">{t('offerTerms')}<textarea maxLength={2000} rows={2} value={value.terms} onChange={e => change('terms', e.target.value)} /></label>
+    <StructuredTermsFields t={t} value={value} change={change} viewerIsOwner={viewerIsOwner} />
     {definitionId&&<><ReferencePanel sdk={sdk} t={t} definitionId={definitionId} offer={value} onDefinition={d=>setValue(current=>({...current,quantity:current.quantity||String(d.quantity_basis),unitLabel:current.unitLabel||d.quantity_unit,proposedUnitRef:current.proposedUnitRef||d.unit_ref}))}/><ReferenceConsent t={t} value={value.shareReferenceObservation} onChange={v=>change('shareReferenceObservation',v)}/></>}
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     <div className="stir-actions stir-wide"><button disabled={busy} type="submit">{t(busy ? 'sending' : 'sendCounter')}</button></div>
@@ -72,6 +76,7 @@ export function NegotiationDetail({ sdk, t, id, navigate }) {
   const [busy, setBusy] = useState(false);
   const [countering, setCountering] = useState(false);
   const [consent,setConsent]=useState(false);
+  const [acknowledged, setAcknowledged] = useState(false);
   const [revision, setRevision] = useState(0);
   const userId = sdk.user?.id;
 
@@ -92,11 +97,15 @@ export function NegotiationDetail({ sdk, t, id, navigate }) {
   const myTurn = negotiation.status === 'OPEN' && head.authorId !== userId;
   // Who pays whom is part of what is accepted: show it, and bind the acceptance to exactly it.
   const economicParties = head.proposedAmount != null && negotiation.payerUserId ? { payerUserId: negotiation.payerUserId, payeeUserId: negotiation.payeeUserId } : null;
+  const viewerIsOwner = negotiation.ownerId === userId;
+  const expired = offerExpired(head);
+  // Accepting an offer that leaves questions open means accepting it with them still open: say so first.
+  const mustAcknowledge = Boolean(head.openQuestions);
 
   const act = async (action) => {
     setBusy(true); setError('');
     try {
-      if (action.type === 'accept') { const agreement = await negotiations.accept(id, head.id, negotiation.version, consent, economicParties); navigate('/stir/agreements/' + agreement.id); return; }
+      if (action.type === 'accept') { const agreement = await negotiations.accept(id, head.id, negotiation.version, consent, economicParties, Boolean(head.openQuestions) && acknowledged); navigate('/stir/agreements/' + agreement.id); return; }
       if (action.type === 'decline') { await negotiations.decline(id, negotiation.version); setRevision(n => n + 1); return; }
       if (action.type === 'counter') { await negotiations.counter(id, { ...action.payload, expectedVersion: negotiation.version }); setRevision(n => n + 1); return; }
     } catch (e) { setError(e.message); } finally { setBusy(false); }
@@ -104,20 +113,23 @@ export function NegotiationDetail({ sdk, t, id, navigate }) {
 
   return <section className="stir-panel">
     {listing && <p><button type="button" className="stir-link" onClick={() => navigate('/stir/listing/' + listing.id)}>{listing.title}</button></p>}
+    {listing && <ListingDetailsView t={t} listing={listing} />}
     <span className={'stir-badge ' + negotiation.status}>{t(negotiation.status)}</span>
     <ReferencePanel sdk={sdk} t={t} definitionId={negotiation.referenceDefinitionId} offer={head}/>
     {negotiation.referenceDefinitionId&&myTurn&&<ReferenceConsent t={t} value={consent} onChange={setConsent}/>}
     <div className="stir-thread">
-      {negotiation.offers.map(offer => <OfferThreadItem key={offer.id} t={t} offer={offer} isMine={offer.authorId === userId} otherPartyName={otherPartyName} />)}
+      {negotiation.offers.map(offer => <OfferThreadItem key={offer.id} t={t} offer={offer} isMine={offer.authorId === userId} otherPartyName={otherPartyName} viewerIsOwner={viewerIsOwner} />)}
     </div>
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     {negotiation.status === 'OPEN' && !myTurn && <p>{t('waitingForOtherParty')}</p>}
     {myTurn && economicParties && <p className="stir-economic-role" data-testid="economic-role">{t(economicParties.payerUserId === userId ? 'acceptYouPay' : 'acceptYouReceive')}</p>}
+    {negotiation.status === 'OPEN' && myTurn && !countering && mustAcknowledge && !expired && <label className="stir-acknowledge" data-testid="acknowledge-open-questions">
+      <input type="checkbox" checked={acknowledged} onChange={e => setAcknowledged(e.target.checked)} />{t('termsAcknowledgeOpenQuestions')}</label>}
     {negotiation.status === 'OPEN' && myTurn && !countering && <div className="stir-actions">
-      <button disabled={busy} onClick={() => act({ type: 'accept' })}>{t('accept')}</button>
+      <button disabled={busy || expired || (mustAcknowledge && !acknowledged)} onClick={() => act({ type: 'accept' })}>{t('accept')}</button>
       <button disabled={busy} className="secondary" onClick={() => setCountering(true)}>{t('counter')}</button>
     </div>}
-    {negotiation.status === 'OPEN' && countering && <CounterForm sdk={sdk} definitionId={negotiation.referenceDefinitionId} t={t} busy={busy} error="" onSubmit={payload => act({ type: 'counter', payload })} />}
+    {negotiation.status === 'OPEN' && countering && <CounterForm sdk={sdk} definitionId={negotiation.referenceDefinitionId} t={t} busy={busy} error="" viewerIsOwner={viewerIsOwner} onSubmit={payload => act({ type: 'counter', payload })} />}
     {negotiation.status === 'OPEN' && <div className="stir-actions"><button disabled={busy} className="secondary" onClick={() => act({ type: 'decline' })}>{t('decline')}</button></div>}
     {negotiation.status === 'ACCEPTED' && negotiation.agreementId && <button onClick={() => navigate('/stir/agreements/' + negotiation.agreementId)}>{t('viewAgreement')}</button>}
   </section>;

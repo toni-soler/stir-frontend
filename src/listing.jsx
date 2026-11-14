@@ -2,6 +2,7 @@ import { ReferencePanel, ReferenceConsent } from './references.jsx';
 import { createCatalogClient, offerPayload } from './catalog-client.js';
 import { AttachmentImage } from './attachments.jsx';
 import { ReportButton } from './moderation.jsx';
+import { ListingDetailsView, StructuredTermsFields } from './terms.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
@@ -29,6 +30,7 @@ function OfferForm({ sdk, definitionId, t, busy, error, onSubmit }) {
     <label>{t('offerProposedAmount')}<input type="number" min="0" step="any" value={value.proposedAmount} onChange={e => change('proposedAmount', e.target.value)} /></label>
     <label>{t('offerProposedUnitRef')}<input maxLength={60} value={value.proposedUnitRef} onChange={e => change('proposedUnitRef', e.target.value)} /></label>
     <label className="stir-wide">{t('offerTerms')}<textarea maxLength={2000} rows={2} value={value.terms} onChange={e => change('terms', e.target.value)} /></label>
+    <StructuredTermsFields t={t} value={value} change={change} viewerIsOwner={false} />
     {definitionId&&<><ReferencePanel sdk={sdk} t={t} definitionId={definitionId} offer={value} onDefinition={d=>setValue(current=>({...current,quantity:current.quantity||String(d.quantity_basis),unitLabel:current.unitLabel||d.quantity_unit,proposedUnitRef:current.proposedUnitRef||d.unit_ref}))}/><ReferenceConsent t={t} value={value.shareReferenceObservation} onChange={v=>change('shareReferenceObservation',v)}/></>}
     {error && <p role="alert">{t(error.replace('stir.', ''))}</p>}
     <div className="stir-actions stir-wide"><button disabled={busy} type="submit">{t(busy ? 'sending' : 'sendOffer')}</button></div>
@@ -73,6 +75,7 @@ export function ListingDetail({ sdk, t, id, navigate }) {
     <small>{t(listing.resourceKind)} · {t(listing.category)}</small>
     <p className="stir-description">{listing.description}</p>
     {listing.location && <p>⌖ {listing.location}</p>}
+    <ListingDetailsView t={t} listing={listing} />
     <p>{t('status')}: {t(listing.status)}</p>
     {!own && listing.status === 'ACTIVE' && !offering && <button onClick={() => setOffering(true)}>{t('makeOffer')}</button>}
     {!own && listing.status === 'ACTIVE' && offering && <OfferForm sdk={sdk} definitionId={listing.referenceDefinitionId} t={t} busy={busy} error={error} onSubmit={submitOffer} />}
