@@ -108,12 +108,13 @@ export function deviceApi(sdk, tenantId) {
     addIntent: (publicKeyBase64url) => request('/approval-intent', body('POST', { publicKeyBase64url })),
     revokeIntent: (credentialId) => request('/' + encodeURIComponent(credentialId) + '/revoke/approval-intent', body('POST')),
     /**
-     * Asks the identity service to approve exactly one operation (the intent STIR described) with a
+     * Asks the identity service to approve exactly one operation (the intent STIR described), in this
+     * workspace (tenant-scoped path: the platform refuses a tenant header on unscoped paths), with a
      * fresh authenticator code. Returns the approval token; throws an Error whose message is a
      * translatable key. The code is sent once and not kept.
      */
     requestApproval: async (intent, code) => {
-      const response = await sdk.fetchWithAuth('/api/shell/v1/operation-approvals', { method: 'POST',
+      const response = await sdk.fetchWithAuth(`/api/shell/v1/tenants/${encodeURIComponent(tenantId)}/operation-approvals`, { method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: intent.action, resource: intent.resource, intentDigest: intent.intentDigest, code }) });
       const text = await response.text();

@@ -36,7 +36,7 @@ test('the intent to approve comes from STIR and the approval is requested from t
   assert.deepEqual(await api.addIntent('pk'), intent);
   assert.equal(sdk.sent[0].path, '/api/stir/tenants/tenant-a/economic/devices/approval-intent');
   assert.equal(await api.requestApproval(intent, '123456'), 'approval');
-  assert.equal(sdk.sent[1].path, '/api/shell/v1/operation-approvals');
+  assert.equal(sdk.sent[1].path, '/api/shell/v1/tenants/tenant-a/operation-approvals');
   assert.deepEqual(JSON.parse(sdk.sent[1].options.body), { ...intent, code: '123456' });
 });
 
