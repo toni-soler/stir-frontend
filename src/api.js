@@ -8,7 +8,8 @@ export { listingPayload, offerPayload } from './catalog-client.js';
 // exceeds your credit limit", never "HTTP 422".
 function httpError(status, data) {
   const rawMessage = data && typeof data.message === 'string' ? data.message : '';
-  const match = /^([A-Z_]+): /.exec(rawMessage);
+  // osTRIS's approval and ownership refusals arrive as a bare code (no "CODE: detail" form).
+  const match = /^([A-Z_]+): /.exec(rawMessage) || /^((?:OPERATION_APPROVAL|CONTROLLER)_[A-Z_]+)$/.exec(rawMessage);
   const error = new Error(match ? `stir.error${match[1]}` : `stir.http${status}`);
   error.status = status;
   error.detail = rawMessage;
@@ -94,12 +95,37 @@ export function economicApi(sdk, tenantId) {
   };
 }
 
+const approvalHeader = (approval) => (approval ? { 'X-Operation-Approval': approval } : {});
+
 export function deviceApi(sdk, tenantId) {
   const { request } = apiClient(sdk, tenantId, '/economic/devices');
   return {
     list: () => request(''),
-    add: (label, publicKeyBase64url) => request('', body('POST', { label, publicKeyBase64url })),
-    revoke: (credentialId) => request('/' + encodeURIComponent(credentialId) + '/revoke', body('POST')),
+    // `approval` is a per-operation approval (see requestApproval): relayed as a header, kept only
+    // in memory for this one call, never stored.
+    add: (label, publicKeyBase64url, approval) => request('', { ...body('POST', { label, publicKeyBase64url }), headers: approvalHeader(approval) }),
+    revoke: (credentialId, approval) => request('/' + encodeURIComponent(credentialId) + '/revoke', { ...body('POST'), headers: approvalHeader(approval) }),
+    addIntent: (publicKeyBase64url) => request('/approval-intent', body('POST', { publicKeyBase64url })),
+    revokeIntent: (credentialId) => request('/' + encodeURIComponent(credentialId) + '/revoke/approval-intent', body('POST')),
+    /**
+     * Asks the identity service to approve exactly one operation (the intent STIR described), in this
+     * workspace (tenant-scoped path: the platform refuses a tenant header on unscoped paths), with a
+     * fresh authenticator code. Returns the approval token; throws an Error whose message is a
+     * translatable key. The code is sent once and not kept.
+     */
+    requestApproval: async (intent, code) => {
+      const response = await sdk.fetchWithAuth(`/api/shell/v1/tenants/${encodeURIComponent(tenantId)}/operation-approvals`, { method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: intent.action, resource: intent.resource, intentDigest: intent.intentDigest, code }) });
+      const text = await response.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+      if (response.ok && data?.approvalToken) return data.approvalToken;
+      const key = { INVALID_TOTP: 'approvalInvalidCode', MFA_NOT_ENABLED: 'approvalMfaRequired', RATE_LIMITED: 'approvalRateLimited' }[data?.code] || 'approvalFailed';
+      const error = new Error('stir.' + key);
+      error.status = response.status;
+      throw error;
+    },
   };
 }
 
