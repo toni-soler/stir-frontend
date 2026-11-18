@@ -11,7 +11,9 @@ const bundles = JSON.parse(read('../src/locales.json'));
 // The manual is written in Spanish and in English; each copy is checked against the UI in its own language.
 const MANUALS = { es: read('../src/manual/es/index.html'), en: read('../src/manual/en/index.html') };
 // Labels that belong to the platform around STIR (the Shell), not to STIR's own bundle.
-const PLATFORM_LABELS = new Set(['Espacio actual', 'Current workspace', 'STIR', 'Usuarios', 'Users', 'Roles']);
+const PLATFORM_LABELS = new Set(['Espacio actual', 'Current workspace', 'STIR', 'Usuarios', 'Users', 'Roles',
+  'Roles asignados', 'Assigned roles', 'Plantilla de módulo', 'Module template',
+  'Dar los roles de los módulos a los miembros actuales', 'Give module roles to current members']);
 const decode = (text) => text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
 
 for (const [language, manual] of Object.entries(MANUALS)) {
