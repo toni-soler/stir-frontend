@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="stir-user-manual" content="1">
+<meta name="description" content="Manual de usuario de STIR: publicar, negociar, acordar, intercambiar en la unidad comunitaria, cumplir y revisar casos.">
+<title>Manual de usuario · STIR</title>
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header>
+  <h1>Manual de usuario de STIR</h1>
+  <p>Sistema Transparente de Intercambio de Recursos: publicar, negociar, acordar, intercambiar y cumplir dentro de tu comunidad.</p>
+  <p>Revisión funcional: 18 de noviembre de 2026 · Cubre hasta los casos sobre acuerdos · Guía en español</p>
+  <div class="toolbar">
+    <button type="button" data-action="print">Imprimir / guardar como PDF</button>
+    <a href="#primeros-pasos">Empezar a trabajar</a>
+  </div>
+</header>
+
+<div class="layout">
+<aside aria-label="Contenido">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#como-usar">Cómo utilizar esta guía</a></li>
+    <li><a href="#primeros-pasos">Primeros pasos</a></li>
+    <li><a href="#conceptos">Conceptos que conviene conocer</a></li>
+    <li><a href="#resumen">Resumen y notificaciones</a></li>
+    <li><a href="#marketplace">Buscar en el marketplace</a></li>
+    <li><a href="#publicar">Publicar lo que ofreces o buscas</a></li>
+    <li><a href="#leer-publicacion">Leer una publicación</a></li>
+    <li><a href="#negociar">Negociar</a></li>
+    <li><a href="#acuerdos">Tus acuerdos</a></li>
+    <li><a href="#economia">El intercambio en la unidad comunitaria</a></li>
+    <li><a href="#cumplimiento">Cumplir lo acordado</a></li>
+    <li><a href="#enmiendas">Cambiar un acuerdo: enmiendas</a></li>
+    <li><a href="#casos">Cuando algo no se cumplió: casos</a></li>
+    <li><a href="#revisores">Para quien revisa casos</a></li>
+    <li><a href="#perfil">Tu perfil, tu historia y tus consentimientos</a></li>
+    <li><a href="#referencias">Referencias comunitarias</a></li>
+    <li><a href="#gobernanza">Gobernanza de la comunidad</a></li>
+    <li><a href="#moderacion">Reportar y moderar</a></li>
+    <li><a href="#administracion">Administrar la comunidad</a></li>
+    <li><a href="#incidencias">Resolver incidencias</a></li>
+    <li><a href="#pantallas">Índice de pantallas</a></li>
+  </ol>
+</aside>
+
+<main>
+
+<section id="como-usar">
+  <h2>1. Cómo utilizar esta guía</h2>
+  <p>STIR es el espacio donde una comunidad intercambia recursos: bienes, servicios, conocimientos, colaboración o trabajo. Puedes publicar lo que ofreces o lo que buscas, negociar con otras personas, cerrar un acuerdo y, si lleva un importe, completarlo en la <strong>unidad comunitaria</strong> de tu comunidad.</p>
+  <p>Esta guía sigue el orden en que normalmente se usa STIR. Si es tu primera vez, empieza por <a href="#primeros-pasos">Primeros pasos</a>. Si buscas una pantalla concreta, el <a href="#pantallas">Índice de pantallas</a> explica cada una en una línea. Los textos de botones y campos aparecen así: <span class="ui">Crear publicación</span>.</p>
+  <div class="note"><strong>Tres ideas que recorren todo STIR.</strong>
+    <ul>
+      <li><strong>Lo acordado no se reescribe.</strong> Un acuerdo queda congelado tal como se aceptó. Si algo cambia, se añade una enmienda que dice qué sustituye.</li>
+      <li><strong>Nadie decide por ti, y nada ocurre solo.</strong> Cada paso lo da una persona con nombre: tú, la otra parte o un revisor de la comunidad.</li>
+      <li><strong>No hay puntuaciones.</strong> STIR no califica a nadie. Lo que se muestra son hechos que la otra parte confirmó, y sólo si quien los protagoniza decide compartirlos.</li>
+    </ul>
+  </div>
+  <h3>Quién hace qué</h3>
+  <div class="table-wrap"><table>
+    <caption>Papeles en STIR</caption>
+    <tr><th>Papel</th><th>Qué hace</th><th>Dónde lo explica la guía</th></tr>
+    <tr><td>Participante</td><td>Publica, negocia, acuerda, intercambia y declara lo que hizo o recibió.</td><td>Capítulos 2 a 13 y 15</td></tr>
+    <tr><td>Revisor de casos</td><td>Una persona nombrada por la comunidad que revisa casos en los que no es parte.</td><td><a href="#revisores">Capítulo 14</a></td></tr>
+    <tr><td>Publicador de referencias</td><td>Propone y publica orientaciones de valor para la comunidad.</td><td><a href="#referencias">Capítulo 16</a></td></tr>
+    <tr><td>Moderación</td><td>Revisa los reportes y puede ocultar publicaciones.</td><td><a href="#moderacion">Capítulo 18</a></td></tr>
+    <tr><td>Administración de la comunidad</td><td>Da de alta a las personas, asigna permisos, configura la comunidad económica y nombra a los revisores.</td><td><a href="#administracion">Capítulo 19</a></td></tr>
+  </table></div>
+  <p class="muted">Lo que ves depende de los permisos que tu comunidad te haya dado. Si te falta una pestaña o un botón que esta guía describe, pide a la administración de tu comunidad que lo revise.</p>
+</section>
+
+<section id="primeros-pasos">
+  <h2>2. Primeros pasos</h2>
+  <h3>Entrar</h3>
+  <ol class="steps">
+    <li>Abre la dirección de tu comunidad en el navegador e introduce tu correo y tu contraseña.</li>
+    <li>Si tu comunidad exige un segundo paso, introduce el código de 6 cifras de tu aplicación de autenticación. La primera vez te pedirá configurarla y te dará <strong>códigos de recuperación</strong>: guárdalos en un lugar seguro, fuera del navegador. Cada uno sirve una sola vez si pierdes el móvil.</li>
+    <li>Si perteneces a varias comunidades (espacios), elige la tuya en el selector <span class="ui">Espacio actual</span> de la parte superior.</li>
+    <li>Abre la tarjeta <span class="ui">STIR</span>. Llegarás al <span class="ui">Resumen</span>.</li>
+  </ol>
+  <p>Puedes cambiar el idioma en el selector de idioma de la parte superior. STIR está traducido a doce idiomas.</p>
+  <h3>Los tres primeros pasos dentro de STIR</h3>
+  <ol class="steps">
+    <li><strong>Completa tu perfil</strong> en <span class="ui">Mi perfil</span>: el <span class="ui">Nombre visible</span> es lo que verán las demás personas, y puede ser distinto de tu correo. Ver <a href="#perfil">Tu perfil</a>.</li>
+    <li><strong>Activa los intercambios</strong> en <span class="ui">Activación económica</span> si vas a intercambiar con importe en la unidad comunitaria. Hace falta el perfil completo. Ver <a href="#economia">El intercambio en la unidad comunitaria</a>.</li>
+    <li><strong>Explora el marketplace</strong> o crea tu primera publicación. Ver <a href="#marketplace">Buscar</a> y <a href="#publicar">Publicar</a>.</li>
+  </ol>
+  <div class="attention"><strong>Tu clave de firma vive en tu navegador.</strong> Al activar los intercambios, STIR crea en este navegador una clave con la que firmarás tus intercambios. No se puede copiar fuera de él y STIR no la guarda. Si cambias de ordenador o de navegador, tendrás que añadir ese dispositivo (ver <a href="#economia">Dispositivos autorizados</a>). Si borras los datos del navegador, la clave de ese navegador se pierde.</div>
+  <h3>La barra de pestañas</h3>
+  <p>Desde el marketplace tienes estas pestañas: <span class="ui">Resumen</span>, <span class="ui">Marketplace</span>, <span class="ui">Mis publicaciones</span>, <span class="ui">Mis negociaciones</span>, <span class="ui">Referencia comunitaria</span>, <span class="ui">Gobernanza</span>, <span class="ui">Mis acuerdos</span>, <span class="ui">Casos</span>, <span class="ui">Activación económica</span>, <span class="ui">Mi perfil</span> y, si moderas, <span class="ui">Cola de moderación</span>. En las demás páginas, <span class="ui">← Marketplace</span> te devuelve al inicio.</p>
+</section>
+
+<section id="conceptos">
+  <h2>3. Conceptos que conviene conocer</h2>
+  <div class="table-wrap"><table>
+    <tr><th>Término</th><th>Qué significa</th></tr>
+    <tr><td>Publicación</td><td>Lo que alguien ofrece (<span class="ui">OFREZCO</span>) o busca (<span class="ui">BUSCO</span>). Puede estar <em>Activa</em> o <em>Cerrada</em>.</td></tr>
+    <tr><td>Propuesta y contraoferta</td><td>Lo que una persona propone a otra sobre una publicación. Cada respuesta es una propuesta nueva; la anterior queda <em>Sustituida</em>, nunca se edita.</td></tr>
+    <tr><td>Negociación</td><td>La conversación entre quien publicó y quien respondió, con todas sus propuestas.</td></tr>
+    <tr><td>Acuerdo</td><td>Lo que existe cuando una parte acepta la propuesta vigente de la otra. Queda congelado en una <strong>instantánea contractual</strong> con su <strong>huella</strong>, un código que permite comprobar que nadie lo ha cambiado.</td></tr>
+    <tr><td>Unidad comunitaria</td><td>La unidad de cuenta de tu comunidad, un crédito mutuo. No es dinero de curso legal ni tiene cambio fijo con ninguna moneda.</td></tr>
+    <tr><td>osTRIS</td><td>El registro económico de la comunidad. Es el único que mueve saldos, y sólo cuando las dos partes firman.</td></tr>
+    <tr><td>Saldo y límite de crédito</td><td>Tu saldo en la unidad comunitaria y hasta dónde puede bajar. La diferencia es tu <strong>capacidad disponible</strong>.</td></tr>
+    <tr><td>Obligación</td><td>Cada cosa que un acuerdo compromete: el bien o servicio, las tareas de cada parte y el intercambio en la unidad comunitaria. Cada una tiene su propio estado.</td></tr>
+    <tr><td>Declaración</td><td>Lo que una parte dice que hizo o recibió. Nunca es un veredicto sobre la otra.</td></tr>
+    <tr><td>Enmienda</td><td>Un cambio aceptado por las dos partes que dice qué sustituye. Nunca reescribe el acuerdo.</td></tr>
+    <tr><td>Caso</td><td>La petición de que la comunidad revise una obligación que no se cumplió. Revisa el efecto, no a la persona.</td></tr>
+    <tr><td>Referencia comunitaria</td><td>Una orientación de valor que publica la comunidad. Orienta; nunca obliga.</td></tr>
+  </table></div>
+  <div class="note"><strong>Cinco números que nunca se mezclan.</strong> La unidad de cuenta, lo que se observó en acuerdos anteriores, la referencia que publicó la comunidad, el importe que tú acordaste y lo que quedó registrado en osTRIS son cosas distintas. STIR siempre indica de cuál se trata.</div>
+</section>
+
+<section id="resumen">
+  <h2>4. Resumen y notificaciones</h2>
+  <p>El <span class="ui">Resumen</span> te dice si <strong>tienes cosas pendientes de revisar</strong> o si <strong>estás al día</strong>. Agrupa:</p>
+  <ul>
+    <li><span class="ui">Esperando tu firma</span>: intercambios que sólo esperan tu firma.</li>
+    <li><span class="ui">Negociaciones abiertas</span>.</li>
+    <li><span class="ui">Acuerdos pendientes de ejecución económica</span>.</li>
+    <li><span class="ui">Mis publicaciones activas</span>.</li>
+    <li>Avisos para completar el perfil o activar el intercambio económico, si te faltan.</li>
+    <li><span class="ui">Actividad reciente</span>, con enlace a <span class="ui">Ver todas las notificaciones</span>.</li>
+  </ul>
+  <h3>Notificaciones</h3>
+  <p>La campana de la parte superior muestra cuántas notificaciones tienes sin leer. Al pulsar una, vas directamente a la negociación o al acuerdo del que habla. Te avisamos cuando:</p>
+  <ul>
+    <li>recibes una propuesta o una contrapropuesta, o aceptan o rechazan la tuya;</li>
+    <li>se necesita tu firma, o la otra parte ya firmó, y cuando el intercambio se completa o se rechaza;</li>
+    <li>la otra parte declara algo sobre una obligación, o propone, acepta o rechaza una enmienda;</li>
+    <li>alguien pide revisar una obligación tuya, o cambia un caso en el que participas.</li>
+  </ul>
+</section>
+
+<section id="marketplace">
+  <h2>5. Buscar en el marketplace</h2>
+  <p>La pestaña <span class="ui">Marketplace</span> muestra las publicaciones de tu comunidad. Cada tarjeta indica si es <span class="ui">OFREZCO</span> o <span class="ui">BUSCO</span>, el tipo de recurso, la categoría, quién la publica y, si la hay, la ubicación aproximada.</p>
+  <ol class="steps">
+    <li>Escribe en <span class="ui">Buscar</span> lo que te interesa.</li>
+    <li>Filtra por <span class="ui">Quiero</span> (ofrezco o busco), <span class="ui">Categoría</span>, <span class="ui">Tipo de recurso</span> y <span class="ui">Estado</span> (activas o cerradas).</li>
+    <li>Si usas a menudo la misma búsqueda, ponle un nombre en <span class="ui">Nombre del filtro</span> y pulsa <span class="ui">Guardar filtro</span>. Aparecerá como un botón para volver a aplicarla.</li>
+    <li><span class="ui">Limpiar filtros</span> vuelve a mostrarlo todo. Usa <span class="ui">Anterior</span> y <span class="ui">Siguiente</span> para pasar de página.</li>
+  </ol>
+  <p><span class="ui">Mis publicaciones</span> muestra sólo las tuyas, con los botones para editarlas o cerrarlas.</p>
+</section>
+
+<section id="publicar">
+  <h2>6. Publicar lo que ofreces o buscas</h2>
+  <ol class="steps">
+    <li>Pulsa <span class="ui">+ Crear publicación</span>.</li>
+    <li>En <span class="ui">Quiero</span>, elige <span class="ui">OFREZCO</span> o <span class="ui">BUSCO</span>.</li>
+    <li>Escribe un <span class="ui">Título</span> claro (por ejemplo «20 kg de tomates») y una <span class="ui">Descripción</span> que ayude a decidir: estado, cantidad, condiciones.</li>
+    <li>Elige <span class="ui">Categoría</span> y <span class="ui">Tipo de recurso</span>: recurso físico, servicio, conocimiento o taller, colaboración, voluntariado, trabajo u otro.</li>
+    <li>Si quieres, indica una <span class="ui">Ubicación</span>. <strong>Sólo municipio o zona</strong>: no publiques direcciones privadas.</li>
+    <li>Pulsa <span class="ui">Guardar y añadir fotos</span>. Ya guardada, añade fotos y marca la <span class="ui">Foto principal</span>.</li>
+  </ol>
+  <h3>Qué se ofrece o se necesita exactamente</h3>
+  <p>Estos detalles son opcionales y ayudan a comparar lo comparable. <strong>Ninguno fija un precio.</strong></p>
+  <ul>
+    <li><span class="ui">Estado</span>: nuevo, como nuevo, bueno, aceptable o para piezas.</li>
+    <li><span class="ui">Cómo se entrega</span>: recogida, entrega, cualquiera de las dos, en el lugar donde se necesita o a distancia.</li>
+    <li><span class="ui">Qué incluye</span>: accesorios, materiales o límites de lo que ofreces.</li>
+    <li><span class="ui">Disponibilidad</span>: disponible para conversar, en conversación con alguien o ya acordado. Cambiarla no cierra la publicación.</li>
+    <li><span class="ui">Disponible hasta</span> (en una oferta) o <span class="ui">Se necesita antes de</span> (en una búsqueda).</li>
+    <li>En una búsqueda, para cada aspecto (momento, lugar, cantidad, estado, importe), indica si <span class="ui">Puede cambiar</span> o <span class="ui">No puede cambiar</span>. Un horario flexible no hace flexible el lugar.</li>
+    <li><span class="ui">Detalles para quien negocie contigo</span>: sólo los ve quien inicie una conversación sobre esta publicación. Comparte sólo lo necesario.</li>
+  </ul>
+  <h3>Precio indicativo y referencia comunitaria</h3>
+  <p>Puedes indicar un <span class="ui">Importe indicativo</span>: es <strong>tu</strong> precio de partida, no lo que el mercado acepta. Si marcas <span class="ui">Usar el precio indicativo de este anuncio como evidencia de referencia comunitaria</span>, podrá contar, sin tu nombre, en las estadísticas de la comunidad. Puedes retirar ese permiso más adelante (ver <a href="#perfil">Tus consentimientos</a>).</p>
+  <p>Si la comunidad ha publicado una referencia para este tipo de recurso, puedes vincularla. Verás la orientación junto a la publicación; no te obliga a nada.</p>
+  <h3>Editar y cerrar</h3>
+  <p>En <span class="ui">Mis publicaciones</span>, <span class="ui">Editar</span> cambia la publicación. Las versiones anteriores quedan guardadas: una propuesta hecha sobre la versión anterior no cambia. <span class="ui">Cerrar publicación</span> la retira del marketplace y <strong>no se puede reabrir</strong>; para volver a ofrecer lo mismo, crea una nueva.</p>
+</section>
+
+<section id="leer-publicacion">
+  <h2>7. Leer una publicación</h2>
+  <p>Al abrir una publicación ves su descripción, fotos, detalles y quién la publica. Pulsa el nombre para ver su perfil público.</p>
+  <ul>
+    <li>Si la publicación está vinculada a una <strong>referencia comunitaria</strong>, verás la orientación con su origen y vigencia. <span class="ui">¿Por qué me muestran esta referencia?</span> lo explica. Es una orientación, nunca un precio: puedes acordar libremente otra cantidad.</li>
+    <li>Si la referencia aún no tiene datos suficientes, STIR lo dice en lugar de mostrar una cifra poco fiable.</li>
+    <li><span class="ui">Hacer una propuesta</span> abre el formulario para negociar (ver <a href="#negociar">Negociar</a>). En tu propia publicación verás «Esta es tu propia publicación».</li>
+    <li><span class="ui">Reportar</span> envía la publicación a moderación si crees que incumple las normas de la comunidad.</li>
+  </ul>
+</section>
+
+<section id="negociar">
+  <h2>8. Negociar</h2>
+  <h3>Hacer una propuesta</h3>
+  <ol class="steps">
+    <li>En la publicación, pulsa <span class="ui">Hacer una propuesta</span>.</li>
+    <li>Escribe un <span class="ui">Mensaje</span>. Si procede, indica <span class="ui">Cantidad</span> y <span class="ui">Unidad</span> (por ejemplo «5» y «kg»).</li>
+    <li>Si hay un importe en la unidad comunitaria, escríbelo en <span class="ui">Importe propuesto</span>. Sin importe, el acuerdo será sin intercambio económico.</li>
+    <li>En <span class="ui">Qué cubre esta propuesta</span>, describe lo que se acuerda: <span class="ui">Alcance</span> (qué incluye y qué no), <span class="ui">Qué harás tú</span>, <span class="ui">Qué hará la otra persona</span> y <span class="ui">Para cuándo</span>.</li>
+    <li>Si dejas preguntas para más adelante, escríbelas en <span class="ui">Queda pendiente</span>. Quien acepte lo hará sabiendo que quedan abiertas.</li>
+    <li>Si quieres que tu propuesta caduque, indica <span class="ui">Se puede aceptar hasta</span>.</li>
+    <li>Pulsa <span class="ui">Enviar propuesta</span>.</li>
+  </ol>
+  <div class="note">Lo que se acepta es exactamente lo escrito. <strong>Lo que no está escrito no está acordado.</strong></div>
+  <h3>Responder</h3>
+  <p>En <span class="ui">Mis negociaciones</span> ves cada conversación con su estado: <em>Abierta</em>, <em>Aceptada</em> o <em>Rechazada</em>. Dentro, cada propuesta aparece con su estado: <em>Propuesta</em>, <em>Sustituida</em>, <em>Aceptada</em> o <em>Rechazada</em>. Cuando te toca responder puedes:</p>
+  <ul>
+    <li><span class="ui">Contraoferta</span>: propones otros términos con el mismo formulario y pulsas <span class="ui">Enviar contraoferta</span>. La propuesta anterior queda sustituida, nunca editada.</li>
+    <li><span class="ui">Aceptar</span>: STIR te recuerda si con ello <strong>pagas</strong> o <strong>recibes</strong> el importe, y quién lo hace. Si la propuesta deja preguntas pendientes, tienes que marcar que aceptas con ellas abiertas.</li>
+    <li><span class="ui">Rechazar</span>: cierra la negociación sin acuerdo.</li>
+  </ul>
+  <p>Mientras esperas, verás «Esperando la respuesta de la otra parte».</p>
+  <h3>Compartir el acuerdo como estadística</h3>
+  <p>Al aceptar, puedes autorizar que el acuerdo cuente en las estadísticas agregadas de la comunidad, si la otra parte también lo autoriza. Nunca se publican mensajes ni identidades, y puedes retirarlo después.</p>
+</section>
+
+<section id="acuerdos">
+  <h2>9. Tus acuerdos</h2>
+  <p><span class="ui">Mis acuerdos</span> muestra todos tus acuerdos con su fase económica: <em>Sin intercambio económico</em>, <em>Pendiente de ejecución económica</em>, <em>Esperando firmas</em> o <em>Confirmado</em>. Al abrir uno ves:</p>
+  <ul>
+    <li><strong>Lo que acordaste</strong>: el importe y la cantidad acordados y los términos aceptados, incluidas las preguntas que quedaron pendientes.</li>
+    <li><strong>Ejecución económica</strong>: el intercambio en la unidad comunitaria, si lo hay (ver <a href="#economia">capítulo 10</a>).</li>
+    <li><strong>Cumplimiento</strong>: el tablero de obligaciones (ver <a href="#cumplimiento">capítulo 11</a>).</li>
+    <li><strong>Referencia al acordar</strong>: la orientación comunitaria vigente cuando acordasteis. Sólo como contexto; no es un término del contrato.</li>
+    <li><strong>Instantánea contractual</strong>: la <span class="ui">Huella (SHA-256)</span> del acuerdo y sus bytes exactos. Sirve para comprobar que el acuerdo no ha cambiado desde que se aceptó.</li>
+  </ul>
+</section>
+
+<section id="economia">
+  <h2>10. El intercambio en la unidad comunitaria</h2>
+  <h3>Activar tus intercambios</h3>
+  <ol class="steps">
+    <li>Completa antes tu perfil público.</li>
+    <li>Ve a <span class="ui">Activación económica</span> y pulsa <span class="ui">Activar intercambios</span>.</li>
+    <li>Verás «Tu intercambio económico está activo», con tu <span class="ui">Saldo</span>, tu <span class="ui">Límite de crédito</span> y tu <span class="ui">Capacidad disponible</span>.</li>
+  </ol>
+  <p>El límite de crédito indica hasta dónde puede bajar tu saldo; hoy se fija al activar la cuenta. La capacidad disponible es tu saldo menos ese límite. <strong>El crédito no es precio</strong>: si un intercambio se rechaza porque superaría tu límite, eso no dice nada sobre si el precio era correcto.</p>
+  <p class="muted">Si ves «Este marketplace todavía no está conectado a una comunidad económica», la administración de tu comunidad tiene que configurarla primero (ver <a href="#administracion">capítulo 19</a>).</p>
+  <h3>Dispositivos autorizados</h3>
+  <p>Tu clave de firma está en el navegador donde activaste los intercambios. En <span class="ui">Dispositivos autorizados</span> ves los dispositivos con los que puedes firmar.</p>
+  <ul>
+    <li>Para firmar desde otro ordenador o navegador, entra desde él y pulsa <span class="ui">Añadir este dispositivo</span>. Puedes darle un nombre.</li>
+    <li>Para dejar de usar uno, pulsa <span class="ui">Revocar</span>. No puedes revocar tu único dispositivo activo.</li>
+    <li>Si tu comunidad lo exige, añadir o revocar un dispositivo pide el código de 6 cifras de tu aplicación de autenticación. Ese código aprueba sólo ese cambio.</li>
+  </ul>
+  <h3>Completar el intercambio de un acuerdo</h3>
+  <ol class="steps">
+    <li>En el acuerdo, pulsa <span class="ui">Iniciar intercambio económico</span>. STIR prepara el intercambio exactamente como se acordó: quién paga, a quién y cuánto.</li>
+    <li>Cada parte pulsa <span class="ui">Firmar intercambio</span> desde un dispositivo autorizado. Verás «Esperando la firma de la otra parte» hasta que firme.</li>
+    <li>Con las dos firmas, cualquiera de las partes pulsa <span class="ui">Confirmar intercambio</span>. osTRIS lo registra y mueve los saldos.</li>
+  </ol>
+  <p>Una vez confirmado, verás la <span class="ui">Secuencia de la comunidad</span>, la <span class="ui">Huella del protocolo</span> y la fecha. STIR nunca firma por ti.</p>
+  <h3>Qué significa cada resultado</h3>
+  <div class="table-wrap"><table>
+    <tr><th>Resultado</th><th>Qué pasó</th><th>Qué hacer</th></tr>
+    <tr><td>Ejecutado</td><td>osTRIS confirmó el intercambio.</td><td>Nada: ya está.</td></tr>
+    <tr><td>Rechazado: límite de crédito</td><td>Quien paga quedaría por debajo de su límite. Es un límite que funcionó como se diseñó, no un juicio sobre el precio.</td><td>Reintentar cuando el saldo lo permita. El acuerdo sigue en pie.</td></tr>
+    <tr><td>Faltan firmas</td><td>Alguna de las dos partes aún no ha firmado.</td><td>Firmar y volver a confirmar.</td></tr>
+    <tr><td>Mal descrito</td><td>Lo que se pidió ejecutar no está bien descrito. No se movió nada.</td><td>Avisar a la administración.</td></tr>
+    <tr><td>Fallo del sistema</td><td>Un fallo técnico, no de las personas. No se movió nada.</td><td>Reintentar más tarde; si se repite, avisar.</td></tr>
+    <tr><td>Resultado desconocido</td><td>No se sabe si se ejecutó (por ejemplo, se cortó la conexión).</td><td>Volver a cargar el acuerdo antes de dar nada por hecho.</td></tr>
+  </table></div>
+</section>
+
+<section id="cumplimiento">
+  <h2>11. Cumplir lo acordado</h2>
+  <p>En cada acuerdo, la sección <strong>Cumplimiento</strong> muestra un tablero con una tarjeta por obligación:</p>
+  <ul>
+    <li><strong>El bien o servicio</strong>: lo debe quien lo ofrece.</li>
+    <li><strong>Tareas de quien publicó</strong> y <strong>Tareas de quien respondió</strong>: lo que cada parte se comprometió a hacer.</li>
+    <li><strong>El intercambio en la unidad comunitaria</strong>: se cumple cuando osTRIS lo confirma, nunca con una declaración.</li>
+  </ul>
+  <p>Cada tarjeta muestra quién lo debe y a quién, para cuándo, cómo se entrega y su estado. Las obligaciones no se esperan unas a otras.</p>
+  <h3>Declarar lo que hiciste o recibiste</h3>
+  <p>En las tarjetas que te afectan aparece un formulario. Cada parte declara <strong>sólo su lado</strong>:</p>
+  <div class="table-wrap"><table>
+    <tr><th>Si la obligación es tuya (la debes)</th><th>Si es para ti (la recibes)</th></tr>
+    <tr><td><span class="ui">Lo hice</span><br><span class="ui">Hice una parte</span><br><span class="ui">No lo hice</span></td>
+        <td><span class="ui">Recibido conforme a lo descrito</span><br><span class="ui">Recibí una parte</span><br><span class="ui">Recibido, pero no como se describió</span><br><span class="ui">No recibido</span></td></tr>
+  </table></div>
+  <p>Si declaras una parte, la <span class="ui">Nota</span> es obligatoria: di qué se hizo y qué falta. Pulsa <span class="ui">Registrar</span>. La otra parte recibe un aviso. Si te equivocas, registra una declaración nueva: la anterior queda en la historia.</p>
+  <h3>Estados de una obligación</h3>
+  <div class="table-wrap"><table>
+    <tr><th>Estado</th><th>Qué significa</th></tr>
+    <tr><td>Pendiente</td><td>Nadie ha declarado nada todavía.</td></tr>
+    <tr><td>Declarada</td><td>Quien la debe ha declarado; la otra parte aún no ha respondido.</td></tr>
+    <tr><td>Cumplida en parte</td><td>Quien la recibe confirma una parte; las notas dicen qué falta.</td></tr>
+    <tr><td>Cumplida</td><td>Quien la recibe confirmó que es conforme a lo descrito.</td></tr>
+    <tr><td>En desacuerdo</td><td>Las partes dicen cosas distintas. <strong>No es un juicio sobre nadie.</strong> Si no se resuelve hablando, se puede pedir una revisión (ver <a href="#casos">Casos</a>).</td></tr>
+    <tr><td>No cumplida</td><td>Las dos partes coinciden en que no se hizo.</td></tr>
+    <tr><td>Sustituida</td><td>Una enmienda aceptada la sustituyó.</td></tr>
+  </table></div>
+  <p>Encima del tablero también puede aparecer un caso abierto sobre una obligación, una corrección del intercambio o un aviso de que la ejecución está en pausa mientras se revisa un caso.</p>
+</section>
+
+<section id="enmiendas">
+  <h2>12. Cambiar un acuerdo: enmiendas</h2>
+  <p>Un acuerdo aceptado nunca se reescribe. Si las dos partes quieren cambiar algo (una fecha, una tarea, el alcance), una propone una <strong>enmienda</strong> y la otra la acepta.</p>
+  <ol class="steps">
+    <li>En el acuerdo, pulsa <span class="ui">Proponer una enmienda</span>.</li>
+    <li>En <span class="ui">Sustituye</span>, marca las obligaciones que cambian.</li>
+    <li>Con <span class="ui">Añadir una obligación</span>, describe cómo quedan: qué es, la descripción, para cuándo y cómo se entrega.</li>
+    <li>Explica <span class="ui">Por qué cambia</span> y pulsa <span class="ui">Proponer</span>.</li>
+  </ol>
+  <p>La otra parte puede <span class="ui">Aceptar enmienda</span> o <span class="ui">Rechazar</span>; quien la propuso puede <span class="ui">Retirar</span>la. Al aceptarse, las obligaciones sustituidas pasan a <em>Sustituida</em> y las nuevas empiezan en <em>Pendiente</em>; todo lo demás se conserva. Cada enmienda aceptada tiene su propia huella, encadenada a la del acuerdo.</p>
+  <div class="attention">El importe y el intercambio en la unidad comunitaria <strong>no se enmiendan</strong>. Tampoco se puede sustituir una obligación ya cumplida o no cumplida. Si alguien acepta otra enmienda antes, la tuya deja de aplicar y tendrás que proponerla de nuevo.</div>
+</section>
+
+<section id="casos">
+  <h2>13. Cuando algo no se cumplió: casos</h2>
+  <p>Si la persona que te debía algo no lo hizo, o no como se describió, y no lo resolvéis hablando, puedes pedir que la comunidad lo revise. Un caso revisa <strong>lo que pasó con la obligación</strong>, no a la persona. No es una puntuación, no aparece en el perfil de nadie y nunca cambia un saldo por sí solo.</p>
+  <h3>Pedir una revisión</h3>
+  <ol class="steps">
+    <li>En el tablero del acuerdo, en la tarjeta que se te debía, pulsa <span class="ui">Pedir una revisión</span>. Sólo aparece si la obligación es para ti y aún no está cumplida.</li>
+    <li>Elige <span class="ui">Qué ocurrió</span>: no entregado, no como se describió o entregado sólo en parte.</li>
+    <li>Escribe <span class="ui">Tu relato de lo ocurrido</span>: qué se acordó y qué no pasó.</li>
+    <li>Pulsa <span class="ui">Abrir el caso</span>. La otra parte recibe un aviso y podrá responder con sus pruebas.</li>
+  </ol>
+  <p class="muted">Sólo se puede pedir revisión si la comunidad ha nombrado a sus revisores. La pestaña <span class="ui">Casos</span> enlaza a <span class="ui">Quién revisa los casos aquí</span>.</p>
+  <h3>Aportar pruebas</h3>
+  <p>En la página del caso, describe la prueba y, si la tienes, una referencia (número de envío, recibo…). Elige quién puede leerla:</p>
+  <ul>
+    <li><span class="ui">Las dos partes y los revisores</span>: lo normal.</li>
+    <li><span class="ui">Sólo los revisores</span>: para datos privados, como una dirección o un documento. La otra parte verá que aportaste una prueba, pero no lo que dice.</li>
+  </ul>
+  <p>Las pruebas no se editan ni se borran.</p>
+  <h3>Cómo avanza un caso</h3>
+  <div class="table-wrap"><table>
+    <tr><th>Estado</th><th>Qué significa</th></tr>
+    <tr><td>Abierto, esperando revisor</td><td>Lo tomará un revisor que no sea parte del acuerdo.</td></tr>
+    <tr><td>En revisión</td><td>Las dos partes aún pueden aportar pruebas.</td></tr>
+    <tr><td>Conclusión emitida</td><td>Cualquiera de las partes puede aceptarla o apelarla antes de que venza el plazo.</td></tr>
+    <tr><td>Apelado</td><td>Otro revisor, distinto del que firmó la conclusión, decidirá la apelación.</td></tr>
+    <tr><td>Resuelto</td><td>La conclusión sobre el efecto es firme.</td></tr>
+    <tr><td>Retirado</td><td>Quien abrió el caso lo retiró, por ejemplo porque llegasteis a un arreglo.</td></tr>
+  </table></div>
+  <p>La <span class="ui">Cronología</span> cuenta cada paso: quién lo dio y cuándo. Cada parte ve todo, salvo el contenido de las pruebas reservadas a los revisores.</p>
+  <h3>Las decisiones, una por una</h3>
+  <div class="table-wrap"><table>
+    <tr><th>Decisión</th><th>Qué responde</th></tr>
+    <tr><td>Conclusión sobre el efecto</td><td>Qué pasó con la obligación (no se cumplió, se cumplió en parte, o no se pudo establecer) y cómo se repara. No dice nada de las intenciones de nadie.</td></tr>
+    <tr><td>Atribución de conducta</td><td>Una pregunta aparte y opcional, sólo cuando la conclusión es firme: ¿lo causó la conducta de alguien? «Un tercero, de buena fe» (por ejemplo, la empresa de envíos) es una respuesta válida.</td></tr>
+    <tr><td>Sanción</td><td>Sólo una advertencia, sólo tras una atribución firme de incumplimiento, y siempre decidida expresamente por un revisor. No cambia ningún saldo, crédito, historia ni perfil.</td></tr>
+  </table></div>
+  <p>Cada decisión tiene su plazo de apelación. Mientras está abierto, puedes <span class="ui">Aceptar esta decisión</span> o apelarla explicando <span class="ui">Por qué la apelas</span>. <strong>Nada se vuelve firme sólo porque pasa el tiempo</strong>: hace falta que las dos partes la acepten, que un revisor la confirme cuando el plazo terminó sin apelación, o que otro revisor confirme la apelación.</p>
+  <h3>La reparación</h3>
+  <ul>
+    <li>Si la conclusión firme ordena <strong>revertir el intercambio en la unidad comunitaria</strong>, los revisores lo firman con sus propias claves y osTRIS lo registra. El intercambio original sigue en el registro y la reversión queda enlazada a él. Las partes nunca firman la corrección de su propio acuerdo.</li>
+    <li>La conclusión puede describir otra reparación, como repetir el trabajo antes de una fecha.</li>
+  </ul>
+  <p>Mientras se revisa un caso, un revisor puede <strong>pausar</strong> la ejecución y las enmiendas del acuerdo durante un tiempo limitado. Verás un aviso con la fecha de fin. La pausa nunca afecta a una persona, una cuenta ni un saldo.</p>
+  <p>Quien abrió el caso puede <span class="ui">Retirar el caso</span> mientras la conclusión no sea firme, por ejemplo si llegasteis a un arreglo.</p>
+</section>
+
+<section id="revisores">
+  <h2>14. Para quien revisa casos</h2>
+  <p>Si la comunidad te ha nombrado revisor, en <span class="ui">Casos</span> verás <span class="ui">Casos por revisar</span>. Nunca revisas un caso en el que eres parte: para ese caso eres sólo parte.</p>
+  <div class="attention">Para firmar correcciones necesitas tener activado el intercambio económico y un dispositivo autorizado en el navegador que uses (ver <a href="#economia">capítulo 10</a>).</div>
+  <ol class="steps">
+    <li><strong>Tomar el caso.</strong> En un caso abierto, pulsa <span class="ui">Tomar este caso</span>. Lees todas las pruebas, incluidas las reservadas.</li>
+    <li><strong>Pausar, si hace falta.</strong> Con <span class="ui">Pausar la ejecución</span> indicas hasta cuándo (30 días como máximo) y por qué. <span class="ui">Levantar la pausa</span> la quita antes.</li>
+    <li><strong>Emitir la conclusión.</strong> Sólo quien tomó el caso. Elige qué pasó con la obligación y si se revierte por completo el intercambio en la unidad comunitaria (sólo si se estableció el efecto y el intercambio está confirmado). Describe otra reparación si la hay y explica los motivos. Pulsa <span class="ui">Emitir la conclusión</span>.</li>
+    <li><strong>Hacerla firme.</strong> <span class="ui">Confirmar como firme</span> sólo funciona si las dos partes la aceptaron o si el plazo terminó sin apelación.</li>
+    <li><strong>Decidir una apelación.</strong> Si no eres autor de la decisión apelada, elige <span class="ui">Decisión confirmada</span> o <span class="ui">Decisión revocada</span> y explica por qué. Una conclusión revocada vuelve a revisión contigo, nunca con su autor.</li>
+    <li><strong>Conducta y sanción, sólo si procede.</strong> Con la conclusión firme puedes emitir una atribución de conducta. Sobre una atribución firme de incumplimiento, y sólo si lo decides expresamente, una advertencia.</li>
+    <li><strong>Reparar el efecto económico.</strong> Si la conclusión firme ordena la reversión, pulsa <span class="ui">Preparar la reversión en osTRIS</span>. Cada revisor pulsa <span class="ui">Ver exactamente qué firmarías</span>, comprueba los importes y pulsa <span class="ui">Firmar con mi clave</span>. Con las firmas necesarias, osTRIS la registra. Si osTRIS no responde, <span class="ui">Volver a pedirlo a osTRIS</span> reintenta.</li>
+  </ol>
+  <div class="note">El número de firmas necesarias y el plazo de apelación los fija la comunidad, y aparecen en <span class="ui">Quién revisa los casos aquí</span>.</div>
+</section>
+
+<section id="perfil">
+  <h2>15. Tu perfil, tu historia y tus consentimientos</h2>
+  <h3>Perfil público</h3>
+  <p>En <span class="ui">Mi perfil</span> editas tu <span class="ui">Nombre visible</span>, tu <span class="ui">Biografía breve</span>, tu <span class="ui">Ubicación</span> y tu foto (<span class="ui">Subir foto</span>). Es lo que ven las demás personas al pulsar tu nombre.</p>
+  <h3>Historia de cumplimiento</h3>
+  <p>Es un registro de hechos, no una puntuación: cuántas entregas o tareas completaste a conformidad confirmada por la otra parte. Sin importes, sin nombres, sin porcentajes y sin nada sobre lo que no salió bien.</p>
+  <ul>
+    <li>Está <strong>desactivada por defecto</strong>. Para que otras personas la vean, marca <span class="ui">Mostrar mi historia de cumplimiento a otras personas participantes</span>.</li>
+    <li>Tú siempre ves la tuya.</li>
+    <li>«Sin historia todavía» significa que aún no hay hechos confirmados. Nunca es una nota baja.</li>
+  </ul>
+  <h3>Tus consentimientos</h3>
+  <p>En <span class="ui">Mi consentimiento a la evidencia de referencias</span> ves cada acuerdo o precio indicativo que autorizaste a contar en las estadísticas de la comunidad. Con <span class="ui">Retirar</span>, deja de usarse en referencias futuras. Lo ya publicado y tus acuerdos no cambian.</p>
+</section>
+
+<section id="referencias">
+  <h2>16. Referencias comunitarias</h2>
+  <p>Una referencia comunitaria es una orientación de valor que la comunidad decide publicar para un tipo de recurso. Puede ser un valor, una banda, una convención inicial (cuando aún no hay acuerdos de los que aprender) o una descripción sin cifra. Siempre muestra quién la decidió, con qué método y hasta cuándo es válida.</p>
+  <p>Junto a la referencia, STIR puede mostrar lo observado en acuerdos anteriores: la mediana y la mitad central, cuántos acuerdos, cuentas y relaciones distintas hay, y en qué periodo. Si son pocos, o están muy concentrados, STIR lo dice y oculta las cifras exactas. Que haya muchas cuentas distintas no demuestra que sean personas independientes.</p>
+  <div class="note">Publicar una referencia es una decisión de la comunidad, nunca un resultado estadístico automático. Y una referencia nunca obliga: puedes acordar otra cosa.</div>
+  <h3>Para quien publica referencias</h3>
+  <ul>
+    <li><span class="ui">Crear definición comparable</span>: qué se compara, cantidad base y unidad.</li>
+    <li><span class="ui">Proponer referencia</span> y, tras revisarla, <span class="ui">Publicar nueva versión</span>. El histórico de versiones se conserva.</li>
+    <li><span class="ui">Política de la referencia</span>: ventana, mínimos y fuentes aceptadas, siempre dentro de los límites constitucionales.</li>
+    <li><span class="ui">Desglose de la evidencia</span>: cada observación con su motivo de inclusión o exclusión.</li>
+    <li><span class="ui">Integridad de mercado</span>: una señal no es un hallazgo. Pasa a revisión y sólo una decisión final de otra persona cambia la evidencia futura; nunca el acuerdo en sí.</li>
+    <li><span class="ui">Conservación</span>: cuánto tiempo se guarda la evidencia y qué observaciones pueden anonimizarse. Nunca ocurre automáticamente.</li>
+  </ul>
+</section>
+
+<section id="gobernanza">
+  <h2>17. Gobernanza de la comunidad</h2>
+  <p>La pestaña <span class="ui">Gobernanza</span> reúne dos niveles distintos:</p>
+  <ul>
+    <li><strong>Gobernanza ordinaria</strong>: si la comunidad la activa, publicar una referencia o cambiar su política exige una votación aprobada. Hay un <span class="ui">Censo electoral</span> propio de la comunidad y una <span class="ui">Política de votación</span> (quórum, aprobación, ventana y abstenciones). Quien está en el censo puede <span class="ui">Votar a favor</span>, <span class="ui">Votar en contra</span> o <span class="ui">Abstenerse</span>. Al cerrar, una propuesta aprobada se ejecuta con <span class="ui">Ejecutar la decisión aprobada</span>.</li>
+    <li><strong>Las Siete Llaves</strong>: protegen las reglas del juego (los límites que la gobernanza ordinaria no puede cruzar). Exigen las firmas de los siete asientos constitucionales, cada una desde el dispositivo de su titular. El Guardián puede suspender una credencial en una emergencia, pero nunca gobierna ni vota.</li>
+  </ul>
+  <p>Ser administrador de la plataforma, Guardián o titular de un asiento no da voto ordinario por sí solo: sólo estar en el censo.</p>
+</section>
+
+<section id="moderacion">
+  <h2>18. Reportar y moderar</h2>
+  <p>Si una publicación o un perfil incumple las normas de tu comunidad, pulsa <span class="ui">Reportar</span>, indica el <span class="ui">Motivo</span> y pulsa <span class="ui">Enviar reporte</span>.</p>
+  <p>Quien modera ve los reportes en <span class="ui">Cola de moderación</span>, con enlace a lo reportado, y puede <span class="ui">Ocultar publicación</span> o <span class="ui">Descartar</span> el reporte. Una publicación oculta muestra a su autor «Esta publicación ha sido ocultada por moderación».</p>
+</section>
+
+<section id="administracion">
+  <h2>19. Administrar la comunidad</h2>
+  <h3>Personas y permisos</h3>
+  <p>La administración da de alta a las personas y les asigna roles desde las pantallas <span class="ui">Usuarios</span> y <span class="ui">Roles</span> de la plataforma. Cada rol es una lista de permisos. Combinaciones habituales:</p>
+  <div class="table-wrap"><table>
+    <tr><th>Rol</th><th>Permisos</th></tr>
+    <tr><td>Participante</td><td><code>stir.listings.read</code>, <code>stir.listings.create</code>, <code>stir.listings.update</code>, <code>stir.participants.read</code>, <code>stir.participants.update</code>, <code>stir.negotiations.read</code>, <code>stir.negotiations.create</code>, <code>stir.negotiations.update</code>, <code>stir.agreements.read</code>, <code>stir.agreements.fulfil</code>, <code>stir.economic.read</code>, <code>stir.economic.manage</code>, <code>stir.notifications.read</code>, <code>stir.content.report</code>, <code>stir.references.read</code>, <code>stir.consent.manage</code>. Para firmar intercambios: <code>OSTRIS_DISCOVERY_READ</code>, <code>OSTRIS_PARTICIPANT_ACTIVATE</code>, <code>OSTRIS_CREDENTIAL_MANAGE</code>, <code>OSTRIS_TRANSACTION_CREATE</code>, <code>OSTRIS_TRANSACTION_READ</code>, <code>OSTRIS_TRANSACTION_AUTHORIZE</code> y <code>OSTRIS_TRANSACTION_COMMIT</code>.</td></tr>
+    <tr><td>Revisor de casos</td><td>Lo de participante más <code>OSTRIS_RESOLUTION_RECORD</code>.</td></tr>
+    <tr><td>Publicador de referencias</td><td><code>stir.references.propose</code>, <code>stir.references.publish</code> y, para la conservación, <code>stir.retention.manage</code>.</td></tr>
+    <tr><td>Moderación</td><td><code>stir.moderation.manage</code>.</td></tr>
+    <tr><td>Gobernanza ordinaria</td><td><code>stir.governance.vote</code>; para gestionar censo y política, <code>stir.governance.manage</code>.</td></tr>
+    <tr><td>Administración económica</td><td><code>OSTRIS_COMMUNITY_MANAGE</code>, además de ser propietaria o administradora del espacio.</td></tr>
+  </table></div>
+  <p class="muted">Cuando STIR añade una función nueva, puede necesitar un permiso nuevo. Revisa esta tabla después de cada actualización.</p>
+  <h3>Configurar la comunidad económica</h3>
+  <p>Una sola vez por comunidad: en <span class="ui">Activación económica</span>, rellena <span class="ui">Nombre de la comunidad</span>, <span class="ui">Código de la unidad</span> y <span class="ui">Decimales</span>, y pulsa <span class="ui">Configurar comunidad económica</span>.</p>
+  <h3>Nombrar a los revisores de casos</h3>
+  <ol class="steps">
+    <li>Ve a <span class="ui">Casos</span> → <span class="ui">Quién revisa los casos aquí</span> → <span class="ui">Cambiar los revisores</span>.</li>
+    <li>Escribe los identificadores de los revisores, uno por línea. Hacen falta al menos dos, y cada uno debe tener activado el intercambio económico.</li>
+    <li>Indica las <span class="ui">Firmas necesarias para una corrección en la unidad comunitaria</span> y el <span class="ui">Plazo de apelación (horas)</span>.</li>
+    <li>Pulsa <span class="ui">Guardar revisores</span>.</li>
+  </ol>
+  <p>Sólo puede hacerlo la autoridad de la comunidad: su propietaria o administradora o, si la gobernanza ordinaria está activa, un miembro del censo. Ser administrador de la plataforma no basta. La lista de revisores es pública para la comunidad.</p>
+</section>
+
+<section id="incidencias">
+  <h2>20. Resolver incidencias</h2>
+  <div class="table-wrap"><table>
+    <tr><th>Mensaje</th><th>Qué significa y qué hacer</th></tr>
+    <tr><td>Inicia sesión con una cuenta real y selecciona un tenant para usar STIR.</td><td>Entra con tu cuenta y elige tu comunidad en <span class="ui">Espacio actual</span>.</td></tr>
+    <tr><td>Tu sesión ha caducado.</td><td>Vuelve a iniciar sesión.</td></tr>
+    <tr><td>No tienes permiso para esta operación.</td><td>Tu rol no incluye esa función. Pide a la administración que lo revise (ver <a href="#administracion">capítulo 19</a>).</td></tr>
+    <tr><td>Esto ha cambiado o ya no aplica. Recarga e inténtalo de nuevo.</td><td>Otra persona actuó a la vez (por ejemplo, respondió a la negociación). Recarga la página y revisa el estado nuevo.</td></tr>
+    <tr><td>Configura tu perfil de mercado antes de activar los intercambios.</td><td>Completa <span class="ui">Mi perfil</span> primero.</td></tr>
+    <tr><td>Este intercambio supera actualmente tu límite de crédito.</td><td>Tu saldo no lo permite ahora. No es un juicio sobre el precio; el acuerdo sigue en pie.</td></tr>
+    <tr><td>Este dispositivo/navegador todavía no está registrado como firmante.</td><td>Añádelo en <span class="ui">Dispositivos autorizados</span> o firma desde el navegador donde activaste los intercambios.</td></tr>
+    <tr><td>Un revisor pausó la ejecución y las enmiendas de este acuerdo…</td><td>Hay un caso en revisión. Espera a la fecha indicada o a que se resuelva.</td></tr>
+    <tr><td>Esta comunidad aún no ha nombrado a sus revisores…</td><td>La administración tiene que nombrarlos antes de que se puedan abrir casos.</td></tr>
+    <tr><td>Demasiados intentos.</td><td>Espera unos minutos y vuelve a intentarlo.</td></tr>
+    <tr><td>El servicio no está disponible.</td><td>Reintenta más tarde. Si persiste, avisa a la administración.</td></tr>
+  </table></div>
+</section>
+
+<section id="pantallas">
+  <h2>21. Índice de pantallas</h2>
+  <div class="table-wrap"><table>
+    <tr><th>Pantalla</th><th>Dirección</th><th>Para qué sirve</th></tr>
+    <tr><td>Resumen</td><td><code>/stir/home</code></td><td>Lo pendiente y la actividad reciente.</td></tr>
+    <tr><td>Marketplace</td><td><code>/stir</code></td><td>Buscar y filtrar publicaciones.</td></tr>
+    <tr><td>Mis publicaciones</td><td><code>/stir/mine</code></td><td>Tus publicaciones, para editarlas o cerrarlas.</td></tr>
+    <tr><td>Crear publicación</td><td><code>/stir/new</code></td><td>Publicar lo que ofreces o buscas.</td></tr>
+    <tr><td>Publicación</td><td><code>/stir/listing/…</code></td><td>Leer una publicación y hacer una propuesta.</td></tr>
+    <tr><td>Mis negociaciones</td><td><code>/stir/negotiations</code></td><td>Tus conversaciones abiertas y cerradas.</td></tr>
+    <tr><td>Negociación</td><td><code>/stir/negotiations/…</code></td><td>Propuestas, contraofertas, aceptar o rechazar.</td></tr>
+    <tr><td>Mis acuerdos</td><td><code>/stir/agreements</code></td><td>Todos tus acuerdos con su fase económica.</td></tr>
+    <tr><td>Acuerdo</td><td><code>/stir/agreements/…</code></td><td>Lo acordado, el intercambio, el cumplimiento, las enmiendas y los casos.</td></tr>
+    <tr><td>Casos</td><td><code>/stir/cases</code></td><td>Casos en los que participas y, si revisas, casos por revisar.</td></tr>
+    <tr><td>Caso</td><td><code>/stir/cases/…</code></td><td>Cronología, pruebas, decisiones, apelaciones y correcciones de un caso.</td></tr>
+    <tr><td>Revisores de casos</td><td><code>/stir/case-review</code></td><td>Quién revisa, cuántas firmas hacen falta y el plazo de apelación.</td></tr>
+    <tr><td>Activación económica</td><td><code>/stir/economic</code></td><td>Activar intercambios, saldo, límite, capacidad y dispositivos.</td></tr>
+    <tr><td>Mi perfil</td><td><code>/stir/profile</code></td><td>Perfil público, historia de cumplimiento y consentimientos.</td></tr>
+    <tr><td>Perfil público</td><td><code>/stir/participants/…</code></td><td>Lo que otra persona comparte.</td></tr>
+    <tr><td>Notificaciones</td><td><code>/stir/notifications</code></td><td>Todos tus avisos.</td></tr>
+    <tr><td>Referencia comunitaria</td><td><code>/stir/references</code></td><td>Referencias publicadas y, para quien publica, propuestas, política, evidencia e integridad.</td></tr>
+    <tr><td>Gobernanza</td><td><code>/stir/governance</code></td><td>Gobernanza ordinaria y Siete Llaves.</td></tr>
+    <tr><td>Herramienta de firma de gobernanza</td><td><code>/stir/governance/sign</code></td><td>Firmar una tarea de gobernanza recibida, en tu propio dispositivo.</td></tr>
+    <tr><td>Cola de moderación</td><td><code>/stir/moderation</code></td><td>Revisar reportes.</td></tr>
+    <tr><td>Privacidad</td><td><code>/stir/privacy</code></td><td>Política de privacidad de la comunidad.</td></tr>
+    <tr><td>Condiciones</td><td><code>/stir/terms</code></td><td>Condiciones de uso de la comunidad.</td></tr>
+  </table></div>
+  <a class="top" href="#como-usar">Volver al principio</a>
+</section>
+
+</main>
+</div>
+<footer>STIR · Manual de usuario · Este manual se actualiza con cada versión que añade funciones. Si algo de lo que ves no coincide, avisa a la administración de tu comunidad.</footer>
+<script src="manual.js"></script>
+</body>
+</html>

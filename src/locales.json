@@ -874,7 +874,8 @@
   "caseEconomicCorrectionNONE": "No correction of the community-unit exchange",
   "caseEconomicCorrectionFULL_REVERSAL": "Reverse the community-unit exchange in full",
   "caseRemedyECONOMIC_REVERSAL": "Reversal of the community-unit exchange",
-  "caseEconomicCorrection": "Correction of the community-unit exchange"
+  "caseEconomicCorrection": "Correction of the community-unit exchange",
+  "userManual": "User manual"
  },
  "es": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -1751,7 +1752,8 @@
   "caseEconomicCorrectionNONE": "Sin corrección del intercambio en la unidad comunitaria",
   "caseEconomicCorrectionFULL_REVERSAL": "Revertir por completo el intercambio en la unidad comunitaria",
   "caseRemedyECONOMIC_REVERSAL": "Reversión del intercambio en la unidad comunitaria",
-  "caseEconomicCorrection": "Corrección del intercambio en la unidad comunitaria"
+  "caseEconomicCorrection": "Corrección del intercambio en la unidad comunitaria",
+  "userManual": "Manual de usuario"
  },
  "ca": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -2628,7 +2630,8 @@
   "caseEconomicCorrectionNONE": "Sense correcció de l'intercanvi en la unitat comunitària",
   "caseEconomicCorrectionFULL_REVERSAL": "Revertir completament l'intercanvi en la unitat comunitària",
   "caseRemedyECONOMIC_REVERSAL": "Reversió de l'intercanvi en la unitat comunitària",
-  "caseEconomicCorrection": "Correcció de l'intercanvi en la unitat comunitària"
+  "caseEconomicCorrection": "Correcció de l'intercanvi en la unitat comunitària",
+  "userManual": "Manual d'usuari"
  },
  "de": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -3505,7 +3508,8 @@
   "caseEconomicCorrectionNONE": "Keine Korrektur des Austauschs in der Gemeinschaftseinheit",
   "caseEconomicCorrectionFULL_REVERSAL": "Den Austausch in der Gemeinschaftseinheit vollständig rückabwickeln",
   "caseRemedyECONOMIC_REVERSAL": "Rückabwicklung des Austauschs in der Gemeinschaftseinheit",
-  "caseEconomicCorrection": "Korrektur des Austauschs in der Gemeinschaftseinheit"
+  "caseEconomicCorrection": "Korrektur des Austauschs in der Gemeinschaftseinheit",
+  "userManual": "Benutzerhandbuch"
  },
  "fr": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -4382,7 +4386,8 @@
   "caseEconomicCorrectionNONE": "Aucune correction de l'échange dans l'unité communautaire",
   "caseEconomicCorrectionFULL_REVERSAL": "Annuler intégralement l'échange dans l'unité communautaire",
   "caseRemedyECONOMIC_REVERSAL": "Annulation de l'échange dans l'unité communautaire",
-  "caseEconomicCorrection": "Correction de l'échange dans l'unité communautaire"
+  "caseEconomicCorrection": "Correction de l'échange dans l'unité communautaire",
+  "userManual": "Manuel d'utilisation"
  },
  "it": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -5259,7 +5264,8 @@
   "caseEconomicCorrectionNONE": "Nessuna correzione dello scambio nell'unità comunitaria",
   "caseEconomicCorrectionFULL_REVERSAL": "Stornare per intero lo scambio nell'unità comunitaria",
   "caseRemedyECONOMIC_REVERSAL": "Storno dello scambio nell'unità comunitaria",
-  "caseEconomicCorrection": "Correzione dello scambio nell'unità comunitaria"
+  "caseEconomicCorrection": "Correzione dello scambio nell'unità comunitaria",
+  "userManual": "Manuale utente"
  },
  "pt": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -6136,7 +6142,8 @@
   "caseEconomicCorrectionNONE": "Sem correção da troca na unidade comunitária",
   "caseEconomicCorrectionFULL_REVERSAL": "Reverter totalmente a troca na unidade comunitária",
   "caseRemedyECONOMIC_REVERSAL": "Reversão da troca na unidade comunitária",
-  "caseEconomicCorrection": "Correção da troca na unidade comunitária"
+  "caseEconomicCorrection": "Correção da troca na unidade comunitária",
+  "userManual": "Manual do utilizador"
  },
  "jp": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -7013,7 +7020,8 @@
   "caseEconomicCorrectionNONE": "コミュニティ単位の交換の訂正なし",
   "caseEconomicCorrectionFULL_REVERSAL": "コミュニティ単位の交換を全額取り消す",
   "caseRemedyECONOMIC_REVERSAL": "コミュニティ単位の交換の取消",
-  "caseEconomicCorrection": "コミュニティ単位の交換の訂正"
+  "caseEconomicCorrection": "コミュニティ単位の交換の訂正",
+  "userManual": "ユーザーマニュアル"
  },
  "eu": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -7890,7 +7898,8 @@
   "caseEconomicCorrectionNONE": "Komunitate-unitateko trukearen zuzenketarik ez",
   "caseEconomicCorrectionFULL_REVERSAL": "Komunitate-unitateko trukea osorik itzuli",
   "caseRemedyECONOMIC_REVERSAL": "Komunitate-unitateko trukearen itzulketa",
-  "caseEconomicCorrection": "Komunitate-unitateko trukearen zuzenketa"
+  "caseEconomicCorrection": "Komunitate-unitateko trukearen zuzenketa",
+  "userManual": "Erabiltzailearen eskuliburua"
  },
  "gl": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -8767,7 +8776,8 @@
   "caseEconomicCorrectionNONE": "Sen corrección do intercambio na unidade comunitaria",
   "caseEconomicCorrectionFULL_REVERSAL": "Reverter por completo o intercambio na unidade comunitaria",
   "caseRemedyECONOMIC_REVERSAL": "Reversión do intercambio na unidade comunitaria",
-  "caseEconomicCorrection": "Corrección do intercambio na unidade comunitaria"
+  "caseEconomicCorrection": "Corrección do intercambio na unidade comunitaria",
+  "userManual": "Manual de usuario"
  },
  "pt-BR": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -9644,7 +9654,8 @@
   "caseEconomicCorrectionNONE": "Sem correção da troca na unidade comunitária",
   "caseEconomicCorrectionFULL_REVERSAL": "Reverter totalmente a troca na unidade comunitária",
   "caseRemedyECONOMIC_REVERSAL": "Reversão da troca na unidade comunitária",
-  "caseEconomicCorrection": "Correção da troca na unidade comunitária"
+  "caseEconomicCorrection": "Correção da troca na unidade comunitária",
+  "userManual": "Manual do usuário"
  },
  "zh": {
   "tagline": "Sistema Transparente de Intercambio de Recursos",
@@ -10521,6 +10532,7 @@
   "caseEconomicCorrectionNONE": "不更正社区单位中的交换",
   "caseEconomicCorrectionFULL_REVERSAL": "全额冲回社区单位中的交换",
   "caseRemedyECONOMIC_REVERSAL": "社区单位交换冲回",
-  "caseEconomicCorrection": "社区单位交换的更正"
+  "caseEconomicCorrection": "社区单位交换的更正",
+  "userManual": "用户手册"
  }
 }
