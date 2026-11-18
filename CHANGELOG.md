@@ -1,5 +1,9 @@
 # Changelog
 
+## Manual: STIR's roles come from module templates
+
+The administration chapter (es/en) now explains that every workspace has STIR's roles already (Participante STIR, Revisor de casos, Moderación, Publicación de referencias, Electorado), that new people join as participants, how to give the role to people who were already there, and that a disabled template role is given to nobody.
+
 ## Shell styles no longer leak into STIR
 
 The Shell styles every `.workspace nav` as its vertical sidebar and every `.surface header` as its white top bar. Both leaked into STIR: the tab bar stacked as full-width buttons, the heading and each offer header turned into white bars, and the tagline shrank to 10px. `style.css` now scopes STIR's own tab bar and headers back.

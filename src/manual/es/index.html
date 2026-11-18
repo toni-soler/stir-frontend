@@ -424,17 +424,23 @@
 <section id="administracion">
   <h2>19. Administrar la comunidad</h2>
   <h3>Personas y permisos</h3>
-  <p>La administración da de alta a las personas y les asigna roles desde las pantallas <span class="ui">Usuarios</span> y <span class="ui">Roles</span> de la plataforma. Cada rol es una lista de permisos. Combinaciones habituales:</p>
+  <p>La administración da de alta a las personas desde la pantalla <span class="ui">Usuarios</span> de la plataforma. Lo que cada persona puede hacer lo deciden sus roles, y cada rol es una lista de permisos.</p>
+  <p><strong>No hace falta preparar los roles de STIR a mano.</strong> Cada espacio tiene ya estos roles, que crea y mantiene la propia plataforma; en la pantalla <span class="ui">Roles</span> aparecen con origen <span class="ui">Plantilla de módulo</span>:</p>
   <div class="table-wrap"><table>
-    <tr><th>Rol</th><th>Permisos</th></tr>
-    <tr><td>Participante</td><td><code>stir.listings.read</code>, <code>stir.listings.create</code>, <code>stir.listings.update</code>, <code>stir.participants.read</code>, <code>stir.participants.update</code>, <code>stir.negotiations.read</code>, <code>stir.negotiations.create</code>, <code>stir.negotiations.update</code>, <code>stir.agreements.read</code>, <code>stir.agreements.fulfil</code>, <code>stir.economic.read</code>, <code>stir.economic.manage</code>, <code>stir.notifications.read</code>, <code>stir.content.report</code>, <code>stir.references.read</code>, <code>stir.consent.manage</code>. Para firmar intercambios: <code>OSTRIS_DISCOVERY_READ</code>, <code>OSTRIS_PARTICIPANT_ACTIVATE</code>, <code>OSTRIS_CREDENTIAL_MANAGE</code>, <code>OSTRIS_TRANSACTION_CREATE</code>, <code>OSTRIS_TRANSACTION_READ</code>, <code>OSTRIS_TRANSACTION_AUTHORIZE</code> y <code>OSTRIS_TRANSACTION_COMMIT</code>.</td></tr>
-    <tr><td>Revisor de casos</td><td>Lo de participante más <code>OSTRIS_RESOLUTION_RECORD</code>.</td></tr>
-    <tr><td>Publicador de referencias</td><td><code>stir.references.propose</code>, <code>stir.references.publish</code> y, para la conservación, <code>stir.retention.manage</code>.</td></tr>
-    <tr><td>Moderación</td><td><code>stir.moderation.manage</code>.</td></tr>
-    <tr><td>Gobernanza ordinaria</td><td><code>stir.governance.vote</code>; para gestionar censo y política, <code>stir.governance.manage</code>.</td></tr>
-    <tr><td>Administración económica</td><td><code>OSTRIS_COMMUNITY_MANAGE</code>, además de ser propietaria o administradora del espacio.</td></tr>
+    <tr><th>Rol</th><th>Para qué sirve</th><th>Permisos</th></tr>
+    <tr><td>Participante STIR</td><td>Todo lo de este manual hasta el capítulo 15: publicar, negociar, acordar, intercambiar, cumplir y pedir revisiones. <strong>Cada persona nueva entra con este rol.</strong></td><td><code>stir.listings.read</code>, <code>stir.listings.create</code>, <code>stir.listings.update</code>, <code>stir.participants.read</code>, <code>stir.participants.update</code>, <code>stir.negotiations.read</code>, <code>stir.negotiations.create</code>, <code>stir.negotiations.update</code>, <code>stir.agreements.read</code>, <code>stir.agreements.fulfil</code>, <code>stir.economic.read</code>, <code>stir.economic.manage</code>, <code>stir.notifications.read</code>, <code>stir.content.report</code>, <code>stir.references.read</code>, <code>stir.consent.manage</code>. Para firmar intercambios: <code>OSTRIS_DISCOVERY_READ</code>, <code>OSTRIS_PARTICIPANT_ACTIVATE</code>, <code>OSTRIS_CREDENTIAL_MANAGE</code>, <code>OSTRIS_TRANSACTION_CREATE</code>, <code>OSTRIS_TRANSACTION_READ</code>, <code>OSTRIS_TRANSACTION_AUTHORIZE</code> y <code>OSTRIS_TRANSACTION_COMMIT</code>.</td></tr>
+    <tr><td>Revisor de casos STIR</td><td>Firmar las correcciones de los casos. Además, la comunidad tiene que nombrarle revisor (ver más abajo).</td><td><code>OSTRIS_RESOLUTION_RECORD</code></td></tr>
+    <tr><td>Moderación STIR</td><td>Revisar reportes y ocultar publicaciones.</td><td><code>stir.moderation.manage</code></td></tr>
+    <tr><td>Publicación de referencias STIR</td><td>Proponer y publicar referencias, y gestionar la conservación.</td><td><code>stir.references.propose</code>, <code>stir.references.publish</code>, <code>stir.retention.manage</code></td></tr>
+    <tr><td>Electorado STIR</td><td>Votar en la gobernanza ordinaria. Además, la comunidad tiene que incluirle en su censo.</td><td><code>stir.governance.vote</code></td></tr>
   </table></div>
-  <p class="muted">Cuando STIR añade una función nueva, puede necesitar un permiso nuevo. Revisa esta tabla después de cada actualización.</p>
+  <p>Los roles se suman: una persona revisora tiene <em>Participante STIR</em> y además <em>Revisor de casos STIR</em>. Dos permisos no tienen plantilla porque son de administración: <code>stir.governance.manage</code> (gestionar censo y política de votación) y <code>OSTRIS_COMMUNITY_MANAGE</code> (configurar la comunidad económica, siendo además propietaria o administradora del espacio).</p>
+  <ul>
+    <li><strong>Al dar de alta a alguien</strong>, en <span class="ui">Roles asignados</span> ya aparece marcado <em>Participante STIR</em>. Si lo dejas así, la persona puede usar STIR desde el primer momento. Desmárcalo sólo si no debe participar.</li>
+    <li><strong>Personas que ya estaban antes:</strong> en <span class="ui">Roles</span>, pulsa <span class="ui">Dar los roles de los módulos a los miembros actuales</span>. Quien no tenga <em>Participante STIR</em> lo recibe; nadie pierde los roles que ya tenía.</li>
+    <li><strong>Cuando STIR se actualiza</strong> y necesita un permiso nuevo, la plataforma se lo añade a estos roles sola. No quita nunca un permiso que la administración haya añadido.</li>
+    <li>Puedes <strong>cambiar el nombre</strong> de estos roles o <strong>desactivarlos</strong> (un rol desactivado no se da a nadie, tampoco a las personas nuevas). No se pueden eliminar, porque la plataforma los volvería a crear.</li>
+  </ul>
   <h3>Configurar la comunidad económica</h3>
   <p>Una sola vez por comunidad: en <span class="ui">Activación económica</span>, rellena <span class="ui">Nombre de la comunidad</span>, <span class="ui">Código de la unidad</span> y <span class="ui">Decimales</span>, y pulsa <span class="ui">Configurar comunidad económica</span>.</p>
   <h3>Nombrar a los revisores de casos</h3>
@@ -453,7 +459,7 @@
     <tr><th>Mensaje</th><th>Qué significa y qué hacer</th></tr>
     <tr><td>Inicia sesión con una cuenta real y selecciona un tenant para usar STIR.</td><td>Entra con tu cuenta y elige tu comunidad en <span class="ui">Espacio actual</span>.</td></tr>
     <tr><td>Tu sesión ha caducado.</td><td>Vuelve a iniciar sesión.</td></tr>
-    <tr><td>No tienes permiso para esta operación.</td><td>Tu rol no incluye esa función. Pide a la administración que lo revise (ver <a href="#administracion">capítulo 19</a>).</td></tr>
+    <tr><td>No tienes permiso para esta operación.</td><td>Tu rol no incluye esa función. Pide a la administración que compruebe que tienes <em>Participante STIR</em> o el rol que corresponda (ver <a href="#administracion">capítulo 19</a>).</td></tr>
     <tr><td>Esto ha cambiado o ya no aplica. Recarga e inténtalo de nuevo.</td><td>Otra persona actuó a la vez (por ejemplo, respondió a la negociación). Recarga la página y revisa el estado nuevo.</td></tr>
     <tr><td>Configura tu perfil de mercado antes de activar los intercambios.</td><td>Completa <span class="ui">Mi perfil</span> primero.</td></tr>
     <tr><td>Este intercambio supera actualmente tu límite de crédito.</td><td>Tu saldo no lo permite ahora. No es un juicio sobre el precio; el acuerdo sigue en pie.</td></tr>
