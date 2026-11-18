@@ -105,6 +105,37 @@ export function fulfilmentApi(sdk, tenantId) {
   };
 }
 
+// Agreement cases (stir-doc/AGREEMENT_CASES.md).
+export function caseApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '');
+  const c = (caseId) => '/cases/' + encodeURIComponent(caseId);
+  const post = (path, value = {}) => request(path, body('POST', value));
+  return {
+    review: () => request('/case-review'),
+    configure: (value) => request('/case-review', body('PUT', value)),
+    list: () => request('/cases'),
+    forAgreement: (agreementId) => request('/agreements/' + encodeURIComponent(agreementId) + '/cases'),
+    open: (agreementId, value) => post('/agreements/' + encodeURIComponent(agreementId) + '/cases', value),
+    view: (caseId) => request(c(caseId)),
+    evidence: (caseId, value) => post(c(caseId) + '/evidence', value),
+    take: (caseId) => post(c(caseId) + '/take'),
+    contain: (caseId, value) => post(c(caseId) + '/containment', value),
+    lift: (caseId) => post(c(caseId) + '/containment/lift'),
+    finding: (caseId, value) => post(c(caseId) + '/findings', value),
+    attribution: (caseId, value) => post(c(caseId) + '/attributions', value),
+    sanction: (caseId, value) => post(c(caseId) + '/sanctions', value),
+    waive: (caseId, decisionId) => post(c(caseId) + '/decisions/' + encodeURIComponent(decisionId) + '/waive'),
+    appeal: (caseId, decisionId, value) => post(c(caseId) + '/decisions/' + encodeURIComponent(decisionId) + '/appeal', value),
+    finalize: (caseId, decisionId) => post(c(caseId) + '/decisions/' + encodeURIComponent(decisionId) + '/finalize'),
+    decideAppeal: (caseId, appealId, value) => post(c(caseId) + '/appeals/' + encodeURIComponent(appealId) + '/decide', value),
+    withdraw: (caseId, value) => post(c(caseId) + '/withdraw', value),
+    prepareRemedy: (caseId) => post(c(caseId) + '/remedies'),
+    remedyPayload: (caseId, remedyId) => request(c(caseId) + '/remedies/' + encodeURIComponent(remedyId) + '/signing-payload'),
+    signRemedy: (caseId, remedyId, value) => post(c(caseId) + '/remedies/' + encodeURIComponent(remedyId) + '/signatures', value),
+    commitRemedy: (caseId, remedyId) => post(c(caseId) + '/remedies/' + encodeURIComponent(remedyId) + '/commit'),
+  };
+}
+
 export function economicApi(sdk, tenantId) {
   const { request } = apiClient(sdk, tenantId, '/economic');
   return {

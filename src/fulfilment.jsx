@@ -4,6 +4,7 @@
 // "not received" stays a disagreement, never a failure.
 import { fulfilmentApi, participantApi } from './api.js';
 import { FULFILMENT_MODES } from './catalog-client.js';
+import { OpenCase, CLAIMABLE_KINDS } from './cases.jsx';
 
 const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
@@ -35,8 +36,12 @@ function Declare({ t, obligation, onDeclare, busy }) {
   </form>;
 }
 
-function Obligation({ t, me, obligation, lastAttempt, onDeclare, busy }) {
+function Obligation({ sdk, t, me, obligation, lastAttempt, onDeclare, busy, agreementId, cases = [], corrections = [], navigate, onCaseOpened }) {
   const economic = obligation.kind === 'ECONOMIC_EXCHANGE';
+  const mine = cases.filter(c => c.obligationId === obligation.id);
+  const live = mine.some(c => !['RESOLVED', 'WITHDRAWN'].includes(c.status));
+  const canClaim = navigate && CLAIMABLE_KINDS.includes(obligation.kind) && obligation.yourRole === 'BENEFICIARY'
+    && !['DONE', 'SUPERSEDED'].includes(obligation.status) && !live;
   const canDeclare = !economic && obligation.status !== 'SUPERSEDED' && obligation.yourRole;
   return <article className={'stir-card stir-obligation' + (obligation.status === 'SUPERSEDED' ? ' stir-muted' : '')}
     data-testid={'obligation-' + obligation.kind + (obligation.status === 'SUPERSEDED' ? '-superseded' : '')}>
@@ -60,7 +65,14 @@ function Obligation({ t, me, obligation, lastAttempt, onDeclare, busy }) {
         {event.note && <small> — {event.note}</small>}
       </li>)}
     </ol>}
+    {economic && corrections.map(x => <p key={x.id} data-testid={'correction-' + x.status}>
+      <span className={'stir-badge ' + (x.status === 'EXECUTED' ? 'ACCEPTED' : '')}>{t('correctionStatus' + x.status)}</span>{' '}
+      <small>{t('correctionHelp' + x.status)}</small>{navigate && <> <button type="button" className="stir-link" onClick={() => navigate('/stir/cases/' + x.caseId)}>{t('caseView')}</button></>}</p>)}
+    {mine.map(c => <p key={c.id} data-testid={'obligation-case-' + c.status}>
+      <span className="stir-badge">{t('caseClaim' + c.claim)} · {t('caseStatus' + c.status)}</span>{' '}
+      {navigate && <button type="button" className="stir-link" onClick={() => navigate('/stir/cases/' + c.id)}>{t('caseView')}</button>}</p>)}
     {canDeclare && <Declare t={t} obligation={obligation} onDeclare={onDeclare} busy={busy} />}
+    {canClaim && <OpenCase sdk={sdk} t={t} agreementId={agreementId} obligation={obligation} navigate={navigate} onOpened={onCaseOpened} />}
   </article>;
 }
 
@@ -123,7 +135,7 @@ function Amendments({ t, me, amendments, onDecide, busy }) {
 }
 
 /** The obligation board shown on an Agreement's own page. */
-export function FulfilmentPanel({ sdk, t, agreementId, reloadKey }) {
+export function FulfilmentPanel({ sdk, t, agreementId, reloadKey, navigate }) {
   const api = useMemo(() => fulfilmentApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [board, setBoard] = useState(null);
   const [amendments, setAmendments] = useState([]);
@@ -144,8 +156,10 @@ export function FulfilmentPanel({ sdk, t, agreementId, reloadKey }) {
   return <section className="stir-fulfilment" data-testid="obligation-board">
     <p><small>{t('fulfilmentIntro')}</small></p>
     {error && <p role="alert">{error}</p>}
+    {board.containment && <p className="stir-notice" data-testid="board-containment">{t('caseContainmentActive')} {new Date(board.containment.until).toLocaleString()}</p>}
     <div className="stir-grid">
-      {active.map(o => <Obligation key={o.id} t={t} me={me} obligation={o} lastAttempt={board.lastExecutionAttempt} busy={busy}
+      {active.map(o => <Obligation key={o.id} sdk={sdk} t={t} me={me} obligation={o} lastAttempt={board.lastExecutionAttempt} busy={busy}
+        agreementId={agreementId} cases={board.cases || []} corrections={board.corrections || []} navigate={navigate} onCaseOpened={load}
         onDeclare={(id, type, note) => act(() => api.declare(agreementId, id, { type, note }))} />)}
     </div>
     {superseded.length > 0 && <details><summary>{t('obligationsSuperseded')} ({superseded.length})</summary>
