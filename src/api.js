@@ -61,6 +61,9 @@ export function participantApi(sdk, tenantId) {
     me: () => request('/me'),
     updateMe: (value) => request('/me', body('PUT', value)),
     view: (userId) => request('/' + encodeURIComponent(userId)),
+    // Contextual fulfilment history: described facts, no score, opt-in (AGREEMENT_FULFILMENT.md).
+    history: (userId) => request('/' + encodeURIComponent(userId) + '/fulfilment-history'),
+    shareHistory: (share) => request('/me/fulfilment-history-sharing', body('PUT', { share })),
   };
 }
 
@@ -84,6 +87,21 @@ export function agreementApi(sdk, tenantId) {
   return {
     list: (filters, signal) => request(query(filters), { signal }),
     read: (id) => request('/' + encodeURIComponent(id)),
+  };
+}
+
+/** Per-obligation fulfilment, typed declarations and amendments of one Agreement (AGREEMENT_FULFILMENT.md). */
+export function fulfilmentApi(sdk, tenantId) {
+  const { request } = apiClient(sdk, tenantId, '/agreements');
+  const base = (agreementId) => '/' + encodeURIComponent(agreementId);
+  return {
+    view: (agreementId) => request(base(agreementId) + '/obligations'),
+    declare: (agreementId, obligationId, value) => request(base(agreementId) + '/obligations/' + encodeURIComponent(obligationId) + '/events', body('POST', value)),
+    amendments: (agreementId) => request(base(agreementId) + '/amendments'),
+    propose: (agreementId, value) => request(base(agreementId) + '/amendments', body('POST', value)),
+    accept: (agreementId, amendmentId) => request(base(agreementId) + '/amendments/' + encodeURIComponent(amendmentId) + '/accept', body('POST', {})),
+    reject: (agreementId, amendmentId) => request(base(agreementId) + '/amendments/' + encodeURIComponent(amendmentId) + '/reject', body('POST', {})),
+    attempts: (agreementId) => request(base(agreementId) + '/trade/attempts'),
   };
 }
 

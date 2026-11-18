@@ -88,7 +88,9 @@ export function MyEconomicProfile({ sdk, t }) {
     {marketplace && me && <>
       <p role="status">{t('activationStatusActive')}</p>
       <p>{t('balance')}: <strong>{formatAmount(me.balanceProjection, marketplace.unitScale)} {marketplace.unitCode}</strong></p>
-      <p>{t('creditFloor')}: {formatAmount(me.creditFloor, marketplace.unitScale)} {marketplace.unitCode}</p>
+      <p>{t('creditFloor')}: {formatAmount(me.creditFloor, marketplace.unitScale)} {marketplace.unitCode} <small>{t('creditFloorOrigin')}</small></p>
+      {me.availableCapacity != null && <p data-testid="available-capacity">{t('availableCapacity')}: <strong>{formatAmount(me.availableCapacity, marketplace.unitScale)} {marketplace.unitCode}</strong></p>}
+      <p><small>{t('creditIsNotPrice')}</small></p>
     </>}
   </section>
   {marketplace && me && <DeviceManagement sdk={sdk} t={t} />}

@@ -6,7 +6,7 @@ const React = window.__IDAX_MODULE_SDK__.React;
 const { useEffect, useState, useMemo } = React;
 
 /** Economic execution panel shown on an Agreement's own page. */
-export function TradeStatus({ sdk, t, agreementId, economicPhase, navigate }) {
+export function TradeStatus({ sdk, t, agreementId, economicPhase, navigate, onChange }) {
   const trades = useMemo(() => tradeApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const economic = useMemo(() => economicApi(sdk, sdk.activeTenantId), [sdk.activeTenantId]);
   const [trade, setTrade] = useState(undefined);
@@ -31,7 +31,8 @@ export function TradeStatus({ sdk, t, agreementId, economicPhase, navigate }) {
     setBusy(true); setError('');
     try { setTrade(await action()); }
     catch (e) { setError(e.message); try { setTrade(await trades.sync(agreementId)); } catch { /* keep the original error visible */ } }
-    finally { setBusy(false); }
+    // Every attempt, failed or not, is recorded with a typed outcome the obligation board shows.
+    finally { setBusy(false); onChange?.(); }
   };
   const activateTrade = () => run(() => trades.activate(agreementId));
   const sign = () => run(async () => {
