@@ -101,6 +101,7 @@ function Marketplace() {
       <button onClick={()=>navigate('/stir/economic')}>{t('economicActivation')}</button>
       <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
       {canModerate && <button onClick={()=>navigate('/stir/moderation')}>{t('moderationQueue')}</button>}
+      <ManualLink t={t}/>
     </nav>
     {(creating||editing) ? <ListingEditor key={editing?.id || 'new'} initial={editing} justCreated={Boolean(editing) && editing.id===justCreatedId} api={api} sdk={sdk} catalogs={catalogs} t={t} onCancel={()=>{setEditing(null);setJustCreatedId(null);setRevision(n=>n+1);navigate('/stir/mine');}} onSaved={(created)=>{setRevision(n=>n+1); if(created){setJustCreatedId(created.id);setEditing(created);} else {setEditing(null);setJustCreatedId(null);navigate('/stir/mine');}}}/> : <>
       <section className="stir-intro"><h2>{t(mine?'mine':'headline')}</h2><p>{t('intro')}</p></section>
@@ -116,6 +117,12 @@ function Marketplace() {
   </main>;
 }
 
+// The user manual is a static page served next to this extension (src/manual), opened in its own tab.
+export const MANUAL_URL='/extensions/stir/manual/';
+// The manual exists in Spanish and English: each locale bundle names its copy (manualLanguage: the Iberian languages
+// read the Spanish one, every other language the English one), so the manual matches the language STIR is shown in.
+export function manualUrl(language){return MANUAL_URL+(/^(es|ca|gl|eu)(-|$)/.test(String(language||''))?'es/':'en/');}
+function ManualLink({t}){return <a className="stir-manual-link" href={manualUrl(t('manualLanguage'))} target="_blank" rel="noopener noreferrer">{t('userManual')}</a>;}
 function sdkAndT() {
   const sdk=window.__IDAX_MODULE_SDK__;
   return [sdk,(key)=>sdk.i18n.t('stir.'+key,bundles.en[key] || bundles.en.error)];
@@ -135,6 +142,7 @@ function withNav(t, navigate, node, sdk) {
     <nav className="stir-tabs" aria-label="STIR">
       <button onClick={()=>navigate('/stir/home')}>{t('dashboardHome')}</button>
       <button onClick={()=>navigate('/stir')}>{t('backToMarketplace')}</button>
+      <ManualLink t={t}/>
     </nav>
     {node}
   </main>;
