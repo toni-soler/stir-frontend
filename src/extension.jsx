@@ -119,7 +119,10 @@ function Marketplace() {
 
 // The user manual is a static page served next to this extension (src/manual), opened in its own tab.
 export const MANUAL_URL='/extensions/stir/manual/';
-function ManualLink({t}){return <a className="stir-manual-link" href={MANUAL_URL} target="_blank" rel="noopener noreferrer">{t('userManual')}</a>;}
+// The manual exists in Spanish and English: each locale bundle names its copy (manualLanguage: the Iberian languages
+// read the Spanish one, every other language the English one), so the manual matches the language STIR is shown in.
+export function manualUrl(language){return MANUAL_URL+(/^(es|ca|gl|eu)(-|$)/.test(String(language||''))?'es/':'en/');}
+function ManualLink({t}){return <a className="stir-manual-link" href={manualUrl(t('manualLanguage'))} target="_blank" rel="noopener noreferrer">{t('userManual')}</a>;}
 function sdkAndT() {
   const sdk=window.__IDAX_MODULE_SDK__;
   return [sdk,(key)=>sdk.i18n.t('stir.'+key,bundles.en[key] || bundles.en.error)];

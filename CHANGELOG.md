@@ -1,8 +1,12 @@
 # Changelog
 
+## Shell styles no longer leak into STIR
+
+The Shell styles every `.workspace nav` as its vertical sidebar and every `.surface header` as its white top bar. Both leaked into STIR: the tab bar stacked as full-width buttons, the heading and each offer header turned into white bars, and the tagline shrank to 10px. `style.css` now scopes STIR's own tab bar and headers back.
+
 ## User manual
 
-A user manual for non-technical participants, served next to the extension at `/extensions/stir/manual/` and opened from a "Manual de usuario" link at the end of the STIR tabs (12 locales). Self-contained HTML with its own CSS and JS (no inline code), printable to PDF, 21 chapters from first steps to cases and community administration, with a screen index. `tests/manual.test.mjs` keeps it honest: every route is in the screen index and every label it names exists in the Spanish UI. Each increment updates it.
+A user manual for non-technical participants, served next to the extension at `/extensions/stir/manual/` and opened from a "Manual de usuario" link at the end of the STIR tabs (12 locales; Iberian languages open the Spanish copy, the rest the English one). In Spanish (`src/manual/es/`) and English (`src/manual/en/`), with real screenshots of the UI in each language under `src/manual/img/<language>/`, produced by `stir-main/scripts/manual_screenshots.py`. Self-contained HTML with its own CSS and JS (no inline code), printable to PDF, 21 chapters from first steps to cases and community administration, with a screen index. `tests/manual.test.mjs` keeps it honest: every route is in the screen index and every label it names exists in the UI of its language, every screenshot exists, and both copies have the same chapters. Each increment updates it.
 
 ## Agreement cases
 

@@ -40,7 +40,12 @@ code{font-size:.88em;background:#eef3f2;padding:2px 4px;border-radius:3px;overfl
 footer{max-width:1200px;margin:auto;padding:0 24px 30px;color:var(--ink-soft);font-size:.85rem}
 @media(max-width:900px){.layout{grid-template-columns:1fr;padding:16px;gap:16px}aside{position:static;max-height:none}aside ol{columns:2}section{padding:20px}}
 @media(max-width:520px){aside ol{columns:1}header{padding:28px 20px}.layout{padding:10px}section{padding:16px}th,td{padding:8px}}
+header p a{color:#fff}
+figure{margin:18px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff}
+figure img{display:block;width:100%;height:auto}
+figcaption{padding:8px 12px;font-size:.88rem;color:var(--ink-soft);border-top:1px solid var(--border)}
 @media print{
+  figure{break-inside:avoid}
   :root{background:#fff}
   header{background:#fff;color:#000;padding:0 0 12px;border-bottom:2px solid #000}
   header p{color:#000}
