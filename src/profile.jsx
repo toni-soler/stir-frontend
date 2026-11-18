@@ -1,4 +1,5 @@
 import { participantApi, attachmentApi } from './api.js';
+import { FulfilmentHistory } from './fulfilment.jsx';
 import { AttachmentImage } from './attachments.jsx';
 import { MyConsentPanel } from './consent-retention.jsx';
 
@@ -72,6 +73,7 @@ export function MyProfile({ sdk, t, navigate }) {
     {saved && <p role="status">{t('profileSaved')}</p>}
     {profile && <AvatarUploader sdk={sdk} t={t} profile={profile} onUploaded={() => api.me().then(setProfile)} />}
     <ProfileForm t={t} value={value} busy={busy} error={error} onChange={change} onSubmit={submit} />
+    {profile && <FulfilmentHistory sdk={sdk} t={t} userId={profile.userId} own />}
     <MyConsentPanel sdk={sdk} t={t} />
   </section>;
 }
@@ -92,6 +94,7 @@ export function PublicProfile({ sdk, t, userId }) {
     <h2>{profile.displayName}</h2>
     {profile.location && <p>⌖ {profile.location}</p>}
     {profile.bio && <p className="stir-description">{profile.bio}</p>}
+    <FulfilmentHistory sdk={sdk} t={t} userId={profile.userId} own={profile.userId === sdk.user?.id} />
   </section>;
 }
 
