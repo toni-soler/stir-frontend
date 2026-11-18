@@ -55,6 +55,23 @@ export function authorizationMessageBytes(authorizationPayloadText) {
   return message;
 }
 
+/** A community resolution authority's signature over an adjudicated correction (AGREEMENT_CASES.md):
+ * UTF8('OSTRIS:TX:GOVAUTH:V1') || 0x00 || UTF8(governance payload text), exactly as osTRIS returned
+ * it. Any other domain is refused, so a governance signing screen can never be used to obtain an
+ * ordinary account authorization. */
+export const GOVERNANCE_AUTHORIZATION_DOMAIN = 'OSTRIS:TX:GOVAUTH:V1';
+export function governanceMessageBytes(signingDomain, governancePayloadText) {
+  if (signingDomain !== GOVERNANCE_AUTHORIZATION_DOMAIN) throw new Error('stir.caseUnexpectedSigningDomain');
+  const encoder = new TextEncoder();
+  const domain = encoder.encode(GOVERNANCE_AUTHORIZATION_DOMAIN);
+  const payload = encoder.encode(governancePayloadText);
+  const message = new Uint8Array(domain.length + 1 + payload.length);
+  message.set(domain, 0);
+  message[domain.length] = 0x00;
+  message.set(payload, domain.length + 1);
+  return message;
+}
+
 async function loadOrCreateKeyRecord(storageKey) {
   const db = await openDb();
   const stored = await idbGet(db, storageKey);

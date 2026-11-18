@@ -7,6 +7,7 @@ import { MyProfile, PublicProfile } from './profile.jsx';
 import { ListingDetail } from './listing.jsx';
 import { NegotiationList, NegotiationDetail } from './negotiation.jsx';
 import { AgreementList, AgreementDetail } from './agreement.jsx';
+import { CaseList, CaseDetail, CaseReviewSettings } from './cases.jsx';
 import { MyEconomicProfile } from './economic.jsx';
 import { PhotoUploader, ListingThumbnail } from './attachments.jsx';
 import { NotificationBell, NotificationList } from './notifications.jsx';
@@ -96,6 +97,7 @@ function Marketplace() {
       <button onClick={()=>navigate('/stir/references')}>{t('refCommunity')}</button>
       <button onClick={()=>navigate('/stir/governance')}>{t('govTab')}</button>
       <button onClick={()=>navigate('/stir/agreements')}>{t('myAgreements')}</button>
+      <button onClick={()=>navigate('/stir/cases')}>{t('casesTitle')}</button>
       <button onClick={()=>navigate('/stir/economic')}>{t('economicActivation')}</button>
       <button onClick={()=>navigate('/stir/profile')}>{t('myProfile')}</button>
       {canModerate && <button onClick={()=>navigate('/stir/moderation')}>{t('moderationQueue')}</button>}
@@ -142,6 +144,9 @@ function NegotiationListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sd
 function NegotiationDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<NegotiationDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
 function AgreementListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<AgreementList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function AgreementDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<AgreementDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
+function CaseListRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<CaseList sdk={sdk} t={t} navigate={navigate}/>,sdk); }
+function CaseDetailRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {id}=useParams(); return withNav(t,navigate,<CaseDetail sdk={sdk} t={t} id={id} navigate={navigate}/>,sdk); }
+function CaseReviewRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<CaseReviewSettings sdk={sdk} t={t}/>,sdk); }
 function MyProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyProfile sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function MyEconomicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate}=sdk.router; const navigate=useNavigate(); return withNav(t,navigate,<MyEconomicProfile sdk={sdk} t={t} navigate={navigate}/>,sdk); }
 function PublicProfileRoute(){ const [sdk,t]=sdkAndT(); const {useNavigate,useParams}=sdk.router; const navigate=useNavigate(); const {userId}=useParams(); return withNav(t,navigate,<PublicProfile sdk={sdk} t={t} userId={userId}/>,sdk); }
@@ -167,6 +172,9 @@ function StirRoot() {
     <Route path="/stir/negotiations/:id" element={<NegotiationDetailRoute/>}/>
     <Route path="/stir/agreements" element={<AgreementListRoute/>}/>
     <Route path="/stir/agreements/:id" element={<AgreementDetailRoute/>}/>
+    <Route path="/stir/cases" element={<CaseListRoute/>}/>
+    <Route path="/stir/cases/:id" element={<CaseDetailRoute/>}/>
+    <Route path="/stir/case-review" element={<CaseReviewRoute/>}/>
     <Route path="/stir/profile" element={<MyProfileRoute/>}/>
     <Route path="/stir/economic" element={<MyEconomicProfileRoute/>}/>
     <Route path="/stir/participants/:userId" element={<PublicProfileRoute/>}/>

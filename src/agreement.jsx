@@ -51,7 +51,7 @@ export function AgreementDetail({ sdk, t, id, navigate }) {
     <TradeStatus sdk={sdk} t={t} agreementId={agreement.id} economicPhase={agreement.economicPhase} navigate={navigate}
       onChange={() => setTradeChanges(n => n + 1)} />
     <h3>{t('fulfilmentTitle')}</h3>
-    <FulfilmentPanel sdk={sdk} t={t} agreementId={agreement.id} reloadKey={tradeChanges} />
+    <FulfilmentPanel sdk={sdk} t={t} agreementId={agreement.id} reloadKey={tradeChanges} navigate={navigate} />
     <AgreementReference sdk={sdk} t={t} id={agreement.id}/>
     <h3>{t('agreementSnapshot')}</h3>
     <p>{t('snapshotDigest')}: <code>{agreement.snapshot.digestSha256}</code></p>

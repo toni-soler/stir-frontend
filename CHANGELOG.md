@@ -1,5 +1,9 @@
 # Changelog
 
+## Agreement cases
+
+Cases on the obligation board ("ask for a review"), a case list and a case page (`/stir/cases`, `/stir/cases/:id`), and the public reviewer roster (`/stir/case-review`). The case page shows the timeline each person may see, evidence with reviewers-only visibility, the finding, attribution and sanction as separate decisions with accept/appeal, reviewer tools (take, containment, decisions, appeal decision, confirmation) and the adjudicated reversal, which a reviewer reviews in full and signs with the device key - only ever under the `OSTRIS:TX:GOVAUTH:V1` domain. 12 locales; no FreeFolk-specific unit names.
+
 ## Usability fixes from the first real E2E review of stir.es
 
 Real end-to-end browser testing against the production stir.es instance found the module's text
