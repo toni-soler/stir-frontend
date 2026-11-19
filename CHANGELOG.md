@@ -1,5 +1,9 @@
 # Changelog
 
+## Ordinary governance: the electorate comes first
+
+The server enables ordinary governance only once its electorate holds a member, but the panel showed the electorate only after governance was on: no community could turn it on from the browser, and the attempt answered a generic "Revisa los valores del formulario". The electorate is now built while governance is still off, and the switch stays disabled - with the reason (`govEnableNeedsElectorate`, 12 locales) - until someone is on it. The manual's governance chapter says so (es/en). `tests/ordinary-governance-ui.test.mjs` keeps the order.
+
 ## Manual: STIR's roles come from module templates
 
 The administration chapter (es/en) now explains that every workspace has STIR's roles already (Participante STIR, Revisor de casos, Moderación, Publicación de referencias, Electorado), that new people join as participants, how to give the role to people who were already there, and that a disabled template role is given to nobody.

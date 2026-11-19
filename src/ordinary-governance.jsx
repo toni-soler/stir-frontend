@@ -70,17 +70,20 @@ export function OrdinaryGovernancePanel({ sdk, t, definitionId, communityId, can
   return <details><summary>{t('govOrdinaryTitle')}</summary>
     <p>{t('govOrdinaryHint')}</p>
     {error && <p role="alert">{error}</p>}
-    {canManage && <label><input type="checkbox" checked={Boolean(settings?.ordinaryGovernanceEnabled)} disabled={busy} onChange={e => run(() => api.setEnabled(communityId, e.target.checked))}/>{t('govEnabled')}</label>}
+    {/* The server enables ordinary governance only once the electorate holds a member, so the electorate is built
+        first: it is shown whether or not governance is on, and the switch waits for it. */}
+    {canManage && <details><summary>{t('govElectorate')}</summary>
+      <p>{t('govElectorateHint')}</p>
+      <ul>{members.map(m => <li key={m.user_id}><code>{String(m.user_id).slice(0, 8)}</code> <button type="button" className="stir-link" disabled={busy} onClick={() => run(() => api.removeMember(communityId, m.user_id))}>{t('govRemoveMember')}</button></li>)}</ul>
+      <form className="stir-form" onSubmit={e => { e.preventDefault(); run(() => api.addMember(communityId, newMember.trim())).then(() => setNewMember('')); }}>
+        <label>{t('govMemberUserId')}<input required value={newMember} onChange={e => setNewMember(e.target.value)}/></label>
+        <button disabled={busy}>{t('govAddMember')}</button>
+      </form>
+    </details>}
+    {canManage && <label><input type="checkbox" checked={Boolean(settings?.ordinaryGovernanceEnabled)} disabled={busy || (!settings?.ordinaryGovernanceEnabled && members.length === 0)} onChange={e => run(() => api.setEnabled(communityId, e.target.checked))}/>{t('govEnabled')}</label>}
+    {canManage && !settings?.ordinaryGovernanceEnabled && members.length === 0 && <p><small>{t('govEnableNeedsElectorate')}</small></p>}
     {!settings?.ordinaryGovernanceEnabled && <p>{t('govDisabledHint')}</p>}
     {settings?.ordinaryGovernanceEnabled && <>
-      {canManage && <details><summary>{t('govElectorate')}</summary>
-        <p>{t('govElectorateHint')}</p>
-        <ul>{members.map(m => <li key={m.user_id}><code>{String(m.user_id).slice(0, 8)}</code> <button type="button" className="stir-link" disabled={busy} onClick={() => run(() => api.removeMember(communityId, m.user_id))}>{t('govRemoveMember')}</button></li>)}</ul>
-        <form className="stir-form" onSubmit={e => { e.preventDefault(); run(() => api.addMember(communityId, newMember.trim())).then(() => setNewMember('')); }}>
-          <label>{t('govMemberUserId')}<input required value={newMember} onChange={e => setNewMember(e.target.value)}/></label>
-          <button disabled={busy}>{t('govAddMember')}</button>
-        </form>
-      </details>}
       {canManage && <details><summary>{t('govPolicyConfig')}</summary>
         <p>{t('govPolicyHint')}</p>
         {policy && <p>{t('govCurrentPolicy')}: {t('govQuorum')} {policy.quorum_numerator}/{policy.quorum_denominator} · {t('govApproval')} {policy.approval_numerator}/{policy.approval_denominator} · {t('govWindowHours')} {policy.voting_window_hours}h · v{policy.version}</p>}
